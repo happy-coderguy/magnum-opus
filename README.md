@@ -1,2 +1,3 @@
-# magnum-opus
-my best game in HTML yet 
+# Magnum Opus
+Best HTML game yet 
+A strategy game 
