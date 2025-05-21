@@ -1,0 +1,9 @@
+:root{
+    --back-image:url(images/backgrounds/black.jpg);
+}
+body{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background-image:var(--back-image);
+}
