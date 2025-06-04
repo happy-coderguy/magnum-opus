@@ -25,6 +25,8 @@ const choose_pastans = document.querySelector(".choose_pastans");
 const choose_scrapbots = document.querySelector(".choose_scrapbots");
 const choose_humans = document.querySelector(".choose_humans");
 
+const tile_container = document.querySelector(".tiles");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -109,6 +111,12 @@ function show_help(){
 function hide_help(){
     help.style.display="none";
 }
+//actual game functions lol
+function open_ya_base(){
+    //your base :)
+}
+
+//all the game starting functions lmao 
 function game_start(){
     start_menu.style.display="none";
     settings.style.display="none";
@@ -136,7 +144,6 @@ function game_init(){
     loader_cover.style.display="none";
     loader.style.display="none";
     root.style.setProperty("--back-image", "url(images/backgrounds/black.jpg)");
-    //choose faction
     choose_faction();
 }
 function choose_faction(){
@@ -146,36 +153,91 @@ function choose_faction(){
     choose_yox_empire.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "yox_empire";
-        generate_map();
+        generate_map(player_faction);
     }
     choose_humans.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "humans";
-        generate_map();
+        generate_map(player_faction);
     }
     choose_pastans.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "pastans";
-        generate_map();
+        generate_map(player_faction);
     }
     choose_scrapbots.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "scrapbots";
-        generate_map();
+        generate_map(player_faction);
     }
 
 }
-function generate_map(){
+function generate_map(player_faction){
     let tiletype;
     for (let x = 1; x<26; x++){
         for (let y = 1; y<26; y++){
             const tile = document.createElement("img");
             tile.classList.add("tile");
-            tile.style.left = (x-1)*64+"px";
-            tile.style.top = (y-1)*64+"px";
-            if (x===2 && y===2){
-                //player hq 
+            tile.style.position = "absolute";
+            tile.style.left = (x-1)*128+"px";
+            tile.style.top = (y-1)*128+"px";
+            tile.style.width = "128px";
+            tile.style.height = "128px";
+            if (player_faction === "humans"){
+                enemy1 = "scrapbots";
+                enemy2 = "pastans";
+                enemy3 = "yox_empire";
             }
+            else if (player_faction === "scrapbots"){
+                enemy1 = "humans";
+                enemy2 = "pastans";
+                enemy3 = "yox_empire";
+            }
+            else if (player_faction === "pastans"){
+                enemy1 = "humans";
+                enemy2 = "scrapbots";
+                enemy3 = "yox_empire";
+            }
+            else{
+                enemy1 = "humans";
+                enemy2 = "scrapbots";
+                enemy3 = "pastans"; 
+            }
+            console.log("e")
+            if (x===2 && y===2){
+                if (player_faction === "humans"){
+                    tile.src = "images/tiles/humans_hq.png";
+                }
+                else if (player_faction === "scrapbots"){
+                    tile.src = "images/tiles/scrapbots_hq.png";
+                }
+                else if (player_faction === "pastans"){
+                    tile.src = "images/tiles/pastans_hq.png";
+                }
+                else  if (player_faction === "yox_empire"){
+                    tile.src = "images/tiles/yox_empire_hq.png";
+                }
+                tile.onclick=open_ya_base;
+            }
+            else if (x===2 && y===24){
+                tile.src = "images/tiles/" + enemy1 + "_hq.png";
+            }
+            else if (x===24 && y===2){
+                tile.src = "images/tiles/" + enemy2 + "_hq.png";
+            }
+            else if (x===24 && y===24){
+                tile.src = "images/tiles/" + enemy3 + "_hq.png";
+            }
+            else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22)){
+                tile.src = "images/tiles/mine.png";
+            }
+            else if ((x===4 && y===2) || (x===3 && y===7) || (x==24 && y===4)){
+                tile.src = "images/tiles/food.png";
+            }
+            else{
+                tile.src = "images/tiles/land.png";
+            }
+            tile_container.appendChild(tile);
         }
     }
 }
