@@ -18,7 +18,12 @@ const loader = document.querySelector(".loader");
 const loader_cover = document.querySelector(".loader_cover");
 const lc_text = document.querySelector(".lc_text");
 const lc_image = document.querySelector(".lc_image");
-// ...existing code...
+
+const faction_choose = document.querySelector(".faction_choose");
+const choose_yox_empire = document.querySelector(".choose_yox_empire");
+const choose_pastans = document.querySelector(".choose_pastans");
+const choose_scrapbots = document.querySelector(".choose_scrapbots");
+const choose_humans = document.querySelector(".choose_humans");
 
 const loading_images = [
     "backgrounds/black.jpg",
@@ -109,7 +114,6 @@ function game_start(){
     settings.style.display="none";
     help.style.display="none";
     game_div.style.display="block";
-
     load_assets();
 }
 function load_assets(){
@@ -132,6 +136,48 @@ function game_init(){
     loader_cover.style.display="none";
     loader.style.display="none";
     root.style.setProperty("--back-image", "url(images/backgrounds/black.jpg)");
+    //choose faction
+    choose_faction();
+}
+function choose_faction(){
+    let player_faction;
+    faction_choose.style.display="block";
+
+    choose_yox_empire.onclick = function(){
+        faction_choose.style.display="none";
+        player_faction = "yox_empire";
+        generate_map();
+    }
+    choose_humans.onclick = function(){
+        faction_choose.style.display="none";
+        player_faction = "humans";
+        generate_map();
+    }
+    choose_pastans.onclick = function(){
+        faction_choose.style.display="none";
+        player_faction = "pastans";
+        generate_map();
+    }
+    choose_scrapbots.onclick = function(){
+        faction_choose.style.display="none";
+        player_faction = "scrapbots";
+        generate_map();
+    }
+
+}
+function generate_map(){
+    let tiletype;
+    for (let x = 1; x<26; x++){
+        for (let y = 1; y<26; y++){
+            const tile = document.createElement("img");
+            tile.classList.add("tile");
+            tile.style.left = (x-1)*64+"px";
+            tile.style.top = (y-1)*64+"px";
+            if (x===2 && y===2){
+                //player hq 
+            }
+        }
+    }
 }
 
 

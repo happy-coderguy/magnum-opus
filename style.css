@@ -1,5 +1,15 @@
 :root{
     --back-image:url(images/backgrounds/menu.png);
+    --human-color:#0fc9fc;
+    --yox-empire-color:#6200ff;
+    --pastans-color:#00ff6a;
+    --scrapbots-color:#ff8000;
+    --human-color-light:#6fdcfe;
+    --yox-empire-color-light:#9966ff;
+    --pastans-color-light:#66ffbb;
+    --scrapbots-color-light:#ffaa66;
+    
+    
 }
 body{
     width:100vw;
@@ -137,6 +147,63 @@ span, div, button{
 .loader{
     z-index:1;
     display:none;
+    image-rendering:pixelated;
+}
+.faction_choose{
+    position:absolute;
+    width:80vw;
+    height:80vh;
+    border:7px solid #666666;
+    background-color:white;
+    left:calc(10vw - 3.5px);
+    top:calc(10vh - 3.5px);
+    border-radius:4px;
+    display:none;
+    z-index:10;
+}
+.choose_humans, .choose_yox_empire, .choose_scrapbots, .choose_pastans{
+    width: 60vw;
+    height:15vh;
+    margin:auto;
+    margin-top:2vh;
+    border:2px solid black;
+    color:black;
+    font-family: "Almendra SC";
+    text-align:center;
+    font-size:2em;
+}
+.choose_humans{
+    background-color:var(--human-color);
+}
+.choose_yox_empire{
+    background-color:var(--yox-empire-color);
+}
+.choose_scrapbots{
+    background-color:var(--scrapbots-color);
+}
+.choose_pastans{
+    background-color:var(--pastans-color);
+}
+.choose_humans:hover{
+    background-color:var(--human-color-light);
+}
+.choose_yox_empire:hover{
+    background-color:var(--yox-empire-color-light);
+}
+.choose_scrapbots:hover{
+    background-color:var(--scrapbots-color-light);
+}
+.choose_pastans:hover{
+    background-color:var(--pastans-color-light);
+}
+.choose_humans:hover, .choose_yox_empire:hover, .choose_scrapbots:hover, .choose_pastans:hover{
+    cursor:pointer;
+}
+.tile{
+    position:absolute;
+    width:50px;
+    height:50px;
+    image-rendering: pixelated;
 }
 @keyframes spin{
     0%{
