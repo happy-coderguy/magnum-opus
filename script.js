@@ -30,6 +30,9 @@ const tile_container = document.querySelector(".tiles");
 const hotbar = document.querySelector(".hotbar");
 const next_turn = document.querySelector(".next_turn");
 
+const hq_menu = document.querySelector(".hq_menu");
+const hq_close = document.querySelector(".hq_close");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -116,7 +119,10 @@ function hide_help(){
 }
 //actual game functions lol
 function open_ya_base(){
-    //your base :)
+    hq_menu.style.display="block";
+}
+function close_ya_base(){
+    hq_menu.style.display="none";
 }
 
 //all the game starting functions lmao 
@@ -307,3 +313,4 @@ set_close.onclick = hide_settings;
 smenu_help.onclick = show_help;
 help_close.onclick = hide_help;
 smenu_play.onclick= game_start;
+hq_close.onclick = close_ya_base;
