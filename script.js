@@ -228,11 +228,23 @@ function generate_map(player_faction){
             else if (x===24 && y===24){
                 tile.src = "images/tiles/" + enemy3 + "_hq.png";
             }
-            else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22)){
+            else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22) || (x===19 && y===23) || (x===4 && y===24) || (x===3 && y===19) || (x===11 && y===11) || (x===15 && y===15)){
                 tile.src = "images/tiles/mine.png";
             }
-            else if ((x===4 && y===2) || (x===3 && y===7) || (x==24 && y===4)){
+            else if ((x===4 && y===2) || (x===3 && y===7) || (x==24 && y===4) || (x===19 && y===3) || (x===22 && y===24) || (x===23 && y===19) || (x===2 && y===22) || (x===7 && y===23) || (x===11 && y===15) || (x===15 && y===11)){
                 tile.src = "images/tiles/food.png";
+            }
+            else if ((x===13 && y===3) || (x===18 && y===18)){
+                tile.src="images/tiles/oil.png";
+            }
+            else if ((x===3 && y===13) || (x===18 && y===8)){
+                tile.src="images/tiles/hazardite.png";
+            }
+            else if ((x===23 && y===13) || (x===8 && y===8)){
+                tile.src="images/tiles/gems.png";
+            }
+            else if ((x===13 && y===23) || (x===8 && y===18)){
+                tile.src="images/tiles/aluminium.png";
             }
             else{
                 tile.src = "images/tiles/land.png";
