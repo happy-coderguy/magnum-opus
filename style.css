@@ -203,6 +203,30 @@ span, div, button{
     position:absolute;
     image-rendering: pixelated;
 }
+.hotbar{
+    position:fixed;
+    bottom:0px;
+    right:0px;
+    width:90vw;
+    height:12vh;
+    background-color:#99aaff;
+    border:3px solid black;
+    border-top-left-radius:10px;
+    display:none;
+}
+.next_turn{
+    background-color:#000099;
+    color:white;
+    font-family:"Almendra SC";
+    width:20%;
+    height:80%;
+    font-size:1.5em;
+    margin:10px;
+    border:4px solid black;
+}
+.next_turn:hover{
+    background-color:#4444aa;
+}
 @keyframes spin{
     0%{
         left:20vw;

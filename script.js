@@ -27,6 +27,9 @@ const choose_humans = document.querySelector(".choose_humans");
 
 const tile_container = document.querySelector(".tiles");
 
+const hotbar = document.querySelector(".hotbar");
+const next_turn = document.querySelector(".next_turn");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -170,10 +173,9 @@ function choose_faction(){
         player_faction = "scrapbots";
         generate_map(player_faction);
     }
-
 }
 function generate_map(player_faction){
-    let tiletype;
+    hotbar.style.display = "block";
     for (let x = 1; x<26; x++){
         for (let y = 1; y<26; y++){
             const tile = document.createElement("img");
@@ -183,6 +185,12 @@ function generate_map(player_faction){
             tile.style.top = (y-1)*128+"px";
             tile.style.width = "128px";
             tile.style.height = "128px";
+            if (x===1 && y===1){
+                tile.classList.add("top_left_anchor");
+            }
+            if (x===25 && y===25){
+                tile.classList.add("bottom_right_anchor");
+            }
             if (player_faction === "humans"){
                 enemy1 = "scrapbots";
                 enemy2 = "pastans";
@@ -252,10 +260,47 @@ function generate_map(player_faction){
             tile_container.appendChild(tile);
         }
     }
+    do_the_game();
+}
+function do_the_game(){
+    const top_left_anchor = document.querySelector(".top_left_anchor");
+    const bottom_right_anchor = document.querySelector(".bottom_right_anchor");
+    const tiles = document.querySelectorAll(".tile");
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "ArrowLeft" && top_left_anchor.style.left !== "0px") {
+            tiles.forEach(tile => {
+                tile.style.left = (parseInt(tile.style.left) + 128) + "px";
+            });
+        } 
+        else if (e.key === "ArrowRight" &&parseInt(bottom_right_anchor.style.left) >= window.innerWidth - 128) {
+            tiles.forEach(tile => {
+                tile.style.left = (parseInt(tile.style.left) - 128) + "px";
+            });
+        } 
+        else if (e.key === "ArrowUp" && top_left_anchor.style.top !== "0px") {
+            tiles.forEach(tile => {
+                tile.style.top = (parseInt(tile.style.top) + 128) + "px";
+            });
+        } 
+        else if (e.key === "ArrowDown" && parseInt(bottom_right_anchor.style.top) >= window.innerHeight - 128) {
+            tiles.forEach(tile => {
+                tile.style.top = (parseInt(tile.style.top) - 128) + "px";
+            });
+        }
+    });
 }
 
-
-
+document.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowLeft") {
+        // Left arrow pressed
+    } else if (e.key === "ArrowRight") {
+        // Right arrow pressed
+    } else if (e.key === "ArrowUp") {
+        // Up arrow pressed
+    } else if (e.key === "ArrowDown") {
+        // Down arrow pressed
+    }
+});
 /**ONCLICK ASSIGNMENTS**/
 smenu_settings.onclick = show_settings;
 set_close.onclick = hide_settings;
