@@ -33,6 +33,13 @@ const next_turn = document.querySelector(".next_turn");
 const hq_menu = document.querySelector(".hq_menu");
 const hq_close = document.querySelector(".hq_close");
 
+const food_amount_label = document.querySelector(".food_c_label");
+const ore_amount_label = document.querySelector(".ore_c_label");
+const oil_amount_label = document.querySelector(".oil_c_label");
+const gems_amount_label = document.querySelector(".gems_c_label");
+const hazardite_amount_label = document.querySelector(".hazardite_c_label");
+const aluminium_amount_label = document.querySelector(".aluminium_c_label");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -91,6 +98,13 @@ const loading_images = [
     "yox_empire/cerberus.png"
 ];
 
+let player_food = 0;
+let player_ore = 0;
+let player_oil = 0;
+let player_hazardite = 0;
+let player_aluminium = 0;
+let player_gems = 0;
+
 //this is for goofy easter egg
 const d = new Date
 let time = d.getTime();
@@ -124,7 +138,15 @@ function open_ya_base(){
 function close_ya_base(){
     hq_menu.style.display="none";
 }
+function update_resource_counters(){
+    food_amount_label.innerText= player_food;
+    ore_amount_label.innerText= player_food;
+    gems_amount_label.innerText= player_food;
+    oil_amount_label.innerText= player_food;
+    hazardite_amount_label.innerText= player_food;
+    aluminium_amount_label.innerText= player_food;
 
+}
 //all the game starting functions lmao 
 function game_start(){
     start_menu.style.display="none";

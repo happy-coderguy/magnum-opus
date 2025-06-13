@@ -205,6 +205,7 @@ span, div, button{
 .tile{
     position:absolute;
     image-rendering: pixelated;
+    z-index:2;
 }
 .hotbar{
     position:fixed;
@@ -216,6 +217,7 @@ span, div, button{
     border:3px solid black;
     border-top-left-radius:10px;
     display:none;
+    z-index:300;
 }
 .next_turn{
     background-color:#000099;
@@ -230,6 +232,27 @@ span, div, button{
 }
 .next_turn:hover{
     background-color:#4444aa;
+}
+.counters_container{
+    width:75%;
+    height:80%;
+    margin-left:10px;
+    background-color:#2222aa;
+    z-index:400;
+}
+.food_counter, .ore_counter, .oil_counter, .gems_counter, .hazardite_counter, .aluminium_counter{
+    width:10%;
+    height:50%;
+    margin-top:25%;
+    position:absolute;
+    z-index:2000;
+}
+.c_img{
+    width:32px;
+    height:32px;
+}
+.food_c_label, .ore_c_label, .oil_c_label, .gems_c_label, .hazardite_c_label, .aluminium_c_label{
+    font-size:auto;
 }
 .hq_menu{
     position:absolute;
