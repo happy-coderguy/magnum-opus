@@ -40,6 +40,35 @@ const gems_amount_label = document.querySelector(".gems_c_label");
 const hazardite_amount_label = document.querySelector(".hazardite_c_label");
 const aluminium_amount_label = document.querySelector(".aluminium_c_label");
 
+const build1_button = document.querySelector(".buy_building1");
+const build2_button = document.querySelector(".buy_building2");
+const build3_button = document.querySelector(".buy_building3");
+const build4_button = document.querySelector(".buy_building4");
+const build5_button = document.querySelector(".buy_building5");
+const build6_button = document.querySelector(".buy_building6");
+const build7_button = document.querySelector(".buy_building7");
+const build8_button = document.querySelector(".buy_building8");
+const build9_button = document.querySelector(".buy_building9");
+const build10_button = document.querySelector(".buy_building10");
+const build11_button = document.querySelector(".buy_building11");
+const build12_button = document.querySelector(".buy_building12");
+const build13_button = document.querySelector(".buy_building13");
+const build14_button = document.querySelector(".buy_building14");
+const build15_button = document.querySelector(".buy_building15");
+const build16_button = document.querySelector(".buy_building16");
+const build17_button = document.querySelector(".buy_building17");
+const build18_button = document.querySelector(".buy_building18");
+
+const unit1_button = document.querySelector(".buy_unit1");
+const unit2_button = document.querySelector(".buy_unit2");
+const unit3_button = document.querySelector(".buy_unit3");
+const unit4_button = document.querySelector(".buy_unit4");
+const unit5_button = document.querySelector(".buy_unit5");
+const unit6_button = document.querySelector(".buy_unit6");
+const unit7_button = document.querySelector(".buy_unit7");
+const unit8_button = document.querySelector(".buy_unit8");
+const unit9_button = document.querySelector(".buy_unit9");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -104,6 +133,7 @@ let player_oil = 0;
 let player_hazardite = 0;
 let player_aluminium = 0;
 let player_gems = 0;
+let player_faction;
 
 //this is for goofy easter egg
 const d = new Date
@@ -140,12 +170,11 @@ function close_ya_base(){
 }
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
-    ore_amount_label.innerText= player_food;
-    gems_amount_label.innerText= player_food;
-    oil_amount_label.innerText= player_food;
-    hazardite_amount_label.innerText= player_food;
-    aluminium_amount_label.innerText= player_food;
-
+    ore_amount_label.innerText= player_ore;
+    gems_amount_label.innerText= player_gems;
+    oil_amount_label.innerText= player_oil;
+    hazardite_amount_label.innerText= player_hazardite;
+    aluminium_amount_label.innerText= player_aluminium;
 }
 //all the game starting functions lmao 
 function game_start(){
@@ -178,31 +207,102 @@ function game_init(){
     choose_faction();
 }
 function choose_faction(){
-    let player_faction;
     faction_choose.style.display="block";
-
     choose_yox_empire.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "yox_empire";
-        generate_map(player_faction);
+        root.style.setProperty("--player-color-pale", "#8855ee");
+        root.style.setProperty("--player-color-light", "#9966ff");
+        generate_map();
     }
     choose_humans.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "humans";
-        generate_map(player_faction);
+        root.style.setProperty("--player-color-pale", "#66ccee");
+        root.style.setProperty("--player-color-light", "#77ddff");
+        generate_map();
     }
     choose_pastans.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "pastans";
-        generate_map(player_faction);
+        root.style.setProperty("--player-color-pale", "#55eeaa");
+        root.style.setProperty("--player-color-light", "#66ffbb");
+        generate_map();
     }
     choose_scrapbots.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "scrapbots";
-        generate_map(player_faction);
+        root.style.setProperty("--player-color-pale", "#ee9955");     
+        root.style.setProperty("--player-color-light", "#ffaa66");
+        generate_map();
     }
 }
-function generate_map(player_faction){
+
+function generate_map(){
+
+    //HQ
+    if(player_faction==="humans"){
+        unit1_button.innerText="Labourer - 10 food";
+        unit2_button.innerText="Spearman - 10 food, 5 ore";
+        unit3_button.innerText="Warrior - 20 food, 10 ore";
+        unit4_button.innerText="Horseman - 20 food, 10 ore";
+        unit5_button.innerText="Archer - 10 food, 15 ore";
+        unit6_button.innerText = "Musketeer - 20 food, 20 ore";
+        unit7_button.innerText = "Gun car - 15 food, 30 ore, 1 aluminium";
+        unit8_button.innerText = "Juggernaut - 30 food, 30 ore, 1 hazardite";
+        unit9_button.innerText = "Tank - 25 food, 50 ore, 1 oil, 1 gem";
+
+        build3_button.innerText = "Barracks - 10 food, 10 ore";
+        build6_button.innerText = "Stables - 20 food, 20 ore";
+        build7_button.innerText = "Archery Range - 20 food, 20 ore";
+        build11_button.innerText = "Shooting Range - 25 food, 25 ore";
+        build15_button.innerText = "Garage - 35 food, 35 ore";
+        build16_button.innerText = "Elite Bootcamp - 40 food, 30 ore";
+        build18_button.innerText = "Tank Park - 45 food, 55 ore";
+    } 
+    else if (player_faction === "pastans") {
+        unit1_button.innerText = "Fusilli - 10 food";
+        unit2_button.innerText = "Penne - 10 food, 5 ore";
+        unit3_button.innerText = "Rigatoni - 20 food, 10 ore";
+        unit4_button.innerText = "Lasagna - 15 food, 15 ore";
+        unit5_button.innerText = "Orechiette - 15 food, 20 ore";
+        unit6_button.innerText = "Spaghetti - 25 food, 20 ore";
+        unit7_button.innerText = "Tagliatelle - 20 food, 30 ore, 1 hazardite";
+        unit8_button.innerText = "Farfalle - 30 food, 15 ore, 1 gem";
+        unit9_button.innerText = "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium";
+        
+        build3_button.innerText = "Spoon - 10 food, 10 ore";
+        build6_button.innerText = "Stables - 20 food, 20 ore";
+        build7_button.innerText = "Archery Range - 20 food, 20 ore";
+        build11_button.innerText = "Sieve - 25 food, 25 ore";
+        build15_button.innerText = "Grater - 35 food, 35 ore";
+        build16_button.innerText = "Plate - 40 food, 30 ore";
+        build18_button.innerText = "Pot - 45 food, 55 ore";
+    } 
+    else if (player_faction === "scrapbots") {
+        unit1_button.innerText = "Worker - 10 ore";
+        unit2_button.innerText = "Fodder - 5 food, 5 ore";
+        unit3_button.innerText = "Fighter - 10 food, 10 ore";
+        unit4_button.innerText = "Sprinter - 10 food, 15 ore";
+        unit5_button.innerText = "Shooter - 10 food, 15 ore";
+        unit6_button.innerText = "Skirmisher - 15 food, 15 ore";
+        unit7_button.innerText = "Pursuer - 20 food, 20 ore, 1 aluminium";
+        unit8_button.innerText = "Destroyer - 25 food, 25 ore, 1 oil";
+        unit9_button.innerText = "Annihilator - 25 food, 50 ore, 1 gem, 1 hazardite";
+    } 
+    else{
+        unit1_button.innerText = "Gnome - 10 food";
+        unit2_button.innerText = "Kobold - 10 food, 10 ore";
+        unit3_button.innerText = "Hoplite - 15 food, 15 ore";
+        unit4_button.innerText = "Strider - 20 food, 15 ore";
+        unit5_button.innerText = "Slingslime - 20 food, 15 ore";
+        unit6_button.innerText = "Lich - 30 food, 20 ore";
+        unit7_button.innerText = "Cerberus - 20 food, 20 ore, 1 aluminium";
+        unit8_button.innerText = "Leviathan - 30 food, 30 ore, 1 oil";
+        unit9_button.innerText = "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite";
+    }
+
+    //MAIN MAP
     hotbar.style.display = "block";
     for (let x = 1; x<26; x++){
         for (let y = 1; y<26; y++){
