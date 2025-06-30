@@ -32,6 +32,10 @@ const next_turn = document.querySelector(".next_turn");
 
 const hq_menu = document.querySelector(".hq_menu");
 const hq_close = document.querySelector(".hq_close");
+const hq_encycl = document.querySelector(".hq_info");
+
+const encycl = document.querySelector(".encycl");
+const encycl_close = document.querySelector(".encycl_close");
 
 const food_amount_label = document.querySelector(".food_c_label");
 const ore_amount_label = document.querySelector(".ore_c_label");
@@ -68,6 +72,86 @@ const unit6_button = document.querySelector(".buy_unit6");
 const unit7_button = document.querySelector(".buy_unit7");
 const unit8_button = document.querySelector(".buy_unit8");
 const unit9_button = document.querySelector(".buy_unit9");
+
+const encycl_entry1 = document.querySelector(".encycl_select_1");
+const encycl_entry2 = document.querySelector(".encycl_select_2");
+const encycl_entry3 = document.querySelector(".encycl_select_3");
+const encycl_entry4 = document.querySelector(".encycl_select_4");
+const encycl_entry5 = document.querySelector(".encycl_select_5");
+const encycl_entry6 = document.querySelector(".encycl_select_6");
+const encycl_entry7 = document.querySelector(".encycl_select_7");
+const encycl_entry8 = document.querySelector(".encycl_select_8");
+const encycl_entry9 = document.querySelector(".encycl_select_9");
+const encycl_entry10 = document.querySelector(".encycl_select_10");
+const encycl_entry11 = document.querySelector(".encycl_select_11");
+const encycl_entry12 = document.querySelector(".encycl_select_12");
+const encycl_entry13 = document.querySelector(".encycl_select_13");
+const encycl_entry14 = document.querySelector(".encycl_select_14");
+const encycl_entry15 = document.querySelector(".encycl_select_15");
+const encycl_entry16 = document.querySelector(".encycl_select_16");
+const encycl_entry17 = document.querySelector(".encycl_select_17");
+const encycl_entry18 = document.querySelector(".encycl_select_18");
+const encycl_entry19 = document.querySelector(".encycl_select_19");
+const encycl_entry20 = document.querySelector(".encycl_select_20");
+const encycl_entry21 = document.querySelector(".encycl_select_21");
+const encycl_entry22 = document.querySelector(".encycl_select_22");
+const encycl_entry23 = document.querySelector(".encycl_select_23");
+const encycl_entry24 = document.querySelector(".encycl_select_24");
+const encycl_entry25 = document.querySelector(".encycl_select_25");
+const encycl_entry26 = document.querySelector(".encycl_select_26");
+const encycl_entry27 = document.querySelector(".encycl_select_27");
+const encycl_entry28 = document.querySelector(".encycl_select_28");
+const encycl_entry29 = document.querySelector(".encycl_select_29");
+const encycl_entry30 = document.querySelector(".encycl_select_30");
+const encycl_entry31 = document.querySelector(".encycl_select_31");
+const encycl_entry32 = document.querySelector(".encycl_select_32");
+const encycl_entry33 = document.querySelector(".encycl_select_33");
+const encycl_entry34 = document.querySelector(".encycl_select_34");
+const encycl_entry35 = document.querySelector(".encycl_select_35");
+const encycl_entry36 = document.querySelector(".encycl_select_36");
+const encycl_entry37 = document.querySelector(".encycl_select_37");
+const encycl_entry38 = document.querySelector(".encycl_select_38");
+const encycl_entry39 = document.querySelector(".encycl_select_39");
+const encycl_entry40 = document.querySelector(".encycl_select_40");
+const encycl_entry41 = document.querySelector(".encycl_select_41");
+const encycl_entry42 = document.querySelector(".encycl_select_42");
+const encycl_entry43 = document.querySelector(".encycl_select_43");
+const encycl_entry44 = document.querySelector(".encycl_select_44");
+const encycl_entry45 = document.querySelector(".encycl_select_45");
+const encycl_entry46 = document.querySelector(".encycl_select_46");
+const encycl_entry47 = document.querySelector(".encycl_select_47");
+const encycl_entry48 = document.querySelector(".encycl_select_48");
+const encycl_entry49 = document.querySelector(".encycl_select_49");
+const encycl_entry50 = document.querySelector(".encycl_select_50");
+const encycl_entry51 = document.querySelector(".encycl_select_51");
+const encycl_entry52 = document.querySelector(".encycl_select_52");
+const encycl_entry53 = document.querySelector(".encycl_select_53");
+const encycl_entry54 = document.querySelector(".encycl_select_54");
+const encycl_entry55 = document.querySelector(".encycl_select_55");
+const encycl_entry56 = document.querySelector(".encycl_select_56");
+const encycl_entry57 = document.querySelector(".encycl_select_57");
+const encycl_entry58 = document.querySelector(".encycl_select_58");
+const encycl_entry59 = document.querySelector(".encycl_select_59");
+const encycl_entry60 = document.querySelector(".encycl_select_60");
+const encycl_entry61 = document.querySelector(".encycl_select_61");
+const encycl_entry62 = document.querySelector(".encycl_select_62");
+const encycl_entry63 = document.querySelector(".encycl_select_63");
+const encycl_entry64 = document.querySelector(".encycl_select_64");
+const encycl_entry65 = document.querySelector(".encycl_select_65");
+const encycl_entry66 = document.querySelector(".encycl_select_66");
+const encycl_entry67 = document.querySelector(".encycl_select_67");
+const encycl_entry68 = document.querySelector(".encycl_select_68");
+const encycl_entry69 = document.querySelector(".encycl_select_69");
+const encycl_entry70 = document.querySelector(".encycl_select_70");
+const encycl_entry71 = document.querySelector(".encycl_select_71");
+const encycl_entry72 = document.querySelector(".encycl_select_72");
+const encycl_entry73 = document.querySelector(".encycl_select_73");
+const encycl_entry74 = document.querySelector(".encycl_select_74");
+const encycl_entry75 = document.querySelector(".encycl_select_75");
+
+const encycl_infobox_title = document.querySelector(".encycl_infobox_title");
+const encycl_infobox_text = document.querySelector(".encycl_infobox_text");
+const encycl_infobox_image = document.querySelector(".encycl_infobox_image");
 
 const loading_images = [
     "backgrounds/black.jpg",
@@ -134,6 +218,7 @@ let player_hazardite = 0;
 let player_aluminium = 0;
 let player_gems = 0;
 let player_faction;
+let player_buildings = [];
 
 //this is for goofy easter egg
 const d = new Date
@@ -168,6 +253,16 @@ function open_ya_base(){
 function close_ya_base(){
     hq_menu.style.display="none";
 }
+function open_encycl(){
+    encycl.style.display = "block";
+    encycl_infobox_title.innerText="Click something to see information";
+    encycl_infobox_image.src="images/backgrounds/black.jpg";
+    encycl_infobox_text.innerText="Click something to see information";
+
+}
+function close_encycl(){
+    encycl.style.display = "none";
+}
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
     ore_amount_label.innerText= player_ore;
@@ -175,6 +270,79 @@ function update_resource_counters(){
     oil_amount_label.innerText= player_oil;
     hazardite_amount_label.innerText= player_hazardite;
     aluminium_amount_label.innerText= player_aluminium;
+}
+function open_encycl_entry(entry){
+    switch(entry){
+        case 1:
+            encycl_infobox_title.innerText="Labourer";
+            encycl_infobox_image.src="images/humans/labourer.png";
+            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            break; 
+        case 2:
+            encycl_infobox_title.innerText="Spearman";
+            encycl_infobox_image.src="images/humans/spearman.png";
+            encycl_infobox_text.innerText="Weak melee unit. Uses sharp pointy.";
+            break;
+        case 3:
+            encycl_infobox_title.innerText="Swordsman";
+            encycl_infobox_image.src="images/humans/swordsman.png";
+            encycl_infobox_text.innerText="Melee unit. Likes sunshine and beef.";
+            break;
+        case 4:
+            encycl_infobox_title.innerText="Horseman";
+            encycl_infobox_image.src="images/humans/horseman.png";
+            encycl_infobox_text.innerText="Fast melee unit. Neigh neigh";
+            break;
+        case 5:
+            encycl_infobox_title.innerText="Archer";
+            encycl_infobox_image.src="images/humans/archer.png";
+            encycl_infobox_text.innerText="Can shoot arrows (maybe)";
+            break;
+        case 6:
+            encycl_infobox_title.innerText="Musketeer";
+            encycl_infobox_image.src="images/humans/musketeer.png";
+            encycl_infobox_text.innerText="Own a musket for home defence. Can shoot and stab";
+            break;    
+        case 7:
+            encycl_infobox_title.innerText="Gun Car";
+            encycl_infobox_image.src="images/humans/gun_car.png";
+            encycl_infobox_text.innerText="Vroom pyew";
+            break;
+        case 8:
+            encycl_infobox_title.innerText="Juggernaut";
+            encycl_infobox_image.src="images/humans/juggernaut.png";
+            encycl_infobox_text.innerText="Real tough guy";
+            break;
+        case 9:
+            encycl_infobox_title.innerText="Tank";
+            encycl_infobox_image.src="images/humans/tank.png";
+            encycl_infobox_text.innerText="Slow and big but deadly. Not historically accurate.";
+            break;
+        case 10:
+            encycl_infobox_title.innerText="Fusilli";
+            encycl_infobox_image.src="images/humans/fusilli.png";
+            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            break;
+        case 11:
+            encycl_infobox_title.innerText="Penne";
+            encycl_infobox_image.src="images/humans/penne.png";
+            encycl_infobox_text.innerText="Shoots lasers from its hand. Weak but cheap";
+            break;
+        case 12:
+            encycl_infobox_title.innerText="Rigatoni";
+            encycl_infobox_image.src="images/humans/rigatoni.png";
+            encycl_infobox_text.innerText="A bombastic stabby man.";
+            break;
+        case 13:
+            encycl_infobox_title.innerText="Rigatoni";
+            encycl_infobox_image.src="images/humans/rigatoni.png";
+            encycl_infobox_text.innerText="A bombastic stabby man.";
+            break;
+        
+        
+        
+
+    }
 }
 //all the game starting functions lmao 
 function game_start(){
@@ -239,7 +407,6 @@ function choose_faction(){
 }
 
 function generate_map(){
-
     //HQ
     if(player_faction==="humans"){
         unit1_button.innerText="Labourer - 10 food";
@@ -272,11 +439,11 @@ function generate_map(){
         unit9_button.innerText = "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium";
         
         build3_button.innerText = "Spoon - 10 food, 10 ore";
-        build6_button.innerText = "Stables - 20 food, 20 ore";
-        build7_button.innerText = "Archery Range - 20 food, 20 ore";
+        build6_button.innerText = "Baking Tray - 20 food, 20 ore";
+        build7_button.innerText = "Bowl - 20 food, 20 ore";
         build11_button.innerText = "Sieve - 25 food, 25 ore";
         build15_button.innerText = "Grater - 35 food, 35 ore";
-        build16_button.innerText = "Plate - 40 food, 30 ore";
+        build16_button.innerText = "Plate - 30 food, 40 ore";
         build18_button.innerText = "Pot - 45 food, 55 ore";
     } 
     else if (player_faction === "scrapbots") {
@@ -289,6 +456,14 @@ function generate_map(){
         unit7_button.innerText = "Pursuer - 20 food, 20 ore, 1 aluminium";
         unit8_button.innerText = "Destroyer - 25 food, 25 ore, 1 oil";
         unit9_button.innerText = "Annihilator - 25 food, 50 ore, 1 gem, 1 hazardite";
+
+        build3_button.innerText = "Factory - 10 food, 10 ore";
+        build6_button.innerText = "Racetrack - 20 food, 20 ore";
+        build7_button.innerText = "Shooting Range - 20 food, 20 ore";
+        build11_button.innerText = "Spider Bunker - 25 food, 25 ore";
+        build15_button.innerText = "Airfield - 30 food, 40 ore";
+        build16_button.innerText = "Assembly Scaffolds - 30 food, 40 ore";
+        build18_button.innerText = "Supershell - 45 food, 55 ore";
     } 
     else{
         unit1_button.innerText = "Gnome - 10 food";
@@ -300,6 +475,14 @@ function generate_map(){
         unit7_button.innerText = "Cerberus - 20 food, 20 ore, 1 aluminium";
         unit8_button.innerText = "Leviathan - 30 food, 30 ore, 1 oil";
         unit9_button.innerText = "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite";
+
+        build3_button.innerText = "Graveyard - 10 food, 10 ore";
+        build6_button.innerText = "Silent Trees - 20 food, 20 ore";
+        build7_button.innerText = "Damp Cave - 20 food, 20 ore";
+        build11_button.innerText = "Forbidden Library - 25 food, 25 ore";
+        build15_button.innerText = "Hell's Kennel - 35 food, 35 ore";
+        build16_button.innerText = "Big Pit - 40 food, 30 ore";
+        build18_button.innerText = "Tower of Souls - 45 food, 55 ore";
     }
 
     //MAIN MAP
@@ -418,17 +601,6 @@ function do_the_game(){
     });
 }
 
-document.addEventListener("keydown", function(e) {
-    if (e.key === "ArrowLeft") {
-        // Left arrow pressed
-    } else if (e.key === "ArrowRight") {
-        // Right arrow pressed
-    } else if (e.key === "ArrowUp") {
-        // Up arrow pressed
-    } else if (e.key === "ArrowDown") {
-        // Down arrow pressed
-    }
-});
 /**ONCLICK ASSIGNMENTS**/
 smenu_settings.onclick = show_settings;
 set_close.onclick = hide_settings;
@@ -436,3 +608,10 @@ smenu_help.onclick = show_help;
 help_close.onclick = hide_help;
 smenu_play.onclick= game_start;
 hq_close.onclick = close_ya_base;
+hq_encycl.onclick = open_encycl;
+encycl_close.onclick = close_encycl;
+
+for (let i = 1; i <= 75; i++) {
+    const btn = document.querySelector(`.encycl_select_${i}`);
+    btn.onclick = () => open_encycl_entry(i);    
+}

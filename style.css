@@ -11,6 +11,15 @@
     --player-color-pale:#000000;
     --player-color-light:#000000;
     
+    --unit-one-unlocked:#ffffff;
+    --unit-two-unlocked:#ffffff;
+    --unit-three-unlocked:#ff0000;
+    --unit-four-unlocked:#ff0000;
+    --unit-five-unlocked:#ff0000;
+    --unit-six-unlocked:#ff0000;
+    --unit-seven-unlocked:#ff0000;
+    --unit-eight-unlocked:#ff0000;
+    --unit-nine-unlocked:#ff0000;
     
 }
 body{
@@ -72,7 +81,7 @@ body{
     border:5px solid black;
     background-color:#44ee44;
 }
-.set_close, .help_close, .hq_close{
+.set_close, .help_close, .hq_close, .encycl_close{
     margin-top:10px;
     margin-left:68vw;
     width:10vw;
@@ -87,7 +96,7 @@ body{
 .set_close:hover, .help_close:hover, .smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
     cursor:pointer;
 }
-.set_close:hover, .help_close:hover, .hq_close:hover{
+.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover{
     background-color:#ff6666;
 }
 span, div, button{
@@ -277,10 +286,31 @@ span, div, button{
     background-color:#000099;
     display:none;
 }
-.hq_close{
+.hq_close, .encycl_close{
     position:absolute;
     top:20px;
     right:20px;
+    height:auto;
+}
+.encycl_close:hover{
+    cursor:pointer;
+}
+.hq_info{
+    position:absolute;
+    top:30px;
+    width:10vw;
+    right:calc(40px + 10vw);
+    font-family: "Almendra SC", serif;
+    font-weight: 400;
+    font-style: normal;
+    text-align:center;
+    font-size:1em;
+    border:solid black 2px;
+    background-color:#7799dd;
+}
+.hq_info:hover{
+    background-color:#99bbff;
+    cursor:pointer;
 }
 .hq_buildings, .hq_units{
     position:absolute;
@@ -317,10 +347,101 @@ span, div, button{
     background-color:var(--player-color-light);
     border:2px solid white;
     font-weight:600;
+    cursor:pointer;
 }
+.buy_unit1:hover{
+    border:2px solid var(--unit-one-unlocked);
+}
+.buy_unit2:hover{
+    border:2px solid var(--unit-two-unlocked);
+}
+.buy_unit3:hover{
+    border:2px solid var(--unit-three-unlocked);
+}
+.buy_unit4:hover{
+    border:2px solid var(--unit-four-unlocked);
+}
+.buy_unit5:hover{
+    border:2px solid var(--unit-five-unlocked);
+}
+.buy_unit6:hover{
+    border:2px solid var(--unit-six-unlocked);
+}
+.buy_unit7:hover{
+    border:2px solid var(--unit-seven-unlocked);
+}
+.buy_unit8:hover{
+    border:2px solid var(--unit-eight-unlocked);
+}
+.buy_unit9:hover{
+    border:2px solid var(--unit-nine-unlocked);
+}
+
 .hq_buildings .buything{
     height:5%;
 }
+.encycl{
+    height:100vh;
+    width:100vw;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background-color:#d3bd92;
+    display:none;
+}
+.encycl_select{
+    height:100vh;
+    width:15vw;
+    background-color:#b9ab71;
+    border-right:3px solid black;
+    position:absolute;
+    top:0px;
+    left:0px;
+    overflow-y:scroll;
+}
+.e_es{
+    width:100%;
+    height:10%;
+    font-family:"Almendra SC";
+    background-color:#b9ab71;
+    border:2px solid black;
+}
+.e_es:hover{
+    background-color:#99bbdd;
+}
+.encycl_infobox{
+    width:60vw;
+    height:80vh;
+    position:absolute;
+    border:2px solid black;
+    background-color:#b9ab71;
+    top:10vh;
+    left:27.5vw;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:20px;
+}
+.encycl_infobox_title{
+    text-align:center;
+    font-family:"Almendra SC";
+    color:black;
+    font-weight:600;
+    font-size:1.8em;
+}
+.encycl_infobox_image{
+    width:40%;
+    height:auto;
+    margin:auto;
+    image-rendering: pixelated;    
+}
+.encycl_infobox_text{
+    text-align:center;
+    color:black;
+    font-family: "Almendra SC";
+    font-size:1.1em;
+}
+
 @keyframes spin{
     0%{
         left:20vw;
