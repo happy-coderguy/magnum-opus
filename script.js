@@ -320,24 +320,364 @@ function open_encycl_entry(entry){
             break;
         case 10:
             encycl_infobox_title.innerText="Fusilli";
-            encycl_infobox_image.src="images/humans/fusilli.png";
+            encycl_infobox_image.src="images/pastans/fusilli.png";
             encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
             break;
         case 11:
             encycl_infobox_title.innerText="Penne";
-            encycl_infobox_image.src="images/humans/penne.png";
+            encycl_infobox_image.src="images/pastans/penne.png";
             encycl_infobox_text.innerText="Shoots lasers from its hand. Weak but cheap";
             break;
         case 12:
             encycl_infobox_title.innerText="Rigatoni";
-            encycl_infobox_image.src="images/humans/rigatoni.png";
+            encycl_infobox_image.src="images/pastans/rigatoni.png";
             encycl_infobox_text.innerText="A bombastic stabby man.";
             break;
         case 13:
-            encycl_infobox_title.innerText="Rigatoni";
-            encycl_infobox_image.src="images/humans/rigatoni.png";
-            encycl_infobox_text.innerText="A bombastic stabby man.";
+            encycl_infobox_title.innerText="Lasagna";
+            encycl_infobox_image.src="images/pastans/lasagna.png";
+            encycl_infobox_text.innerText="Goes nice close to its enemies and then BLEHHH";
             break;
+        case 14:
+            encycl_infobox_title.innerText="Orechiette";
+            encycl_infobox_image.src="images/pastans/orechiette.png";
+            encycl_infobox_text.innerText="Ranged unit with many lasers.";
+            break;
+        case 15:
+            encycl_infobox_title.innerText="Spaghetti";
+            encycl_infobox_image.src="images/pastans/spaghetti.png";
+            encycl_infobox_text.innerText="Grandma's cooking leads to psychic awakening";
+            break;
+        case 16:
+            encycl_infobox_title.innerText="Tagliatelle";
+            encycl_infobox_image.src="images/pastans/tagliatelle.png";
+            encycl_infobox_text.innerText="Little gremlin big gun";
+            break;
+        case 17:
+            encycl_infobox_title.innerText="Farfalle";
+            encycl_infobox_image.src="images/pastans/farfalle.png";
+            encycl_infobox_text.innerText="It's ya boy Farfie who attacks twice. DJ Farfie OUT";
+            break;
+        case 18:
+            encycl_infobox_title.innerText="Macaroni";
+            encycl_infobox_image.src="images/pastans/macaroni.png";
+            encycl_infobox_text.innerText="Like El Macho but so macho he doesn't die, melee";
+            break;
+        case 19:
+            encycl_infobox_title.innerText="Builder";
+            encycl_infobox_image.src="images/scrapbots/builder.png";
+            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            break;
+        case 20:
+            encycl_infobox_title.innerText="Fodder";
+            encycl_infobox_image.src="images/scrapbots/fodder.png";
+            encycl_infobox_text.innerText="Melee. Lacks the intelligence to care about being fodder";
+            break;
+        case 21:
+            encycl_infobox_title.innerText="Fighter";
+            encycl_infobox_image.src="images/scrapbots/fighter.png";
+            encycl_infobox_text.innerText="Punchy punchy boi";
+            break;
+        case 22:
+            encycl_infobox_title.innerText="Sprinter";
+            encycl_infobox_image.src="images/scrapbots/sprinter.png";
+            encycl_infobox_text.innerText="Melee that shockingly can't run because no legs.";
+            break;
+        case 23:
+            encycl_infobox_title.innerText="Shooter";
+            encycl_infobox_image.src="images/scrapbots/shooter.png";
+            encycl_infobox_text.innerText="Most self-explanatory unit";
+            break;
+        case 24:
+            encycl_infobox_title.innerText="Skirmisher";
+            encycl_infobox_image.src="images/scrapbots/skirmisher.png";
+            encycl_infobox_text.innerText="Forgive me for naming it skirmisher even though it's not one";
+            break;
+        case 25:
+            encycl_infobox_title.innerText="Pursuer";
+            encycl_infobox_image.src="images/scrapbots/pursuer.png";
+            encycl_infobox_text.innerText="Be you here or be you there I shall reduce you to thin air";
+            break;
+        case 26:
+            encycl_infobox_title.innerText="Destroyer";
+            encycl_infobox_image.src="images/scrapbots/destroyer.png";
+            encycl_infobox_text.innerText="Unstoppable melee that will touch your opponents";
+            break;
+        case 27:
+            encycl_infobox_title.innerText="Annihilator";
+            encycl_infobox_image.src="images/scrapbots/annihilator.png";
+            encycl_infobox_text.innerText="Mike, why is the sun flying towards us?";
+            break;
+        case 28:
+            encycl_infobox_title.innerText="Gnome";
+            encycl_infobox_image.src="images/yox_empire/gnome.png";
+            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            break;
+        case 29:
+            encycl_infobox_title.innerText="Kobold";
+            encycl_infobox_image.src="images/yox_empire/kobold.png";
+            encycl_infobox_text.innerText="Melee unit that somehow manages to punch";
+            break;
+        case 30:
+            encycl_infobox_title.innerText="Hoplite";
+            encycl_infobox_image.src="images/yox_empire/hoplite.png";
+            encycl_infobox_text.innerText="Clickity click-clack, a discombobulating attack";
+            break;
+        case 31:
+            encycl_infobox_title.innerText="Strider";
+            encycl_infobox_image.src="images/yox_empire/strider.png";
+            encycl_infobox_text.innerText="Fast and melee";
+            break;
+        case 32:
+            encycl_infobox_title.innerText="Slingslime";
+            encycl_infobox_image.src="images/yox_empire/slingslime.png";
+            encycl_infobox_text.innerText="Shoots rocks cutely";
+            break;
+        case 33:
+            encycl_infobox_title.innerText="Lich";
+            encycl_infobox_image.src="images/yox_empire/lich.png";
+            encycl_infobox_text.innerText="I cast big fat laser";
+            break;
+        case 34:
+            encycl_infobox_title.innerText="Cerberus";
+            encycl_infobox_image.src="images/yox_empire/cerberus.png";
+            encycl_infobox_text.innerText="Fast, shoots you, punches you";
+            break;
+        case 35:
+            encycl_infobox_title.innerText="Leviathan";
+            encycl_infobox_image.src="images/yox_empire/leviathan.png";
+            encycl_infobox_text.innerText="Eats kobolds for breakfast";
+            break;
+        case 36:
+            encycl_infobox_title.innerText="Reaper";
+            encycl_infobox_image.src="images/yox_empire/reaper.png";
+            encycl_infobox_text.innerText="Deadly elite unit that will probably kill you";
+            break;
+        case 37:
+            encycl_infobox_title.innerText="Farm";
+            encycl_infobox_image.src="images/icons/food.png";
+            encycl_infobox_text.innerText="Gives you 5 more food each turn";
+            break;
+        case 38:
+            encycl_infobox_title.innerText="Quarry";
+            encycl_infobox_image.src="images/icons/ore.png";
+            encycl_infobox_text.innerText="Gives you 5 more ore each turn";
+            break;
+        case 39:
+            encycl_infobox_title.innerText="Marketplace";
+            encycl_infobox_image.src="images/icons/marketplace.png";
+            encycl_infobox_text.innerText="Allows for you to trade basic resources";
+            break;
+        case 40:
+            encycl_infobox_title.innerText="Walls";
+            encycl_infobox_image.src="images/icons/wall.png";
+            encycl_infobox_text.innerText="City health +50";
+            break;
+        case 41:
+            encycl_infobox_title.innerText="Mill";
+            encycl_infobox_image.src="images/icons/food.png";
+            encycl_infobox_text.innerText="Gives you 5 more food each turn";
+            break;
+        case 42:
+            encycl_infobox_title.innerText="Mineshafts";
+            encycl_infobox_image.src="images/icons/ore.png";
+            encycl_infobox_text.innerText="Gives you 5 more ore each turn";
+            break;
+        case 43:
+            encycl_infobox_title.innerText="Fortifications";
+            encycl_infobox_image.src="images/icons/fortifications.png";
+            encycl_infobox_text.innerText="City health +50";
+            break;
+        case 44:
+            encycl_infobox_title.innerText="University";
+            encycl_infobox_image.src="images/icons/science.png";
+            encycl_infobox_text.innerText="Unlock science";
+            break;
+        case 45:
+            encycl_infobox_title.innerText="Shopping Center";
+            encycl_infobox_image.src="images/icons/marketplace.png";
+            encycl_infobox_text.innerText="Allows you to trade all resources";
+            break;
+        case 46:
+            encycl_infobox_title.innerText="Hospital";
+            encycl_infobox_image.src="images/icons/hospital.png";
+            encycl_infobox_text.innerText="Units next to your city will heal at the end of your turn";
+            break;
+        case 47:
+            encycl_infobox_title.innerText="Research Center";
+            encycl_infobox_image.src="images/icons/science.png";
+            encycl_infobox_text.innerText="Unlock more science";
+            break;
+        case 48:
+            encycl_infobox_title.innerText="Barracks";
+            encycl_infobox_image.src="images/humans/swordsman.png";
+            encycl_infobox_text.innerText="Allows you to recuit Swordsmen";
+            break;
+        case 49:
+            encycl_infobox_title.innerText="Stables";
+            encycl_infobox_image.src="images/humans/horseman.png";
+            encycl_infobox_text.innerText="Allows you to recuit Horsemen";
+            break;
+        case 50:
+            encycl_infobox_title.innerText="Archery Range";
+            encycl_infobox_image.src="images/humans/archer.png";
+            encycl_infobox_text.innerText="Allows you to recuit Archers";
+            break;
+        case 51:
+            encycl_infobox_title.innerText="Shooting Range";
+            encycl_infobox_image.src="images/humans/musketeer.png";
+            encycl_infobox_text.innerText="Allows you to recuit Musketeers. Not to be confused with Shooting Range";
+            break;
+        case 52:
+            encycl_infobox_title.innerText="Garage";
+            encycl_infobox_image.src="images/humans/gun_car.png";
+            encycl_infobox_text.innerText="Allows you to recuit Gun Cars, has cool doors";
+            break;
+        case 53:
+            encycl_infobox_title.innerText="Elite Bootcamp";
+            encycl_infobox_image.src="images/humans/juggernaut.png";
+            encycl_infobox_text.innerText="Allows you to recuit Juggernauts, includes one (1) tree";
+            break;
+        case 54:
+            encycl_infobox_title.innerText="Tank Park";
+            encycl_infobox_image.src="images/humans/tank.png";
+            encycl_infobox_text.innerText="Allows you to recuit Tanks, includes two (2) trees";
+            break;
+        case 55:
+            encycl_infobox_title.innerText="Spoon";
+            encycl_infobox_image.src="images/pastans/rigatoni.png";
+            encycl_infobox_text.innerText="Allows you to recuit Rigatonines";
+            break;
+        case 56:
+            encycl_infobox_title.innerText="Baking Tray";
+            encycl_infobox_image.src="images/pastans/lasagna.png";
+            encycl_infobox_text.innerText="Allows you to recuit Lasagnae";
+            break;
+        case 57:
+            encycl_infobox_title.innerText="Bowl";
+            encycl_infobox_image.src="images/pastans/orechiette.png";
+            encycl_infobox_text.innerText="Allows you to recuit Orechietti";
+            break;
+        case 58:
+            encycl_infobox_title.innerText="Sieve";
+            encycl_infobox_image.src="images/pastans/spaghetti.png";
+            encycl_infobox_text.innerText="Allows you to recuit Spaghettis";
+            break;
+        case 59:
+            encycl_infobox_title.innerText="Grater";
+            encycl_infobox_image.src="images/pastans/tagliatelle.png";
+            encycl_infobox_text.innerText="Allows you to recuit Tagliatellae";
+            break;
+        case 60:
+            encycl_infobox_title.innerText="Plate";
+            encycl_infobox_image.src="images/pastans/farfalle.png";
+            encycl_infobox_text.innerText="Allows you to recuit Farfallae";
+            break;
+        case 61:
+            encycl_infobox_title.innerText="Pot";
+            encycl_infobox_image.src="images/pastans/macaroni.png";
+            encycl_infobox_text.innerText="Allows you to recuit Macarone";
+            break;
+        case 62:
+            encycl_infobox_title.innerText="Factory";
+            encycl_infobox_image.src="images/scrapbots/fighter.png";
+            encycl_infobox_text.innerText="Allows you to recuit Fighters";
+            break;
+        case 63:
+            encycl_infobox_title.innerText="Racetrack";
+            encycl_infobox_image.src="images/scrapbots/sprinter.png";
+            encycl_infobox_text.innerText="Allows you to recuit Sprinters, is the most boring circle track possible";
+            break;
+        case 64:
+            encycl_infobox_title.innerText="Shooting Range";
+            encycl_infobox_image.src="images/scrapbots/shooter.png";
+            encycl_infobox_text.innerText="Allows you to recuit Shooters. Not to be confused with Shooting Range";
+            break;
+        case 65:
+            encycl_infobox_title.innerText="Spider Bunker";
+            encycl_infobox_image.src="images/scrapbots/skirmisher.png";
+            encycl_infobox_text.innerText="Allows you to recuit Skirmishers, it's not a cave.";
+            break;
+        case 66:
+            encycl_infobox_title.innerText="Airfield";
+            encycl_infobox_image.src="images/scrapbots/pursuer.png";
+            encycl_infobox_text.innerText="Allows you to recuit Pursuers";
+            break;
+        case 67:
+            encycl_infobox_title.innerText="Assembly Scaffolds";
+            encycl_infobox_image.src="images/scrapbots/destroyer.png";
+            encycl_infobox_text.innerText="Allows you to recuit Destroyers. Looks like a spaceship launch pad";
+            break;
+        case 68:
+            encycl_infobox_title.innerText="Supershell";
+            encycl_infobox_image.src="images/scrapbots/annihilator.png";
+            encycl_infobox_text.innerText="Allows you to recuit Annihilators, like a dyson sphere but it builds the sun";
+            break;
+        case 69:
+            encycl_infobox_title.innerText="Graveyard";
+            encycl_infobox_image.src="images/yox_empire/hoplite.png";
+            encycl_infobox_text.innerText="Allows you to recuit Hoplites, has spiky trees";
+            break;
+        case 70:
+            encycl_infobox_title.innerText="Silent Trees";
+            encycl_infobox_image.src="images/yox_empire/strider.png";
+            encycl_infobox_text.innerText="Allows you to recuit Striders";
+            break;
+        case 71:
+            encycl_infobox_title.innerText="Damp Cave";
+            encycl_infobox_image.src="images/yox_empire/slingslime.png";
+            encycl_infobox_text.innerText="Allows you to recuit Slingslimes. Hat shop included";
+            break;
+        case 72:
+            encycl_infobox_title.innerText="Forbidden Library";
+            encycl_infobox_image.src="images/yox_empire/lich.png";
+            encycl_infobox_text.innerText="Allows you to recuit Liches";
+            break;
+        case 73:
+            encycl_infobox_title.innerText="Hell's Kennel";
+            encycl_infobox_image.src="images/yox_empire/cerberus.png";
+            encycl_infobox_text.innerText="Allows you to recuit Cerberuses";
+            break;
+        case 74:
+            encycl_infobox_title.innerText="Big Pit";
+            encycl_infobox_image.src="images/yox_empire/leviathan.png";
+            encycl_infobox_text.innerText="Allows you to recuit Leviathans, it's very big";
+            break;
+        case 75:
+            encycl_infobox_title.innerText="Tower of Souls";
+            encycl_infobox_image.src="images/yox_empire/reaper.png";
+            encycl_infobox_text.innerText="Allows you to recuit Reapers, has cool floating wisps";
+            break;
+        
+        
+        
+        /**
+         * build3_button.innerText = "Graveyard - 10 food, 10 ore";
+        build6_button.innerText = "Silent Trees - 20 food, 20 ore";
+        build7_button.innerText = "Damp Cave - 20 food, 20 ore";
+        build11_button.innerText = "Forbidden Library - 25 food, 25 ore";
+        build15_button.innerText = "Hell's Kennel - 35 food, 35 ore";
+        build16_button.innerText = "Big Pit - 40 food, 30 ore";
+        build18_button.innerText = "Tower of Souls - 45 food, 55 ore";
+    }  **/
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
