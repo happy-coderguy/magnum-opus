@@ -33,6 +33,9 @@ const next_turn = document.querySelector(".next_turn");
 const hq_menu = document.querySelector(".hq_menu");
 const hq_close = document.querySelector(".hq_close");
 const hq_encycl = document.querySelector(".hq_info");
+const hq_popup_div = document.querySelector(".hq_popup");
+const hq_popup_text = document.querySelector(".hq_popup_text");
+const hq_popup_ok = document.querySelector(".hq_popup_ok");
 
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
@@ -211,8 +214,8 @@ const loading_images = [
     "yox_empire/cerberus.png"
 ];
 
-let player_food = 0;
-let player_ore = 0;
+let player_food = 500;
+let player_ore = 500;
 let player_oil = 0;
 let player_hazardite = 0;
 let player_aluminium = 0;
@@ -246,7 +249,6 @@ function show_help(){
 function hide_help(){
     help.style.display="none";
 }
-//actual game functions lol
 function open_ya_base(){
     hq_menu.style.display="block";
 }
@@ -684,6 +686,35 @@ function open_encycl_entry(entry){
 
     }
 }
+function hq_popup(text){
+    hq_popup_div.style.display="block";
+    hq_popup_text.innerText=text;
+}
+function hq_popup_hide(){
+    hq_popup_div.style.display="none";
+}
+function buy_building_do(building_number){
+    switch(building_number){
+        case 1:
+            if(player_buildings.includes("Farm")){
+                hq_popup("You already built this")    
+            }
+            else{
+                if(player_food<5 || player_ore<5){
+                    hq_popup("You don't have enough resources")
+                }
+                else{
+                    player_buildings.push("Farm");
+                    player_food=player_food-5;
+                    player_ore=player_ore-5;
+                    build1_button.innerText = "Built";
+                    update_resource_counters();
+                }
+            }
+            break;
+            
+    }
+}
 //all the game starting functions lmao 
 function game_start(){
     start_menu.style.display="none";
@@ -721,6 +752,7 @@ function choose_faction(){
         player_faction = "yox_empire";
         root.style.setProperty("--player-color-pale", "#8855ee");
         root.style.setProperty("--player-color-light", "#9966ff");
+        root.style.setProperty("--player-color-dark", "#310080");
         generate_map();
     }
     choose_humans.onclick = function(){
@@ -728,6 +760,7 @@ function choose_faction(){
         player_faction = "humans";
         root.style.setProperty("--player-color-pale", "#66ccee");
         root.style.setProperty("--player-color-light", "#77ddff");
+        root.style.setProperty("--player-color-dark", "#0986a9");
         generate_map();
     }
     choose_pastans.onclick = function(){
@@ -735,6 +768,7 @@ function choose_faction(){
         player_faction = "pastans";
         root.style.setProperty("--player-color-pale", "#55eeaa");
         root.style.setProperty("--player-color-light", "#66ffbb");
+        root.style.setProperty("--player-color-dark", "#00aa47");
         generate_map();
     }
     choose_scrapbots.onclick = function(){
@@ -742,6 +776,7 @@ function choose_faction(){
         player_faction = "scrapbots";
         root.style.setProperty("--player-color-pale", "#ee9955");     
         root.style.setProperty("--player-color-light", "#ffaa66");
+        root.style.setProperty("--player-color-dark", "#aa5500");
         generate_map();
     }
 }
@@ -939,6 +974,7 @@ function do_the_game(){
             });
         }
     });
+    update_resource_counters();
 }
 
 /**ONCLICK ASSIGNMENTS**/
@@ -950,6 +986,26 @@ smenu_play.onclick= game_start;
 hq_close.onclick = close_ya_base;
 hq_encycl.onclick = open_encycl;
 encycl_close.onclick = close_encycl;
+build1_button.onclick = () => buy_building_do(1);
+build2_button.onclick =  () => buy_building_do(2);
+build3_button.onclick =  () => buy_building_do(3);
+build4_button.onclick =  () => buy_building_do(4);
+build5_button.onclick =  () => buy_building_do(5);
+build6_button.onclick =  () => buy_building_do(6);
+build7_button.onclick =  () => buy_building_do(7);
+build8_button.onclick =  () => buy_building_do(8);
+build9_button.onclick =  () => buy_building_do(9);
+build10_button.onclick =  () => buy_building_do(10);
+build11_button.onclick =  () => buy_building_do(11);
+build12_button.onclick =  () => buy_building_do(12);
+build13_button.onclick =  () => buy_building_do(13);
+build14_button.onclick =  () => buy_building_do(14);
+build15_button.onclick =  () => buy_building_do(15);
+build16_button.onclick =  () => buy_building_do(16);
+build17_button.onclick =  () => buy_building_do(17);
+build18_button.onclick =  () => buy_building_do(18);
+hq_popup_ok.onclick=hq_popup_hide;
+
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);

@@ -10,6 +10,7 @@
     --scrapbots-color-light:#ffaa66;
     --player-color-pale:#000000;
     --player-color-light:#000000;
+    --player-color-dark:#000000;
     
     --unit-one-unlocked:#ffffff;
     --unit-two-unlocked:#ffffff;
@@ -283,7 +284,7 @@ span, div, button{
     left:0px;
     width:100vw;
     height:100vh;
-    background-color:#000099;
+    background-color:var(--player-color-dark);
     display:none;
 }
 .hq_close, .encycl_close{
@@ -440,6 +441,40 @@ span, div, button{
     color:black;
     font-family: "Almendra SC";
     font-size:1.1em;
+}
+.hq_popup{
+    width:80vw;
+    height:80vh;
+    position:absolute;
+    top:10vh;
+    left:10vw;
+    background-color:#bb77aa;
+    border:5px solid black;
+    z-index:999999;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    display:none;
+}
+.hq_popup_text{
+    display:block;
+    font-family:"Almendra SC";
+    color:black;
+    font-size:2em;
+    margin-top:10px;
+    text-align:center;
+}
+.hq_popup_ok{
+    display:block;
+    margin:auto;
+    width:50%;
+    height:20%;
+    background-color:#aa5599;
+    font-family:"Almendra SC";
+    margin-top:15%;
+}
+.hq_popup_ok:hover{
+    background-color:#bb66aa;
 }
 
 @keyframes spin{
