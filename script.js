@@ -36,6 +36,7 @@ const hq_encycl = document.querySelector(".hq_info");
 const hq_popup_div = document.querySelector(".hq_popup");
 const hq_popup_text = document.querySelector(".hq_popup_text");
 const hq_popup_ok = document.querySelector(".hq_popup_ok");
+const hq_market = document.querySelector(".hq_market");
 
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
@@ -156,6 +157,8 @@ const encycl_infobox_title = document.querySelector(".encycl_infobox_title");
 const encycl_infobox_text = document.querySelector(".encycl_infobox_text");
 const encycl_infobox_image = document.querySelector(".encycl_infobox_image");
 
+const marketplace=document.querySelector(".marketplace");
+
 const loading_images = [
     "backgrounds/black.jpg",
     "backgrounds/menu.png",
@@ -227,6 +230,8 @@ let player_buildings = [];
 const d = new Date
 let time = d.getTime();
 
+let building_inq;
+
 /**FUNCTIONS**/
 function show_settings(){
     //code for goofy easter egg
@@ -264,6 +269,14 @@ function open_encycl(){
 }
 function close_encycl(){
     encycl.style.display = "none";
+}
+function open_marketplace(){
+    if(player_buildings.includes("Marketplace")){
+        marketplace.style.display="block";
+    }
+    else{
+        hq_popup("You need to build the Marketplace first")
+    }
 }
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
@@ -712,6 +725,69 @@ function buy_building_do(building_number){
                 }
             }
             break;
+        case 2:
+            if(player_buildings.includes("Quarry")){
+                hq_popup("You already built this")    
+            }
+            else{
+                if(player_food<5 || player_ore<5){
+                    hq_popup("You don't have enough resources")
+                }
+                else{
+                    player_buildings.push("Quarry");
+                    player_food=player_food-5;
+                    player_ore=player_ore-5;
+                    build2_button.innerText = "Built";
+                    update_resource_counters();
+                }
+            }
+            break;
+        case 3:
+            if(player_faction==="humans"){
+                building_inq="Barracks";
+            }
+            else if(player_faction==="pastans"){
+                building_inq="Spoon";
+            }
+            else if(player_faction==="scrapbots"){
+                building_inq="Factory";
+            }
+            else{
+                building_inq="Graveyard";
+            }
+            if(player_buildings.includes(building_inq)){
+                hq_popup("You already built this")    
+            }
+            else{
+                if(player_food<10 || player_ore<10){
+                    hq_popup("You don't have enough resources")
+                }
+                else{
+                    player_buildings.push(building_inq);
+                    player_food=player_food-10;
+                    player_ore=player_ore-10;
+                    build3_button.innerText = "Built";
+                    update_resource_counters();
+                }
+            }
+            break;
+        case 4:
+            if(player_buildings.includes("Marketplace")){
+                hq_popup("You already built this")    
+            }
+            else{
+                if(player_food<10 || player_ore<10){
+                    hq_popup("You don't have enough resources")
+                }
+                else{
+                    player_buildings.push("Marketplace");
+                    player_food=player_food-10;
+                    player_ore=player_ore-10;
+                    build4_button.innerText = "Built";
+                    update_resource_counters();
+                }
+            }
+            break;
             
     }
 }
@@ -1005,7 +1081,7 @@ build16_button.onclick =  () => buy_building_do(16);
 build17_button.onclick =  () => buy_building_do(17);
 build18_button.onclick =  () => buy_building_do(18);
 hq_popup_ok.onclick=hq_popup_hide;
-
+hq_market.onclick=open_marketplace;
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);

@@ -293,21 +293,38 @@ span, div, button{
     right:20px;
     height:auto;
 }
+.hq_close:hover{
+    cursor:pointer;
+}
 .encycl_close:hover{
     cursor:pointer;
 }
-.hq_info{
+.hq_info, .hq_market{
     position:absolute;
     top:30px;
     width:10vw;
-    right:calc(40px + 10vw);
     font-family: "Almendra SC", serif;
     font-weight: 400;
     font-style: normal;
     text-align:center;
     font-size:1em;
     border:solid black 2px;
+}
+.hq_info{
+    right:calc(40px + 10vw);
     background-color:#7799dd;
+}
+.hq_info:hover{
+    background-color:#99bbff;
+    cursor:pointer;
+}
+.hq_market{
+    right:calc(60px + 20vw);
+    background-color:#ffee55;
+}
+.hq_market:hover{
+    background-color:#ffff88;
+    cursor:pointer;
 }
 .hq_info:hover{
     background-color:#99bbff;
@@ -476,7 +493,15 @@ span, div, button{
 .hq_popup_ok:hover{
     background-color:#bb66aa;
 }
-
+.marketplace{
+    background:linear-gradient(#ffff88, #aaffaa);
+    position:absolute;
+    width:100vw;
+    height:100vh;
+    top:0px;
+    left:0px;
+    display:none;
+}
 @keyframes spin{
     0%{
         left:20vw;
