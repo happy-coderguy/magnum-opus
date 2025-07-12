@@ -47,6 +47,12 @@ const oil_amount_label = document.querySelector(".oil_c_label");
 const gems_amount_label = document.querySelector(".gems_c_label");
 const hazardite_amount_label = document.querySelector(".hazardite_c_label");
 const aluminium_amount_label = document.querySelector(".aluminium_c_label");
+const food_amount_label2 = document.querySelector(".food_c_label2");
+const ore_amount_label2 = document.querySelector(".ore_c_label2");
+const oil_amount_label2 = document.querySelector(".oil_c_label2");
+const gems_amount_label2 = document.querySelector(".gems_c_label2");
+const hazardite_amount_label2 = document.querySelector(".hazardite_c_label2");
+const aluminium_amount_label2 = document.querySelector(".aluminium_c_label2");
 
 const build1_button = document.querySelector(".buy_building1");
 const build2_button = document.querySelector(".buy_building2");
@@ -158,6 +164,9 @@ const encycl_infobox_text = document.querySelector(".encycl_infobox_text");
 const encycl_infobox_image = document.querySelector(".encycl_infobox_image");
 
 const marketplace=document.querySelector(".marketplace");
+const marketplace_close = document.querySelector(".marketplace_close");
+const marketplace1 = document.querySelector(".marketplace1");
+const marketplace2 = document.querySelector(".marketplace2");
 
 const loading_images = [
     "backgrounds/black.jpg",
@@ -278,6 +287,9 @@ function open_marketplace(){
         hq_popup("You need to build the Marketplace first")
     }
 }
+function close_marketplace(){
+    marketplace.style.display="none";
+}
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
     ore_amount_label.innerText= player_ore;
@@ -285,6 +297,12 @@ function update_resource_counters(){
     oil_amount_label.innerText= player_oil;
     hazardite_amount_label.innerText= player_hazardite;
     aluminium_amount_label.innerText= player_aluminium;
+    food_amount_label2.innerText= player_food;
+    ore_amount_label2.innerText= player_ore;
+    gems_amount_label2.innerText= player_gems;
+    oil_amount_label2.innerText= player_oil;
+    hazardite_amount_label2.innerText= player_hazardite;
+    aluminium_amount_label2.innerText= player_aluminium;
 }
 function open_encycl_entry(entry){
     switch(entry){
@@ -1082,8 +1100,11 @@ build17_button.onclick =  () => buy_building_do(17);
 build18_button.onclick =  () => buy_building_do(18);
 hq_popup_ok.onclick=hq_popup_hide;
 hq_market.onclick=open_marketplace;
+marketplace_close.onclick=close_marketplace;
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
     btn.onclick = () => open_encycl_entry(i);    
 }
+
+update_resource_counters();

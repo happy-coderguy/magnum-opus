@@ -82,7 +82,7 @@ body{
     border:5px solid black;
     background-color:#44ee44;
 }
-.set_close, .help_close, .hq_close, .encycl_close{
+.set_close, .help_close, .hq_close, .encycl_close, .marketplace_close{
     margin-top:10px;
     margin-left:68vw;
     width:10vw;
@@ -97,7 +97,7 @@ body{
 .set_close:hover, .help_close:hover, .smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
     cursor:pointer;
 }
-.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover{
+.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover, .marketplace_close:hover{
     background-color:#ff6666;
 }
 span, div, button{
@@ -274,7 +274,7 @@ span, div, button{
     width:32px;
     height:32px;
 }
-.food_c_label, .ore_c_label, .oil_c_label, .gems_c_label, .hazardite_c_label, .aluminium_c_label{
+.food_c_label, .ore_c_label, .oil_c_label, .gems_c_label, .hazardite_c_label, .aluminium_c_label,.food_c_label2, .ore_c_label2, .oil_c_label2, .gems_c_label2, .hazardite_c_label2, .aluminium_c_label2{
     font-size:auto;
 }
 .hq_menu{
@@ -287,7 +287,7 @@ span, div, button{
     background-color:var(--player-color-dark);
     display:none;
 }
-.hq_close, .encycl_close{
+.hq_close, .encycl_close, .marketplace_close{
     position:absolute;
     top:20px;
     right:20px;
@@ -296,7 +296,7 @@ span, div, button{
 .hq_close:hover{
     cursor:pointer;
 }
-.encycl_close:hover{
+.encycl_close:hover, .marketplace_close:hover{
     cursor:pointer;
 }
 .hq_info, .hq_market{
@@ -501,6 +501,36 @@ span, div, button{
     top:0px;
     left:0px;
     display:none;
+}
+.marketplace1, .marketplace2{
+    height:70vh;
+    width:40vw;
+    border:3px solid black;
+    background:#bbaa77;
+}
+.marketplace1{
+    position:absolute;
+    top:10vh;
+    left:5vw;
+}
+.marketplace2{
+    position:absolute;
+    top:10vh;
+    right:5vw;
+}
+.marketplace_resource_counter{
+    position:absolute;
+    bottom:0px;
+    width:100%;
+    left:0px;
+    height:10vh;
+    background-color:#7799dd;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:10px;
+    border:3px solid black;
+
 }
 @keyframes spin{
     0%{
