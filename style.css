@@ -23,6 +23,7 @@
     --unit-nine-unlocked:#ff0000;
 
     --hq-market-unlocked:#ff0000;
+    --hq-university-unlocked:#ff0000;
     
 }
 body{
@@ -304,7 +305,7 @@ span, div, button{
 .encycl_close:hover, .marketplace_close:hover{
     cursor:pointer;
 }
-.hq_info, .hq_market{
+.hq_info, .hq_market, .hq_research{
     position:absolute;
     top:30px;
     width:10vw;
@@ -332,9 +333,15 @@ span, div, button{
     cursor:pointer;
     border:2px solid var(--hq-market-unlocked);
 }
-.hq_info:hover{
-    background-color:#99bbff;
+.hq_research{
+    position:absolute;
+    right:calc(80px + 30vw);
+    background-color:#00dd33;
+}
+.hq_research:hover{
     cursor:pointer;
+    border:2px solid var(--hq-university-unlocked);
+    background-color:#11ff55;
 }
 .hq_buildings, .hq_units{
     position:absolute;
@@ -346,6 +353,11 @@ span, div, button{
     justify-content:center;
     flex-direction: column;
     align-items:center;
+    overflow:hidden;
+    scrollbar-width: 0px;
+}
+.hq_buildings > ::-webkit-scrollbar, .hq_units > ::-webkit-scrollbar{
+    display:none;
 }
 .hq_buildings{
     left:5vw;
@@ -354,7 +366,6 @@ span, div, button{
 .hq_units{
     left:55vw;
     top:10vh;
-    overflow-y:scroll;
     height:80vh;
 }
 .buything{
@@ -422,7 +433,27 @@ span, div, button{
     top:0px;
     left:0px;
     overflow-y:scroll;
+    overflow-x:hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #b9ab71 #d3bd92;
 }
+
+.encycl_select::-webkit-scrollbar {
+    width: 8px;
+    background: #d3bd92;
+}
+
+.encycl_select::-webkit-scrollbar-thumb {
+    background: #a89a60;
+    border-radius: 4px;
+    border: 1px solid #8c7c3a;
+}
+
+.encycl_select::-webkit-scrollbar-track {
+    background: #d3bd92;
+}
+    
+
 .e_es{
     width:100%;
     height:10%;
@@ -576,6 +607,9 @@ span, div, button{
     height:50%;
     width:auto;
 }
+
+
+
 @keyframes spin{
     0%{
         left:20vw;

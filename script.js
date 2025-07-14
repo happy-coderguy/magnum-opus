@@ -288,7 +288,7 @@ function close_encycl(){
 function open_marketplace(){
     if(player_buildings.includes("Marketplace")){
         marketplace.style.display="block";
-        if(player_buildings.includes("Research Center")){
+        if(player_buildings.includes("Shopping Center")){
             marketplace2.style.display="block";
         }
         else{
@@ -845,9 +845,162 @@ function buy_building_do(building_number){
                 player_ore=player_ore-10;
                 build5_button.innerText="Built";
                 update_resource_counters();
+                player_hq_health=player_hq_health+100;
+                player_hq_maxhealth=player_hq_maxhealth+100;
+            }
+            break; 
+        case 6:
+            if(player_faction==="humans"){
+                building_inq="Stables";
+            }
+            else if(player_faction==="pastans"){
+                building_inq="Baking Tray";
+            }
+            else if(player_faction==="scrapbots"){
+                building_inq="Racetrack";
+            }
+            else{
+                building_inq="Silent Trees";
+            }
+
+            if(player_buildings.includes(building_inq)){
+                hq_popup("You already built this")    
+            }
+            else if(player_food<20 || player_ore<20){
+                hq_popup("You don't have enough resources")
+            }
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-four-unlocked","#ffffff");
+                player_food=player_food-20;
+                player_ore=player_ore-20;
+                build6_button.innerText = "Built";
+                update_resource_counters();
             }
             break;
-            
+        case 7:
+            if(player_faction==="humans"){
+                building_inq="Archery Range";
+            }
+            else if(player_faction==="pastans"){
+                building_inq="Bowl";
+            }
+            else if(player_faction==="scrapbots"){
+                building_inq="Shooting Range";
+            }
+            else{
+                building_inq="Damp Cave";
+            }
+
+            if(player_buildings.includes(building_inq)){
+                hq_popup("You already built this")    
+            }
+            else if(player_food<20 || player_ore<20){
+                hq_popup("You don't have enough resources")
+            }
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-five-unlocked","#ffffff");
+                player_food=player_food-20;
+                player_ore=player_ore-20;
+                build7_button.innerText = "Built";
+                update_resource_counters();
+            }
+            break;
+        case 8:
+            if(player_buildings.includes("Mill")){
+                hq_popup("You already built this");
+            }
+            else if (player_food<20 || player_ore<20){
+                hq_popup("You don't have enough resources");
+            }
+            else{
+                player_buildings.push("Mill");
+                player_food=player_food-20;
+                player_ore=player_ore-20;
+                build8_button.innerText = "Built";
+                update_resource_counters();
+            }
+            break;
+        case 9:
+            if(player_buildings.includes("Mineshafts")){
+                hq_popup("You already built this");
+            }
+            else if (player_food<20 || player_ore<20){
+                hq_popup("You don't have enough resources");
+            }
+            else{
+                player_buildings.push("Mineshafts");
+                player_food=player_food-20;
+                player_ore=player_ore-20;
+                build9_button.innerText = "Built";
+                update_resource_counters();
+            }
+            break;
+        case 10:
+            if(player_buildings.includes("Fortifications")){
+                hq_popup("You already built this");
+            }
+            else if(player_food<20 || player_ore<20){
+                hq_popup("You don't have enough resources");
+            }
+            else{
+                player_buildings.push("Fortifications");
+                player_food=player_food-20;
+                player_ore=player_ore-20;
+                build10_button.innerText="Built";
+                update_resource_counters();
+                player_hq_health=player_hq_health+50;
+                player_hq_maxhealth=player_hq_maxhealth+50;
+                player_hq_power=player_hq_power+5;
+            }
+            break; 
+        case 11:
+            if(player_faction==="humans"){
+                building_inq="Shooting Range";
+            }
+            else if(player_faction==="pastans"){
+                building_inq="Sieve";
+            }
+            else if(player_faction==="scrapbots"){
+                building_inq="Spider Bunker";
+            }
+            else{
+                building_inq="Forbidden Library";
+            }
+
+            if(player_buildings.includes(building_inq)){
+                hq_popup("You already built this")    
+            }
+            else if(player_food<25 || player_ore<25){
+                hq_popup("You don't have enough resources")
+            }
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-six-unlocked","#ffffff");
+                player_food=player_food-25;
+                player_ore=player_ore-25;
+                build11_button.innerText = "Built";
+                update_resource_counters();
+            }
+            break;
+        case 12:
+            if(player_buildings.includes("University")){
+                hq_popup("You already built this");
+            }
+            else if(player_food<30 || player_ore<30){
+                hq_popup("You don't have enough resources");
+            }
+            else{
+                player_buildings.push("University");
+                player_food=player_food-30;
+                player_ore=player_ore-30;
+                build12_button.innerText="Built";
+                update_resource_counters();
+                root.style.setProperty("--hq-university-unlocked", "#000000");
+            }
+            break; 
+
     }
 }
 
