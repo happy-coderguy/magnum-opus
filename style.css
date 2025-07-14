@@ -21,6 +21,8 @@
     --unit-seven-unlocked:#ff0000;
     --unit-eight-unlocked:#ff0000;
     --unit-nine-unlocked:#ff0000;
+
+    --hq-market-unlocked:#ff0000;
     
 }
 body{
@@ -265,6 +267,8 @@ span, div, button{
     width:15%;
     height:90%;
     font-size:2em;
+    display:flex;
+    justify-content:center;
 }
 .counters_container span {
     color: white;
@@ -276,6 +280,7 @@ span, div, button{
 }
 .food_c_label, .ore_c_label, .oil_c_label, .gems_c_label, .hazardite_c_label, .aluminium_c_label,.food_c_label2, .ore_c_label2, .oil_c_label2, .gems_c_label2, .hazardite_c_label2, .aluminium_c_label2{
     font-size:auto;
+    font-family:"Almendra SC";
 }
 .hq_menu{
     position:absolute;
@@ -325,6 +330,7 @@ span, div, button{
 .hq_market:hover{
     background-color:#ffff88;
     cursor:pointer;
+    border:2px solid var(--hq-market-unlocked);
 }
 .hq_info:hover{
     background-color:#99bbff;
@@ -512,6 +518,10 @@ span, div, button{
     position:absolute;
     top:10vh;
     left:5vw;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    
 }
 .marketplace2{
     position:absolute;
@@ -528,9 +538,43 @@ span, div, button{
     display:flex;
     flex-direction: row;
     justify-content: center;
-    gap:10px;
     border:3px solid black;
-
+}
+.ore_to_food{
+    height:30%;
+    width:80%;
+    border:2px solid black;
+    background:linear-gradient(90deg, #444444, #ffffff);
+    margin-left:10%;
+}
+.food_to_ore{
+    height:30%;
+    width:80%;
+    border:2px solid black;
+    background:linear-gradient(90deg,#ffffff, #444444);
+    margin-left:10%;
+}
+.ore_to_food, .food_to_ore{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:20px;
+    font-size:2.2em;
+    font-family:"Almendra SC";
+    align-items:center;
+}
+.ore_to_food > img, .food_to_ore > img{
+    image-rendering: pixelated;
+}
+.ore_to_food:hover{
+    background:linear-gradient(90deg, #666666, #ffffff);
+}
+.food_to_ore:hover{
+    background:linear-gradient(90deg, #ffffff, #666666);
+}
+.fto_img, .otf_img{
+    height:50%;
+    width:auto;
 }
 @keyframes spin{
     0%{
