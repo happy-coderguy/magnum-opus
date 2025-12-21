@@ -694,40 +694,6 @@ function open_encycl_entry(entry){
             encycl_infobox_image.src="images/yox_empire/reaper.png";
             encycl_infobox_text.innerText="Allows you to recuit Reapers, has cool floating wisps";
             break;
-        
-        
-        
-        /**
-         * build3_button.innerText = "Graveyard - 10 food, 10 ore";
-        build6_button.innerText = "Silent Trees - 20 food, 20 ore";
-        build7_button.innerText = "Damp Cave - 20 food, 20 ore";
-        build11_button.innerText = "Forbidden Library - 25 food, 25 ore";
-        build15_button.innerText = "Hell's Kennel - 35 food, 35 ore";
-        build16_button.innerText = "Big Pit - 40 food, 30 ore";
-        build18_button.innerText = "Tower of Souls - 45 food, 55 ore";
-    }  **/
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
     }
 }
 function hq_popup(text){
