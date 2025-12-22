@@ -24,7 +24,6 @@
 
     --hq-market-unlocked:#ff0000;
     --hq-university-unlocked:#ff0000;
-    
 }
 body{
     width:100vw;
@@ -33,6 +32,10 @@ body{
     background-image:var(--back-image);
     background-size:100% 100%;
 }
+span, div, button{
+    user-select: none;
+}
+/**MAIN MENU**/
 .start_menu{
     width:80vw;
     position:absolute;
@@ -41,7 +44,6 @@ body{
     top:10vh;
     background:linear-gradient(#c2ac88, #ccac99,#c2ac88);
     border:5px solid #223344;
-
 }
 .smenu_play{
     height:calc(24vh - 6px);
@@ -51,7 +53,6 @@ body{
 .smenu_settings, .smenu_help{
     height:calc(16vh - 6px);
     margin-top:8vh;
-
 }
 .smenu_play, .smenu_settings, .smenu_help{
     padding:0;
@@ -69,11 +70,6 @@ body{
 .smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
     background-color:#cccc99;
     font-size:3.55em;
-}
-.almendra_sc_regular {
-    font-family: "Almendra SC", serif;
-    font-weight: 400;
-    font-style: normal;
 }
 .settings{
     width:80vw;
@@ -100,27 +96,6 @@ body{
 .smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
     cursor:pointer;
 }
-.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover, .marketplace_close:hover, .research_close:hover{
-    background-color:#ff6666;
-    cursor:pointer;
-}
-.hq_close, .encycl_close, .marketplace_close, .research_close{
-    position:absolute;
-    top:20px;
-    right:20px;
-    height:auto;
-    background-color:red;
-    font-family:"Almendra SC", serif;
-    font-weight:400;
-    font-style:normal;
-    text-align:center;
-    font-size:1em;
-    border:solid black 2px;
-    width:10vw;
-}
-span, div, button{
-    user-select: none;
-}
 .set_caption{
     margin-left:5px;
     font-family: "Almendra SC", serif;
@@ -128,7 +103,6 @@ span, div, button{
     font-style: normal;
     text-align:center;
     font-size:2em;
-
 }
 .help{
     width:80vw;
@@ -151,6 +125,26 @@ span, div, button{
     text-align:center;
     text-wrap:wrap;
 }
+/**CLOSE BUTTONS**/
+.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover, .marketplace_close:hover, .research_close:hover{
+    background-color:#ff6666;
+    cursor:pointer;
+}
+.hq_close, .encycl_close, .marketplace_close, .research_close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    height:auto;
+    background-color:red;
+    font-family:"Almendra SC", serif;
+    font-weight:400;
+    font-style:normal;
+    text-align:center;
+    font-size:1em;
+    border:solid black 2px;
+    width:10vw;
+}
+/**LOADING STUFF**/
 .loader_cover{
     position:absolute;
     top:0px;
@@ -182,6 +176,7 @@ span, div, button{
     display:none;
     image-rendering:pixelated;
 }
+/**GAME START**/
 .faction_choose{
     position:absolute;
     width:80vw;
@@ -232,6 +227,7 @@ span, div, button{
 .choose_humans:hover, .choose_yox_empire:hover, .choose_scrapbots:hover, .choose_pastans:hover{
     cursor:pointer;
 }
+/**MAIN MAP**/
 .tile{
     position:absolute;
     image-rendering: pixelated;
@@ -299,6 +295,7 @@ span, div, button{
     font-size:auto;
     font-family:"Almendra SC";
 }
+/**HQ MENU**/
 .hq_menu{
     position:absolute;
     z-index:9999;
@@ -419,6 +416,43 @@ span, div, button{
 .hq_buildings .buything{
     height:5%;
 }
+.hq_popup{
+    width:80vw;
+    height:80vh;
+    position:absolute;
+    top:10vh;
+    left:10vw;
+    background-color:var(--player-color-light);
+    border:5px solid black;
+    z-index:999999;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    display:none;
+}
+.hq_popup_text{
+    display:block;
+    font-family:"Almendra SC";
+    color:black;
+    font-size:2.5em;
+    margin-top:10px;
+    text-align:center;
+}
+.hq_popup_ok{
+    display:block;
+    margin:auto;
+    width:50%;
+    height:20%;
+    background-color:var(--player-color-dark);
+    font-family:"Almendra SC";
+    margin-top:15%;
+    font-size:2em;
+    border:2px solid black;
+}
+.hq_popup_ok:hover{
+    background-color:var(--player-color-pale);
+}
+/**ENCYCLOPOEDIA**/
 .encycl{
     height:100vh;
     width:100vw;
@@ -456,8 +490,6 @@ span, div, button{
 .encycl_select::-webkit-scrollbar-track {
     background: #d3bd92;
 }
-    
-
 .e_es{
     width:100%;
     height:10%;
@@ -500,42 +532,7 @@ span, div, button{
     font-family: "Almendra SC";
     font-size:1.1em;
 }
-.hq_popup{
-    width:80vw;
-    height:80vh;
-    position:absolute;
-    top:10vh;
-    left:10vw;
-    background-color:var(--player-color-light);
-    border:5px solid black;
-    z-index:999999;
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    display:none;
-}
-.hq_popup_text{
-    display:block;
-    font-family:"Almendra SC";
-    color:black;
-    font-size:2.5em;
-    margin-top:10px;
-    text-align:center;
-}
-.hq_popup_ok{
-    display:block;
-    margin:auto;
-    width:50%;
-    height:20%;
-    background-color:var(--player-color-dark);
-    font-family:"Almendra SC";
-    margin-top:15%;
-    font-size:2em;
-    border:2px solid black;
-}
-.hq_popup_ok:hover{
-    background-color:var(--player-color-pale);
-}
+/**MARKETPLACE**/
 .marketplace{
     background:linear-gradient(#ffff88, #aaffaa);
     position:absolute;
@@ -613,6 +610,7 @@ span, div, button{
     height:50%;
     width:auto;
 }
+/**RESEARCH**/
 .research{
     height:100vh;
     width:100vw;
@@ -622,6 +620,7 @@ span, div, button{
     background:radial-gradient(#556699, #000000);
     display:none;
 }
+
 /**ANIMATIONS*/
 @keyframes spin{
     0%{
