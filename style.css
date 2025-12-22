@@ -85,7 +85,7 @@ body{
     border:5px solid black;
     background-color:#44ee44;
 }
-.set_close, .help_close, .hq_close, .encycl_close, .marketplace_close{
+.set_close, .help_close{
     margin-top:10px;
     margin-left:68vw;
     width:10vw;
@@ -97,11 +97,26 @@ body{
     font-size:1em;
     border:solid black 2px;
 }
-.set_close:hover, .help_close:hover, .smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
+.smenu_play:hover, .smenu_settings:hover, .smenu_help:hover{
     cursor:pointer;
 }
-.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover, .marketplace_close:hover{
+.set_close:hover, .help_close:hover, .hq_close:hover, .encycl_close:hover, .marketplace_close:hover, .research_close:hover{
     background-color:#ff6666;
+    cursor:pointer;
+}
+.hq_close, .encycl_close, .marketplace_close, .research_close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    height:auto;
+    background-color:red;
+    font-family:"Almendra SC", serif;
+    font-weight:400;
+    font-style:normal;
+    text-align:center;
+    font-size:1em;
+    border:solid black 2px;
+    width:10vw;
 }
 span, div, button{
     user-select: none;
@@ -270,6 +285,7 @@ span, div, button{
     font-size:2em;
     display:flex;
     justify-content:center;
+    align-items:center;
 }
 .counters_container span {
     color: white;
@@ -293,21 +309,9 @@ span, div, button{
     background-color:var(--player-color-dark);
     display:none;
 }
-.hq_close, .encycl_close, .marketplace_close{
-    position:absolute;
-    top:20px;
-    right:20px;
-    height:auto;
-}
-.hq_close:hover{
-    cursor:pointer;
-}
-.encycl_close:hover, .marketplace_close:hover{
-    cursor:pointer;
-}
 .hq_info, .hq_market, .hq_research{
     position:absolute;
-    top:30px;
+    top:20px;
     width:10vw;
     font-family: "Almendra SC", serif;
     font-weight: 400;
@@ -502,7 +506,7 @@ span, div, button{
     position:absolute;
     top:10vh;
     left:10vw;
-    background-color:#bb77aa;
+    background-color:var(--player-color-light);
     border:5px solid black;
     z-index:999999;
     display:flex;
@@ -514,7 +518,7 @@ span, div, button{
     display:block;
     font-family:"Almendra SC";
     color:black;
-    font-size:2em;
+    font-size:2.5em;
     margin-top:10px;
     text-align:center;
 }
@@ -523,12 +527,14 @@ span, div, button{
     margin:auto;
     width:50%;
     height:20%;
-    background-color:#aa5599;
+    background-color:var(--player-color-dark);
     font-family:"Almendra SC";
     margin-top:15%;
+    font-size:2em;
+    border:2px solid black;
 }
 .hq_popup_ok:hover{
-    background-color:#bb66aa;
+    background-color:var(--player-color-pale);
 }
 .marketplace{
     background:linear-gradient(#ffff88, #aaffaa);
@@ -607,9 +613,16 @@ span, div, button{
     height:50%;
     width:auto;
 }
-
-
-
+.research{
+    height:100vh;
+    width:100vw;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background:radial-gradient(#556699, #000000);
+    display:none;
+}
+/**ANIMATIONS*/
 @keyframes spin{
     0%{
         left:20vw;

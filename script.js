@@ -37,9 +37,13 @@ const hq_popup_div = document.querySelector(".hq_popup");
 const hq_popup_text = document.querySelector(".hq_popup_text");
 const hq_popup_ok = document.querySelector(".hq_popup_ok");
 const hq_market = document.querySelector(".hq_market");
+const hq_research = document.querySelector(".hq_research");
 
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
+
+const research = document.querySelector(".research");
+const research_close = document.querySelector(".research_close");
 
 const food_amount_label = document.querySelector(".food_c_label");
 const ore_amount_label = document.querySelector(".ore_c_label");
@@ -302,6 +306,23 @@ function open_marketplace(){
 }
 function close_marketplace(){
     marketplace.style.display="none";
+}
+function open_research(){
+    if(player_buildings.includes("University")){
+        research.style.display="block";
+        if (player_buildings.includes("Research Facility")){
+            
+        }
+        else{
+            
+        }
+    }
+    else{
+        hq_popup("You need to build the University first")
+    }
+}
+function close_research(){
+    research.style.display="none";
 }
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
@@ -1263,6 +1284,9 @@ hq_market.onclick=open_marketplace;
 marketplace_close.onclick=close_marketplace;
 ore_to_food.onclick = () => do_trade(1);
 food_to_ore.onclick = () => do_trade(2);
+hq_research.onclick=open_research;
+research_close.onclick=close_research;
+
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
     btn.onclick = () => open_encycl_entry(i);    
