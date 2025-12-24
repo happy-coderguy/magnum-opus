@@ -617,8 +617,50 @@ span, div, button{
     position:absolute;
     top:0px;
     left:0px;
-    background:radial-gradient(#556699, #000000);
+    background:radial-gradient(#66dd66, #55ee55);
     display:none;
+    flex-direction:column;
+    justify-content:center;
+    gap:5%;
+    align-items:center;
+}
+.research_row1, .research_row2, .research_row3, .research_row4{
+    border:2px solid black;
+    width:90%;
+    height:15%;
+    display:flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items:center;
+    gap:2%;
+}
+.research_row1{
+    background-color:#aaaabb;
+}
+.research_row2{
+    background-color:#bb77dd;
+}
+.research_row3{
+    background:linear-gradient(90deg,#ff0000, #0000ff);
+}
+.research_row4{
+    background:#ffffff;
+}
+.r3r1, .r3r2{
+    background-color:#ff0000;
+}
+.r3r3, .r3r4{
+    background-color:#0000ff;
+}
+.ritem{
+    border:2px solid black;
+    width:20%;
+    height:auto;
+    text-align:center;
+    font-family:monospace;
+}
+.ritem:hover{
+    font-weight:700;
 }
 
 /**ANIMATIONS*/

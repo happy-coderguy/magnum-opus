@@ -42,9 +42,6 @@ const hq_research = document.querySelector(".hq_research");
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
 
-const research = document.querySelector(".research");
-const research_close = document.querySelector(".research_close");
-
 const food_amount_label = document.querySelector(".food_c_label");
 const ore_amount_label = document.querySelector(".ore_c_label");
 const oil_amount_label = document.querySelector(".oil_c_label");
@@ -174,6 +171,29 @@ const marketplace2 = document.querySelector(".marketplace2");
 
 const ore_to_food = document.querySelector(".ore_to_food");
 const food_to_ore = document.querySelector(".food_to_ore");
+
+const research = document.querySelector(".research");
+const research_close = document.querySelector(".research_close");
+const research_row1 = document.querySelector(".research_row1");
+const research_row2 = document.querySelector(".research_row2");
+const research_row3 = document.querySelector(".research_row3");
+const research_row4 = document.querySelector(".research_row4");
+const r1r1 = document.querySelector(".r1r1");
+const r1r2 = document.querySelector(".r1r2");
+const r1r3 = document.querySelector(".r1r3");
+const r1r4 = document.querySelector(".r1r4");
+const r2r1 = document.querySelector(".r2r1");
+const r2r2 = document.querySelector(".r2r2");
+const r2r3 = document.querySelector(".r2r3");
+const r2r4 = document.querySelector(".r2r4");
+const r3r1 = document.querySelector(".r3r1");
+const r3r2 = document.querySelector(".r3r2");
+const r3r3 = document.querySelector(".r3r3");
+const r3r4 = document.querySelector(".r3r4");
+const r4r1 = document.querySelector(".r4r1");
+const r4r2 = document.querySelector(".r4r2");
+const r4r3 = document.querySelector(".r4r3");
+const r4r4 = document.querySelector(".r4r4");
 
 const loading_images = [
     "backgrounds/black.jpg",
@@ -309,7 +329,7 @@ function close_marketplace(){
 }
 function open_research(){
     if(player_buildings.includes("University")){
-        research.style.display="block";
+        research.style.display="flex";
         if (player_buildings.includes("Research Facility")){
             
         }
