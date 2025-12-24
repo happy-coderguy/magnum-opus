@@ -39,9 +39,6 @@ const hq_popup_ok = document.querySelector(".hq_popup_ok");
 const hq_market = document.querySelector(".hq_market");
 const hq_research = document.querySelector(".hq_research");
 
-const encycl = document.querySelector(".encycl");
-const encycl_close = document.querySelector(".encycl_close");
-
 const food_amount_label = document.querySelector(".food_c_label");
 const ore_amount_label = document.querySelector(".ore_c_label");
 const oil_amount_label = document.querySelector(".oil_c_label");
@@ -84,6 +81,8 @@ const unit7_button = document.querySelector(".buy_unit7");
 const unit8_button = document.querySelector(".buy_unit8");
 const unit9_button = document.querySelector(".buy_unit9");
 
+const encycl = document.querySelector(".encycl");
+const encycl_close = document.querySelector(".encycl_close");
 const encycl_entry1 = document.querySelector(".encycl_select_1");
 const encycl_entry2 = document.querySelector(".encycl_select_2");
 const encycl_entry3 = document.querySelector(".encycl_select_3");
@@ -159,7 +158,6 @@ const encycl_entry72 = document.querySelector(".encycl_select_72");
 const encycl_entry73 = document.querySelector(".encycl_select_73");
 const encycl_entry74 = document.querySelector(".encycl_select_74");
 const encycl_entry75 = document.querySelector(".encycl_select_75");
-
 const encycl_infobox_title = document.querySelector(".encycl_infobox_title");
 const encycl_infobox_text = document.querySelector(".encycl_infobox_text");
 const encycl_infobox_image = document.querySelector(".encycl_infobox_image");
@@ -168,7 +166,6 @@ const marketplace=document.querySelector(".marketplace");
 const marketplace_close = document.querySelector(".marketplace_close");
 const marketplace1 = document.querySelector(".marketplace1");
 const marketplace2 = document.querySelector(".marketplace2");
-
 const ore_to_food = document.querySelector(".ore_to_food");
 const food_to_ore = document.querySelector(".food_to_ore");
 
@@ -264,12 +261,11 @@ let player_buildings = [];
 let player_hq_health = 100;
 let player_hq_maxhealth = 100;
 let player_hq_power = 10;
+let building_inq;
 
 //this is for goofy easter egg
 const d = new Date
 let time = d.getTime();
-
-let building_inq;
 
 /**FUNCTIONS**/
 function show_settings(){
@@ -284,30 +280,11 @@ function show_settings(){
     //actual code for showing settings
     settings.style.display="block";
 }
-function hide_settings(){
-    settings.style.display="none";
-}
-function show_help(){
-    help.style.display="block";
-}
-function hide_help(){
-    help.style.display="none";
-}
-function open_ya_base(){
-    hq_menu.style.display="block";
-}
-function close_ya_base(){
-    hq_menu.style.display="none";
-}
 function open_encycl(){
     encycl.style.display = "block";
     encycl_infobox_title.innerText="Click something to see information";
     encycl_infobox_image.src="images/backgrounds/black.jpg";
     encycl_infobox_text.innerText="Click something to see information";
-
-}
-function close_encycl(){
-    encycl.style.display = "none";
 }
 function open_marketplace(){
     if(player_buildings.includes("Marketplace")){
@@ -324,25 +301,21 @@ function open_marketplace(){
     }
 
 }
-function close_marketplace(){
-    marketplace.style.display="none";
-}
 function open_research(){
     if(player_buildings.includes("University")){
         research.style.display="flex";
         if (player_buildings.includes("Research Facility")){
-            
+            research_row3.style.display="flex";
+            research_row4.style.display="flex";
         }
         else{
-            
+            research_row3.style.display="none";
+            research_row4.style.display="none";
         }
     }
     else{
         hq_popup("You need to build the University first")
     }
-}
-function close_research(){
-    research.style.display="none";
 }
 function update_resource_counters(){
     food_amount_label.innerText= player_food;
@@ -741,9 +714,6 @@ function hq_popup(text){
     hq_popup_div.style.display="block";
     hq_popup_text.innerText=text;
 }
-function hq_popup_hide(){
-    hq_popup_div.style.display="none";
-}
 function do_trade(tradeid){
     switch (tradeid){
         case 1:
@@ -765,12 +735,8 @@ function do_trade(tradeid){
 function buy_building_do(building_number){
     switch(building_number){
         case 1:
-            if(player_buildings.includes("Farm")){
-                hq_popup("You already built this");
-            }
-            else if (player_food<5 || player_ore<5){
-                hq_popup("You don't have enough resources");
-            }
+            if(player_buildings.includes("Farm")){hq_popup("You already built this");}
+            else if (player_food<5 || player_ore<5){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Farm");
                 player_food=player_food-5;
@@ -780,12 +746,8 @@ function buy_building_do(building_number){
             }
             break;
         case 2:
-            if(player_buildings.includes("Quarry")){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<5 || player_ore<5){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_buildings.includes("Quarry")){hq_popup("You already built this");}
+            else if(player_food<5 || player_ore<5){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Quarry");
                 player_food=player_food-5;
@@ -795,25 +757,12 @@ function buy_building_do(building_number){
             }
             break;
         case 3:
-            if(player_faction==="humans"){
-                building_inq="Barracks";
-            }
-            else if(player_faction==="pastans"){
-                building_inq="Spoon";
-            }
-            else if(player_faction==="scrapbots"){
-                building_inq="Factory";
-            }
-            else{
-                building_inq="Graveyard";
-            }
-
-            if(player_buildings.includes(building_inq)){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<10 || player_ore<10){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_faction==="humans"){building_inq="Barracks";}
+            else if(player_faction==="pastans"){building_inq="Spoon";}
+            else if(player_faction==="scrapbots"){building_inq="Factory";}
+            else{building_inq="Graveyard";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push(building_inq);
                 root.style.setProperty("--unit-three-unlocked","#ffffff");
@@ -824,12 +773,8 @@ function buy_building_do(building_number){
             }
             break;
         case 4:
-            if(player_buildings.includes("Marketplace")){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<10 || player_ore<10){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_buildings.includes("Marketplace")){hq_popup("You already built this");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Marketplace");
                 player_food=player_food-10;
@@ -840,12 +785,8 @@ function buy_building_do(building_number){
             }
             break;
         case 5:
-            if(player_buildings.includes("Walls")){
-                hq_popup("You already built this");
-            }
-            else if(player_food<10 || player_ore<10){
-                hq_popup("You don't have enough resources");
-            }
+            if(player_buildings.includes("Walls")){hq_popup("You already built this");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Walls");
                 player_food=player_food-10;
@@ -857,25 +798,12 @@ function buy_building_do(building_number){
             }
             break; 
         case 6:
-            if(player_faction==="humans"){
-                building_inq="Stables";
-            }
-            else if(player_faction==="pastans"){
-                building_inq="Baking Tray";
-            }
-            else if(player_faction==="scrapbots"){
-                building_inq="Racetrack";
-            }
-            else{
-                building_inq="Silent Trees";
-            }
-
-            if(player_buildings.includes(building_inq)){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<20 || player_ore<20){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_faction==="humans"){building_inq="Stables";}
+            else if(player_faction==="pastans"){building_inq="Baking Tray";}
+            else if(player_faction==="scrapbots"){building_inq="Racetrack";}
+            else{building_inq="Silent Trees";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push(building_inq);
                 root.style.setProperty("--unit-four-unlocked","#ffffff");
@@ -886,25 +814,12 @@ function buy_building_do(building_number){
             }
             break;
         case 7:
-            if(player_faction==="humans"){
-                building_inq="Archery Range";
-            }
-            else if(player_faction==="pastans"){
-                building_inq="Bowl";
-            }
-            else if(player_faction==="scrapbots"){
-                building_inq="Shooting Range";
-            }
-            else{
-                building_inq="Damp Cave";
-            }
-
-            if(player_buildings.includes(building_inq)){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<20 || player_ore<20){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_faction==="humans"){building_inq="Archery Range";}
+            else if(player_faction==="pastans"){building_inq="Bowl";}
+            else if(player_faction==="scrapbots"){building_inq="Shooting Range";}
+            else{building_inq="Damp Cave";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push(building_inq);
                 root.style.setProperty("--unit-five-unlocked","#ffffff");
@@ -914,13 +829,9 @@ function buy_building_do(building_number){
                 update_resource_counters();
             }
             break;
-        case 8:
-            if(player_buildings.includes("Mill")){
-                hq_popup("You already built this");
-            }
-            else if (player_food<20 || player_ore<20){
-                hq_popup("You don't have enough resources");
-            }
+        case 8: 
+            if(player_buildings.includes("Mill")){hq_popup("You already built this");}
+            else if (player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Mill");
                 player_food=player_food-20;
@@ -930,12 +841,8 @@ function buy_building_do(building_number){
             }
             break;
         case 9:
-            if(player_buildings.includes("Mineshafts")){
-                hq_popup("You already built this");
-            }
-            else if (player_food<20 || player_ore<20){
-                hq_popup("You don't have enough resources");
-            }
+            if(player_buildings.includes("Mineshafts")){hq_popup("You already built this");}
+            else if (player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Mineshafts");
                 player_food=player_food-20;
@@ -945,12 +852,8 @@ function buy_building_do(building_number){
             }
             break;
         case 10:
-            if(player_buildings.includes("Fortifications")){
-                hq_popup("You already built this");
-            }
-            else if(player_food<20 || player_ore<20){
-                hq_popup("You don't have enough resources");
-            }
+            if(player_buildings.includes("Fortifications")){hq_popup("You already built this");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("Fortifications");
                 player_food=player_food-20;
@@ -963,25 +866,12 @@ function buy_building_do(building_number){
             }
             break; 
         case 11:
-            if(player_faction==="humans"){
-                building_inq="Shooting Range";
-            }
-            else if(player_faction==="pastans"){
-                building_inq="Sieve";
-            }
-            else if(player_faction==="scrapbots"){
-                building_inq="Spider Bunker";
-            }
-            else{
-                building_inq="Forbidden Library";
-            }
-
-            if(player_buildings.includes(building_inq)){
-                hq_popup("You already built this")    
-            }
-            else if(player_food<25 || player_ore<25){
-                hq_popup("You don't have enough resources")
-            }
+            if(player_faction==="humans"){building_inq="Shooting Range";}
+            else if(player_faction==="pastans"){building_inq="Sieve";}
+            else if(player_faction==="scrapbots"){building_inq="Spider Bunker";}
+            else{building_inq="Forbidden Library";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<25 || player_ore<25){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push(building_inq);
                 root.style.setProperty("--unit-six-unlocked","#ffffff");
@@ -992,12 +882,8 @@ function buy_building_do(building_number){
             }
             break;
         case 12:
-            if(player_buildings.includes("University")){
-                hq_popup("You already built this");
-            }
-            else if(player_food<30 || player_ore<30){
-                hq_popup("You don't have enough resources");
-            }
+            if(player_buildings.includes("University")){hq_popup("You already built this");}
+            else if(player_food<30 || player_ore<30){hq_popup("You don't have enough resources");}
             else{
                 player_buildings.push("University");
                 player_food=player_food-30;
@@ -1006,11 +892,9 @@ function buy_building_do(building_number){
                 update_resource_counters();
                 root.style.setProperty("--hq-university-unlocked", "#000000");
             }
-            break; 
-
+            break;
     }
 }
-
 //all the game starting functions lmao 
 function game_start(){
     start_menu.style.display="none";
@@ -1206,7 +1090,7 @@ function generate_map(){
                 else  if (player_faction === "yox_empire"){
                     tile.src = "images/tiles/yox_empire_hq.png";
                 }
-                tile.onclick=open_ya_base;
+                tile.onclick=()=>hq_menu.style.display="block";
             }
             else if (x===2 && y===24){
                 tile.src = "images/tiles/" + enemy1 + "_hq.png";
@@ -1274,13 +1158,13 @@ function do_the_game(){
 
 //ONCLICK ASSIGNMENTS
 smenu_settings.onclick = show_settings;
-set_close.onclick = hide_settings;
-smenu_help.onclick = show_help;
-help_close.onclick = hide_help;
+set_close.onclick =()=> settings.style.display="none";
+smenu_help.onclick =()=> help.style.display="block";
+help_close.onclick =()=> help.style.display="none";
 smenu_play.onclick= game_start;
-hq_close.onclick = close_ya_base;
+hq_close.onclick=()=> hq_menu.style.display="none";
 hq_encycl.onclick = open_encycl;
-encycl_close.onclick = close_encycl;
+encycl_close.onclick =()=> encycl.style.display="block";
 build1_button.onclick = () => buy_building_do(1);
 build2_button.onclick =  () => buy_building_do(2);
 build3_button.onclick =  () => buy_building_do(3);
@@ -1299,13 +1183,13 @@ build15_button.onclick =  () => buy_building_do(15);
 build16_button.onclick =  () => buy_building_do(16);
 build17_button.onclick =  () => buy_building_do(17);
 build18_button.onclick =  () => buy_building_do(18);
-hq_popup_ok.onclick=hq_popup_hide;
+hq_popup_ok.onclick=() => hq_popup_div.style.display="none";
 hq_market.onclick=open_marketplace;
-marketplace_close.onclick=close_marketplace;
+marketplace_close.onclick=()=>marketplace.style.display="none";
 ore_to_food.onclick = () => do_trade(1);
 food_to_ore.onclick = () => do_trade(2);
 hq_research.onclick=open_research;
-research_close.onclick=close_research;
+research_close.onclick=()=> research.style.display="none";
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
