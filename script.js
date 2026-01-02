@@ -258,6 +258,7 @@ let player_aluminium = 500;
 let player_gems = 500;
 let player_faction;
 let player_buildings = [];
+let player_research = [];
 let player_hq_health = 100;
 let player_hq_maxhealth = 100;
 let player_hq_power = 10;
@@ -893,6 +894,116 @@ function buy_building_do(building_number){
                 root.style.setProperty("--hq-university-unlocked", "#000000");
             }
             break;
+        case 13:
+            break;
+        case 14:
+            break;
+        case 15:
+            break;
+        case 16:
+            break;
+        case 17:
+            if(player_buildings.includes("Research Facility")){hq_popup("You already built this");}
+            else if(player_food<40 || player_ore<40){hq_popup("You don't have enough resources");}
+            else if(player_buildings.includes("University")){
+                player_buildings.push("Research Facility");
+                player_food=player_food-40;
+                player_ore=player_ore-40;
+                build17_button.innerText="Built";
+                update_resource_counters();
+            }
+            else{hq_popup("Build the University first");}
+    }
+}
+function buy_research_do(research_id){
+    switch(research_id){
+        case 1:
+            if (player_research.includes("11")){hq_popup("You already researched this");}
+            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=10;
+                player_ore-=10;
+                player_research.push("11");
+                root.style.setProperty("--r1r1-purchased", "#00ff00");
+                r1r1.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 2:
+            if (player_research.includes("12")){hq_popup("You already researched this");}
+            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=10;
+                player_ore-=10;
+                player_research.push("12");
+                root.style.setProperty("--r1r2-purchased", "#00ff00");
+                r1r2.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 3:
+            if (player_research.includes("13")){hq_popup("You already researched this");}
+            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=10;
+                player_ore-=10;
+                player_research.push("13");
+                root.style.setProperty("--r1r3-purchased", "#00ff00");
+                r1r3.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 4:
+            if (player_research.includes("14")){hq_popup("You already researched this");}
+            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=10;
+                player_ore-=10;
+                player_research.push("14");
+                root.style.setProperty("--r1r4-purchased", "#00ff00");
+                r1r4.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 5:
+            if (player_research.includes("21")){hq_popup("You already researched this");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=20;
+                player_ore-=20;
+                player_research.push("21");
+                root.style.setProperty("--r2r1-purchased", "#00ff00");
+                r2r1.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 6:
+            if (player_research.includes("22")){hq_popup("You already researched this");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=20;
+                player_ore-=20;
+                player_research.push("22");
+                root.style.setProperty("--r2r2-purchased", "#00ff00");
+                r2r2.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 7:
+            if (player_research.includes("23")){hq_popup("You already researched this");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=20;
+                player_ore-=20;
+                player_research.push("23");
+                root.style.setProperty("--r2r3-purchased", "#00ff00");
+                r2r3.innerText="Researched";
+                r3r2.innerText="We work to earn the right to work - 20 food 20 ore - 1 free worker every 2 turns";
+                r3r4.innerText="Mercantilism - 20 food 20 ore - better market rates for premium resources";
+                update_resource_counters();
+            }
+            break;
+
     }
 }
 //all the game starting functions lmao 
@@ -1183,6 +1294,23 @@ build15_button.onclick =  () => buy_building_do(15);
 build16_button.onclick =  () => buy_building_do(16);
 build17_button.onclick =  () => buy_building_do(17);
 build18_button.onclick =  () => buy_building_do(18);
+r1r1.onclick =()=> buy_research_do(1);
+r1r2.onclick =()=> buy_research_do(2);
+r1r3.onclick =()=> buy_research_do(3);
+r1r4.onclick =()=> buy_research_do(4);
+r2r1.onclick =()=> buy_research_do(5);
+r2r2.onclick =()=> buy_research_do(6);
+r2r3.onclick =()=> buy_research_do(7);
+r2r4.onclick =()=> buy_research_do(8);
+r3r1.onclick =()=> buy_research_do(9);
+r3r2.onclick =()=> buy_research_do(10);
+r3r3.onclick =()=> buy_research_do(11);
+r3r4.onclick =()=> buy_research_do(12);
+r4r1.onclick =()=> buy_research_do(13);
+r4r2.onclick =()=> buy_research_do(14);
+r4r3.onclick =()=> buy_research_do(15);
+r4r4.onclick =()=> buy_research_do(16);
+
 hq_popup_ok.onclick=() => hq_popup_div.style.display="none";
 hq_market.onclick=open_marketplace;
 marketplace_close.onclick=()=>marketplace.style.display="none";
