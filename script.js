@@ -1003,18 +1003,29 @@ function buy_research_do(research_id){
                 update_resource_counters();
             }
             break;
+        case 8:
+            if (player_research.includes("24")){hq_popup("You already researched this");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=20;
+                player_ore-=20;
+                player_research.push("24");
+                root.style.setProperty("--r2r4-purchased", "#00ff00");
+                r2r4.innerText="Researched";
+                r4r3.innerText="Impenetrable Walls - 10 food 40 ore - +50 city health";
+                r4r4.innerText="DESTROY - 30 food 30 ore - +5 damage against cities";
+                update_resource_counters();
+            }
+            break;
 
     }
 }
-//all the game starting functions lmao 
-function game_start(){
+//GAME STARTING FUNCTIONS 
+function load_assets(){
     start_menu.style.display="none";
     settings.style.display="none";
     help.style.display="none";
     game_div.style.display="block";
-    load_assets();
-}
-function load_assets(){
     loader_cover.style.display="block";
     loader.style.display="block";
     linknum = 0;
@@ -1025,12 +1036,12 @@ function load_assets(){
             setTimeout(next_image, 100);    
         }
         else{
-            setTimeout(game_init , 100);
+            end_load();
         }
     }
     next_image();
 }
-function game_init(){
+function end_load(){
     loader_cover.style.display="none";
     loader.style.display="none";
     root.style.setProperty("--back-image", "url(images/backgrounds/black.jpg)");
@@ -1236,9 +1247,9 @@ function generate_map(){
             tile_container.appendChild(tile);
         }
     }
-    do_the_game();
+    game_start();
 }
-function do_the_game(){
+function game_start(){
     const top_left_anchor = document.querySelector(".top_left_anchor");
     const bottom_right_anchor = document.querySelector(".bottom_right_anchor");
     const tiles = document.querySelectorAll(".tile");
@@ -1272,7 +1283,7 @@ smenu_settings.onclick = show_settings;
 set_close.onclick =()=> settings.style.display="none";
 smenu_help.onclick =()=> help.style.display="block";
 help_close.onclick =()=> help.style.display="none";
-smenu_play.onclick= game_start;
+smenu_play.onclick= load_assets;
 hq_close.onclick=()=> hq_menu.style.display="none";
 hq_encycl.onclick = open_encycl;
 encycl_close.onclick =()=> encycl.style.display="block";
