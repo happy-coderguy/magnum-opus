@@ -265,7 +265,6 @@ let player_buildings = [];
 let player_research = [];
 let player_hq_health = 100;
 let player_hq_maxhealth = 100;
-let player_hq_power = 10;
 let building_inq;
 
 //this is for goofy easter egg
@@ -866,7 +865,6 @@ function buy_building_do(building_number){
                 update_resource_counters();
                 player_hq_health=player_hq_health+50;
                 player_hq_maxhealth=player_hq_maxhealth+50;
-                player_hq_power=player_hq_power+5;
             }
             break; 
         case 11:
@@ -952,6 +950,8 @@ function buy_research_do(research_id){
                 player_ore-=10;
                 player_research.push("13");
                 root.style.setProperty("--r1r3-purchased", "#00ff00");
+                player_hq_maxhealth+=25;
+                player_hq_health+=25;
                 r1r3.innerText="Researched";
                 update_resource_counters();
             }
@@ -1088,6 +1088,58 @@ function buy_research_do(research_id){
                 r3r1.style.display="none";
                 r3r2.style.display="none";
                 research_row3.style.background="#0000ff";
+                update_resource_counters();
+            }
+            break;
+        case 13:
+            if (player_research.includes("41")){hq_popup("You already researched this");}
+            else if(player_food<25 && player_ore<25){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=25;
+                player_food-=25;
+                player_research.push("41");
+                root.style.setProperty("--r4r1-purchased", "#00ff00");
+                r4r1.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 14:
+            if (player_research.includes("42")){hq_popup("You already researched this");}
+            else if(player_food<25 && player_ore<25){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=25;
+                player_food-=25;
+                player_research.push("42");
+                root.style.setProperty("--r4r2-purchased", "#00ff00");
+                r4r2.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 15:
+            if (player_research.includes("43")){hq_popup("You already researched this");}
+            else if(!(player_research.includes("24"))){hq_popup("Locked");}
+            else if(player_food<10 && player_ore<40){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=40;
+                player_food-=10;
+                player_research.push("43");
+                root.style.setProperty("--r4r3-purchased", "#00ff00");
+                player_hq_health+=50;
+                player_hq_maxhealth+=50;
+                r4r3.innerText="Researched";
+                update_resource_counters();
+            }
+            break;
+        case 16:
+            if (player_research.includes("44")){hq_popup("You already researched this");}
+            else if(!(player_research.includes("24"))){hq_popup("Locked");}
+            else if(player_food<30 && player_ore<30){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=30;
+                player_food-=30;
+                player_research.push("44");
+                root.style.setProperty("--r4r4-purchased", "#00ff00");
+                r4r4.innerText="Researched";
                 update_resource_counters();
             }
             break;
