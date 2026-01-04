@@ -168,6 +168,10 @@ const marketplace1 = document.querySelector(".marketplace1");
 const marketplace2 = document.querySelector(".marketplace2");
 const ore_to_food = document.querySelector(".ore_to_food");
 const food_to_ore = document.querySelector(".food_to_ore");
+const otf_price_label = document.querySelector(".otf_price");
+const fto_price_label = document.querySelector(".fto_price");
+let otf_price = 15;
+let fto_price = 15;
 
 const research = document.querySelector(".research");
 const research_close = document.querySelector(".research_close");
@@ -718,20 +722,19 @@ function hq_popup(text){
 function do_trade(tradeid){
     switch (tradeid){
         case 1:
-            if(player_ore>=15){
-                player_ore=player_ore-15;
-                player_food=player_food+10;
-                update_resource_counters();
+            if(player_ore>=otf_price){
+                player_ore-=otf_price;
+                player_food+=10;
             }
             break;
         case 2:
-            if(player_food>=15){
-                player_food=player_food-15;
-                player_ore=player_ore+10;
-                update_resource_counters();
+            if(player_food>=fto_price){
+                player_food-=fto_price;
+                player_ore+=10;
             }
             break;
     }
+    update_resource_counters();
 }
 function buy_building_do(building_number){
     switch(building_number){
@@ -1017,7 +1020,77 @@ function buy_research_do(research_id){
                 update_resource_counters();
             }
             break;
-
+        case 9:
+            if (player_research.includes("31")){hq_popup("You already researched this");}
+            else if(player_research.includes("33") || player_research.includes("34")){hq_popup("how")}
+            else if(player_gems<1){hq_popup("You don't have enough resources");}
+            else{
+                player_gems-=1;
+                player_research.push("31");
+                root.style.setProperty("--r3r1-purchased", "#00ff00");
+                r3r1.innerText="Researched";
+                r3r3.style.display="none";
+                r3r4.style.display="none";
+                research_row3.style.background="#ff0000";
+                update_resource_counters();
+            }
+            break;
+        case 10:
+            if (player_research.includes("32")){hq_popup("You already researched this");}
+            else if(!(player_research.includes("23"))){hq_popup("Locked");}
+            else if(player_research.includes("33") || player_research.includes("34")){hq_popup("how");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=20;
+                player_food-=20;
+                player_research.push("32");
+                root.style.setProperty("--r3r2-purchased", "#00ff00");
+                r3r2.innerText="Researched";
+                r3r3.style.display="none";
+                r3r4.style.display="none";
+                research_row3.style.background="#ff0000";
+                update_resource_counters();
+            }
+            break;
+        case 11:
+            if (player_research.includes("33")){hq_popup("You already researched this");}
+            else if(player_research.includes("31") || player_research.includes("32")){hq_popup("how")}
+            else if(player_gems<1 || player_oil<1 || player_hazardite<1 || player_aluminium<1){hq_popup("You don't have enough resources");}
+            else{
+                player_gems-=1;
+                player_hazardite-=1;
+                player_oil-=1;
+                player_aluminium-=1;
+                fto_price=12;
+                otf_price=12;
+                fto_price_label.innerText="12";
+                otf_price_label.innerText="12";
+                player_research.push("33");
+                root.style.setProperty("--r3r3-purchased", "#00ff00");
+                r3r3.innerText="Researched";
+                r3r1.style.display="none";
+                r3r2.style.display="none";
+                research_row3.style.background="#0000ff";
+                update_resource_counters();
+            }
+            break;
+        case 12:
+            if (player_research.includes("34")){hq_popup("You already researched this");}
+            else if(!(player_research.includes("23"))){hq_popup("Locked");}
+            else if(player_research.includes("31") || player_research.includes("32")){hq_popup("how");}
+            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_ore-=20;
+                player_food-=20;
+                player_research.push("34");
+                root.style.setProperty("--r3r4-purchased", "#00ff00");
+                r3r4.innerText="Researched";
+                r3r1.style.display="none";
+                r3r2.style.display="none";
+                research_row3.style.background="#0000ff";
+                update_resource_counters();
+            }
+            break;
     }
 }
 //GAME STARTING FUNCTIONS 
@@ -1280,55 +1353,55 @@ function game_start(){
 
 //ONCLICK ASSIGNMENTS
 smenu_settings.onclick = show_settings;
-set_close.onclick =()=> settings.style.display="none";
-smenu_help.onclick =()=> help.style.display="block";
-help_close.onclick =()=> help.style.display="none";
+set_close.onclick = () => settings.style.display="none";
+smenu_help.onclick = () => help.style.display="block";
+help_close.onclick = () => help.style.display="none";
 smenu_play.onclick= load_assets;
-hq_close.onclick=()=> hq_menu.style.display="none";
+hq_close.onclick= () => hq_menu.style.display="none";
 hq_encycl.onclick = open_encycl;
-encycl_close.onclick =()=> encycl.style.display="block";
+encycl_close.onclick = () => encycl.style.display="none";
 build1_button.onclick = () => buy_building_do(1);
-build2_button.onclick =  () => buy_building_do(2);
-build3_button.onclick =  () => buy_building_do(3);
-build4_button.onclick =  () => buy_building_do(4);
-build5_button.onclick =  () => buy_building_do(5);
-build6_button.onclick =  () => buy_building_do(6);
-build7_button.onclick =  () => buy_building_do(7);
-build8_button.onclick =  () => buy_building_do(8);
-build9_button.onclick =  () => buy_building_do(9);
-build10_button.onclick =  () => buy_building_do(10);
-build11_button.onclick =  () => buy_building_do(11);
-build12_button.onclick =  () => buy_building_do(12);
-build13_button.onclick =  () => buy_building_do(13);
-build14_button.onclick =  () => buy_building_do(14);
-build15_button.onclick =  () => buy_building_do(15);
-build16_button.onclick =  () => buy_building_do(16);
-build17_button.onclick =  () => buy_building_do(17);
-build18_button.onclick =  () => buy_building_do(18);
-r1r1.onclick =()=> buy_research_do(1);
-r1r2.onclick =()=> buy_research_do(2);
-r1r3.onclick =()=> buy_research_do(3);
-r1r4.onclick =()=> buy_research_do(4);
-r2r1.onclick =()=> buy_research_do(5);
-r2r2.onclick =()=> buy_research_do(6);
-r2r3.onclick =()=> buy_research_do(7);
-r2r4.onclick =()=> buy_research_do(8);
-r3r1.onclick =()=> buy_research_do(9);
-r3r2.onclick =()=> buy_research_do(10);
-r3r3.onclick =()=> buy_research_do(11);
-r3r4.onclick =()=> buy_research_do(12);
-r4r1.onclick =()=> buy_research_do(13);
-r4r2.onclick =()=> buy_research_do(14);
-r4r3.onclick =()=> buy_research_do(15);
-r4r4.onclick =()=> buy_research_do(16);
+build2_button.onclick = () => buy_building_do(2);
+build3_button.onclick = () => buy_building_do(3);
+build4_button.onclick = () => buy_building_do(4);
+build5_button.onclick = () => buy_building_do(5);
+build6_button.onclick = () => buy_building_do(6);
+build7_button.onclick = () => buy_building_do(7);
+build8_button.onclick = () => buy_building_do(8);
+build9_button.onclick = () => buy_building_do(9);
+build10_button.onclick = () => buy_building_do(10);
+build11_button.onclick = () => buy_building_do(11);
+build12_button.onclick = () => buy_building_do(12);
+build13_button.onclick = () => buy_building_do(13);
+build14_button.onclick = () => buy_building_do(14);
+build15_button.onclick = () => buy_building_do(15);
+build16_button.onclick = () => buy_building_do(16);
+build17_button.onclick = () => buy_building_do(17);
+build18_button.onclick = () => buy_building_do(18);
+r1r1.onclick = () => buy_research_do(1);
+r1r2.onclick = () => buy_research_do(2);
+r1r3.onclick = () => buy_research_do(3);
+r1r4.onclick = () => buy_research_do(4);
+r2r1.onclick = () => buy_research_do(5);
+r2r2.onclick = () => buy_research_do(6);
+r2r3.onclick = () => buy_research_do(7);
+r2r4.onclick = () => buy_research_do(8);
+r3r1.onclick = () => buy_research_do(9);
+r3r2.onclick = () => buy_research_do(10);
+r3r3.onclick = () => buy_research_do(11);
+r3r4.onclick = () => buy_research_do(12);
+r4r1.onclick = () => buy_research_do(13);
+r4r2.onclick = () => buy_research_do(14);
+r4r3.onclick = () => buy_research_do(15);
+r4r4.onclick = () => buy_research_do(16);
 
-hq_popup_ok.onclick=() => hq_popup_div.style.display="none";
+hq_popup_ok.onclick= () => hq_popup_div.style.display="none";
 hq_market.onclick=open_marketplace;
-marketplace_close.onclick=()=>marketplace.style.display="none";
+marketplace_close.onclick= () =>marketplace.style.display="none";
 ore_to_food.onclick = () => do_trade(1);
 food_to_ore.onclick = () => do_trade(2);
 hq_research.onclick=open_research;
-research_close.onclick=()=> research.style.display="none";
+research_close.onclick= () => research.style.display="none";
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
