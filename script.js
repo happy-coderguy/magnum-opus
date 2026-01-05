@@ -555,12 +555,12 @@ function open_encycl_entry(entry){
         case 44:
             encycl_infobox_title.innerText="University";
             encycl_infobox_image.src="images/icons/science.png";
-            encycl_infobox_text.innerText="Unlock science";
+            encycl_infobox_text.innerText="Unlock research";
             break;
         case 45:
             encycl_infobox_title.innerText="Shopping Center";
             encycl_infobox_image.src="images/icons/marketplace.png";
-            encycl_infobox_text.innerText="Allows you to trade all resources";
+            encycl_infobox_text.innerText="Allows you to trade premium resources";
             break;
         case 46:
             encycl_infobox_title.innerText="Hospital";
@@ -570,7 +570,7 @@ function open_encycl_entry(entry){
         case 47:
             encycl_infobox_title.innerText="Research Center";
             encycl_infobox_image.src="images/icons/science.png";
-            encycl_infobox_text.innerText="Unlock more science";
+            encycl_infobox_text.innerText="Unlock more research";
             break;
         case 48:
             encycl_infobox_title.innerText="Barracks";
@@ -896,6 +896,16 @@ function buy_building_do(building_number){
             }
             break;
         case 13:
+            if(player_buildings.includes("Shopping Center")){hq_popup("You already built this");}
+            else if(!(player_buildings.includes("Marketplace"))){hq_popup("Build the Marketplace first");}
+            else if(player_food<30 || player_ore<30){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=30;
+                player_ore-=30;
+                player_buildings.push("Shopping Center");
+                build13_button.innerText="Built";
+                update_resource_counters();
+            }
             break;
         case 14:
             break;
