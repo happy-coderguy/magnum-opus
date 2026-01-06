@@ -172,6 +172,24 @@ const otf_price_label = document.querySelector(".otf_price");
 const fto_price_label = document.querySelector(".fto_price");
 let otf_price = 15;
 let fto_price = 15;
+let premiums_price = 15;
+let premiums_yield = 10;
+const food_to_oil = document.querySelector(".food_to_oil");
+const fti_price_label = document.querySelector(".fti_price");
+const food_to_hazardite = document.querySelector(".food_to_hite");
+const fth_price_label = document.querySelector(".fth_price");
+const ore_to_gems = document.querySelector(".ore_to_gems");
+const otg_price_label = document.querySelector(".otg_price");
+const ore_to_aluminium = document.querySelector(".ore_to_alu");
+const ota_price_label = document.querySelector(".ota_price");
+const oil_to_food = document.querySelector(".oil_to_food");
+const itf_yield_label = document.querySelector(".itf_yield");
+const hazardite_to_food = document.querySelector(".hite_to_food");
+const htf_yield_label = document.querySelector(".htf_yield");
+const gems_to_ore = document.querySelector(".gems_to_ore");
+const gto_yield_label = document.querySelector(".gto_yield");
+const aluminium_to_ore = document.querySelector(".alu_to_ore");
+const ato_yield_label = document.querySelector(".ato_yield");
 
 const research = document.querySelector(".research");
 const research_close = document.querySelector(".research_close");
@@ -732,6 +750,56 @@ function do_trade(tradeid){
                 player_ore+=10;
             }
             break;
+        case 3:
+            if(player_food>=premiums_price){
+                player_food-=premiums_price;
+                player_oil+=1;
+            }
+            break;
+        case 4:
+            if(player_food>=premiums_price){
+                player_food-=premiums_price;
+                player_hazardite+=1;
+            }
+            break;
+        case 5:
+            if(player_ore>=premiums_price){
+                player_ore-=premiums_price;
+                player_gems+=1;
+            }
+            break;
+        case 6:
+            if(player_ore>=premiums_price){
+                player_ore-=premiums_price;
+                player_aluminium+=1;
+            }
+            break;
+        case 7:
+            if(player_oil>=1){
+                player_oil-=1;
+                player_food+=premiums_yield;
+            }
+            break;
+        case 8:
+            if(player_hazardite>=1){
+                player_hazardite-=1;
+                player_food+=premiums_yield;
+            }
+            break;
+        case 9:
+            if(player_gems>=1){
+                player_gems-=1;
+                player_ore+=premiums_yield;
+            }
+            break;
+        case 10:
+            if(player_aluminium>=1){
+                player_aluminium-=1;
+                player_ore+=premiums_yield;
+            }
+            break;
+
+        
     }
     update_resource_counters();
 }
@@ -930,7 +998,7 @@ function buy_research_do(research_id){
     switch(research_id){
         case 1:
             if (player_research.includes("11")){hq_popup("You already researched this");}
-            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_food-=10;
                 player_ore-=10;
@@ -942,7 +1010,7 @@ function buy_research_do(research_id){
             break;
         case 2:
             if (player_research.includes("12")){hq_popup("You already researched this");}
-            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_food-=10;
                 player_ore-=10;
@@ -954,7 +1022,7 @@ function buy_research_do(research_id){
             break;
         case 3:
             if (player_research.includes("13")){hq_popup("You already researched this");}
-            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_food-=10;
                 player_ore-=10;
@@ -968,7 +1036,7 @@ function buy_research_do(research_id){
             break;
         case 4:
             if (player_research.includes("14")){hq_popup("You already researched this");}
-            else if(player_food<10 && player_ore<10){hq_popup("You don't have enough resources");}
+            else if(player_food<10 || player_ore<10){hq_popup("You don't have enough resources");}
             else{
                 player_food-=10;
                 player_ore-=10;
@@ -980,7 +1048,7 @@ function buy_research_do(research_id){
             break;
         case 5:
             if (player_research.includes("21")){hq_popup("You already researched this");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_food-=20;
                 player_ore-=20;
@@ -992,7 +1060,7 @@ function buy_research_do(research_id){
             break;
         case 6:
             if (player_research.includes("22")){hq_popup("You already researched this");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_food-=20;
                 player_ore-=20;
@@ -1004,7 +1072,7 @@ function buy_research_do(research_id){
             break;
         case 7:
             if (player_research.includes("23")){hq_popup("You already researched this");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_food-=20;
                 player_ore-=20;
@@ -1018,7 +1086,7 @@ function buy_research_do(research_id){
             break;
         case 8:
             if (player_research.includes("24")){hq_popup("You already researched this");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_food-=20;
                 player_ore-=20;
@@ -1049,7 +1117,7 @@ function buy_research_do(research_id){
             if (player_research.includes("32")){hq_popup("You already researched this");}
             else if(!(player_research.includes("23"))){hq_popup("Locked");}
             else if(player_research.includes("33") || player_research.includes("34")){hq_popup("how");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=20;
                 player_food-=20;
@@ -1088,7 +1156,7 @@ function buy_research_do(research_id){
             if (player_research.includes("34")){hq_popup("You already researched this");}
             else if(!(player_research.includes("23"))){hq_popup("Locked");}
             else if(player_research.includes("31") || player_research.includes("32")){hq_popup("how");}
-            else if(player_food<20 && player_ore<20){hq_popup("You don't have enough resources");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=20;
                 player_food-=20;
@@ -1098,12 +1166,22 @@ function buy_research_do(research_id){
                 r3r1.style.display="none";
                 r3r2.style.display="none";
                 research_row3.style.background="#0000ff";
+                premiums_price=12;
+                premiums_yield=12;
+                fth_price_label.innerText=12;
+                fti_price_label.innerText=12;
+                ota_price_label.innerText=12;
+                otg_price_label.innerText=12;
+                gto_yield_label.innerText=12;
+                ato_yield_label.innerText=12;
+                htf_yield_label.innerText=12;
+                itf_yield_label.innerText=12;
                 update_resource_counters();
             }
             break;
         case 13:
             if (player_research.includes("41")){hq_popup("You already researched this");}
-            else if(player_food<25 && player_ore<25){hq_popup("You don't have enough resources");}
+            else if(player_food<25 || player_ore<25){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=25;
                 player_food-=25;
@@ -1115,7 +1193,7 @@ function buy_research_do(research_id){
             break;
         case 14:
             if (player_research.includes("42")){hq_popup("You already researched this");}
-            else if(player_food<25 && player_ore<25){hq_popup("You don't have enough resources");}
+            else if(player_food<25 || player_ore<25){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=25;
                 player_food-=25;
@@ -1128,7 +1206,7 @@ function buy_research_do(research_id){
         case 15:
             if (player_research.includes("43")){hq_popup("You already researched this");}
             else if(!(player_research.includes("24"))){hq_popup("Locked");}
-            else if(player_food<10 && player_ore<40){hq_popup("You don't have enough resources");}
+            else if(player_food<10 || player_ore<40){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=40;
                 player_food-=10;
@@ -1143,7 +1221,7 @@ function buy_research_do(research_id){
         case 16:
             if (player_research.includes("44")){hq_popup("You already researched this");}
             else if(!(player_research.includes("24"))){hq_popup("Locked");}
-            else if(player_food<30 && player_ore<30){hq_popup("You don't have enough resources");}
+            else if(player_food<30 || player_ore<30){hq_popup("You don't have enough resources");}
             else{
                 player_ore-=30;
                 player_food-=30;
@@ -1462,6 +1540,15 @@ hq_market.onclick=open_marketplace;
 marketplace_close.onclick= () =>marketplace.style.display="none";
 ore_to_food.onclick = () => do_trade(1);
 food_to_ore.onclick = () => do_trade(2);
+food_to_oil.onclick = () => do_trade(3);
+food_to_hazardite.onclick = () => do_trade(4);
+ore_to_gems.onclick = () => do_trade(5);
+ore_to_aluminium.onclick = () => do_trade(6);
+oil_to_food.onclick = () => do_trade(7);
+hazardite_to_food.onclick = () => do_trade(8);
+gems_to_ore.onclick = () => do_trade(9);
+aluminium_to_ore.onclick = () => do_trade(10);
+
 hq_research.onclick=open_research;
 research_close.onclick= () => research.style.display="none";
 
