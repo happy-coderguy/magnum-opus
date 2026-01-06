@@ -11,6 +11,18 @@
     --player-color-pale:#000000;
     --player-color-light:#000000;
     --player-color-dark:#000000;
+
+    --food-color:#ffffff;
+    --ore-color:#444444;
+    --ore-color-light:#666666;
+    --aluminium-color:#666666;
+    --aluminium-color-light:#888888;
+    --gems-color:#7799ff;
+    --gems-color-light:#99aaff;
+    --hazardite-color:#aaff23;
+    --hazardite-color-light:#ccff45;
+    --oil-color:#222222;
+    --oil-color-light:#444444;
     
     --unit-one-unlocked:#ffffff;
     --unit-two-unlocked:#ffffff;
@@ -41,7 +53,6 @@
     --r4r2-purchased:#ffffff;
     --r4r3-purchased:#ffffff;
     --r4r4-purchased:#ffffff;
-
 }
 body{
     width:100vw;
@@ -572,13 +583,16 @@ span, div, button{
     left:5vw;
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    
+    justify-content:center;    
 }
 .marketplace2{
     position:absolute;
     top:10vh;
     right:5vw;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .marketplace_resource_counter{
     position:absolute;
@@ -596,38 +610,72 @@ span, div, button{
     height:30%;
     width:80%;
     border:2px solid black;
-    background:linear-gradient(90deg, #444444, #ffffff);
+    background:linear-gradient(90deg, var(--ore-color), var(--food-color));
     margin-left:10%;
 }
 .food_to_ore{
     height:30%;
     width:80%;
     border:2px solid black;
-    background:linear-gradient(90deg,#ffffff, #444444);
+    background:linear-gradient(90deg,var(--food-color), var(--ore-color));
     margin-left:10%;
 }
-.ore_to_food, .food_to_ore{
+.tradebox{
     display:flex;
     flex-direction: row;
     justify-content: center;
     gap:20px;
-    font-size:2.2em;
     font-family:"Almendra SC";
     align-items:center;
 }
-.ore_to_food > img, .food_to_ore > img{
+.ore_to_food, .food_to_ore{
+    font-size:2.2em;
+}
+.tradebox > img{
     image-rendering: pixelated;
 }
 .ore_to_food:hover{
-    background:linear-gradient(90deg, #666666, #ffffff);
+    background:linear-gradient(90deg, var(--ore-color-light), var(--food-color));
 }
 .food_to_ore:hover{
-    background:linear-gradient(90deg, #ffffff, #666666);
+    background:linear-gradient(90deg, var(--food-color), var(--ore-color-light));
 }
-.fto_img, .otf_img{
+.market_img{
     height:50%;
     width:auto;
 }
+.buy_premium_res, .sell_premium_res{
+    display:flex;
+    flex-direction: column;
+    height:80%;
+    width:40%;
+    justify-content: center;
+    align-items: center;
+}
+.buy_premium_res > .tradebox, .sell_premium_res > .tradebox{
+    width:100%;
+    height:25%;
+    border:2px solid black;
+    font-size:1.5em;
+    gap:10px;
+}
+.food_to_oil{background:linear-gradient(90deg, var(--food-color), var(--oil-color));}
+.food_to_hite{background:linear-gradient(90deg, var(--food-color), var(--hazardite-color));}
+.ore_to_gems{background:linear-gradient(90deg, var(--ore-color), var(--gems-color));}
+.ore_to_alu{background:linear-gradient(90deg, var(--ore-color), var(--aluminium-color));}
+.food_to_oil:hover{background:linear-gradient(90deg, var(--food-color), var(--oil-color-light));}
+.food_to_hite:hover{background:linear-gradient(90deg, var(--food-color), var(--hazardite-color-light));}
+.ore_to_gems:hover{background:linear-gradient(90deg, var(--ore-color-light), var(--gems-color-light));}
+.ore_to_alu:hover{background:linear-gradient(90deg, var(--ore-color-light), var(--aluminium-color-light));}
+.oil_to_food{background:linear-gradient(270deg, var(--food-color), var(--oil-color));}
+.hite_to_food{background:linear-gradient(270deg, var(--food-color), var(--hazardite-color));}
+.gems_to_ore{background:linear-gradient(270deg, var(--ore-color), var(--gems-color));}
+.alu_to_ore{background:linear-gradient(270deg, var(--ore-color), var(--aluminium-color));}
+.oil_to_food:hover{background:linear-gradient(270deg, var(--food-color), var(--oil-color-light));}
+.hite_to_food:hover{background:linear-gradient(270deg, var(--food-color), var(--hazardite-color-light));}
+.gems_to_ore:hover{background:linear-gradient(270deg, var(--ore-color-light), var(--gems-color-light));}
+.alu_to_ore:hover{background:linear-gradient(270deg, var(--ore-color-light), var(--aluminium-color-light));}
+
 /**RESEARCH**/
 .research{
     height:100vh;

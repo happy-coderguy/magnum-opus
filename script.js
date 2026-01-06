@@ -294,7 +294,7 @@ function open_marketplace(){
     if(player_buildings.includes("Marketplace")){
         marketplace.style.display="block";
         if(player_buildings.includes("Shopping Center")){
-            marketplace2.style.display="block";
+            marketplace2.style.display="flex";
         }
         else{
             marketplace2.style.display="none";
