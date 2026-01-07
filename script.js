@@ -272,8 +272,8 @@ const loading_images = [
     "yox_empire/cerberus.png"
 ];
 
-let player_food = 500;
-let player_ore = 500;
+let player_food = 5000;
+let player_ore = 5000;
 let player_oil = 500;
 let player_hazardite = 500;
 let player_aluminium = 500;
@@ -798,8 +798,6 @@ function do_trade(tradeid){
                 player_ore+=premiums_yield;
             }
             break;
-
-        
     }
     update_resource_counters();
 }
@@ -976,10 +974,54 @@ function buy_building_do(building_number){
             }
             break;
         case 14:
+            if(player_buildings.includes("Hospital")){hq_popup("You already built this");}
+            else if(player_food<20 || player_ore<20){hq_popup("You don't have enough resources");}
+            else{
+                player_food-=20;
+                player_ore-=20;
+                player_buildings.push("Hospital");
+                build14_button.innerText="Built";
+                update_resource_counters();
+            }
             break;
         case 15:
+            if(player_faction==="humans"){building_inq="Garage";}
+            else if(player_faction==="pastans"){building_inq="Grater";}
+            else if(player_faction==="scrapbots"){building_inq="Airfield";}
+            else{building_inq="Hell's Kennel";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<35 || player_ore<35){hq_popup("You don't have enough resources");}
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-seven-unlocked","#ffffff");
+                player_food=player_food-35;
+                player_ore=player_ore-35;
+                build15_button.innerText = "Built";
+                update_resource_counters();
+            }
             break;
         case 16:
+            if(player_faction==="humans"){building_inq="Elite Bootcamp";}
+            else if(player_faction==="pastans"){building_inq="Plate";}
+            else if(player_faction==="scrapbots"){building_inq="Assembly Scaffolds";}
+            else{building_inq="Big Pit";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if((player_food<40 || player_ore<30) && (building_inq==="Elite Bootcamp" || building_inq==="Big Pit")){hq_popup("You don't have enough resources");}
+            else if((player_food<30 || player_ore<40) && (building_inq==="Plate" || building_inq==="Assembly Scaffolds")){hq_popup("You don't have enough resources");}
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-eight-unlocked","#ffffff");
+                if(building_inq==="Elite Bootcamp" || building_inq==="Big Pit"){
+                    player_food-=40;
+                    player_ore-=30;
+                }
+                else{
+                    player_food-=30;
+                    player_ore-=40;
+                }
+                build16_button.innerText = "Built";
+                update_resource_counters();
+            }
             break;
         case 17:
             if(player_buildings.includes("Research Facility")){hq_popup("You already built this");}
@@ -992,6 +1034,23 @@ function buy_building_do(building_number){
                 update_resource_counters();
             }
             else{hq_popup("Build the University first");}
+            break;
+        case 18:
+            if(player_faction==="humans"){building_inq="Tank Park";}
+            else if(player_faction==="pastans"){building_inq="Pot";}
+            else if(player_faction==="scrapbots"){building_inq="Supershell";}
+            else{building_inq="Tower of Souls";}
+            if(player_buildings.includes(building_inq)){hq_popup("You already built this");}
+            else if(player_food<45 || player_ore<55){hq_popup("You don't have enough resources");}
+            else{
+                player_buildings.push(building_inq);
+                root.style.setProperty("--unit-nine-unlocked","#ffffff");
+                player_food=player_food-45;
+                player_ore=player_ore-55;
+                build18_button.innerText = "Built";
+                update_resource_counters();
+            }
+            break;
     }
 }
 function buy_research_do(research_id){
@@ -1350,7 +1409,7 @@ function generate_map(){
         build6_button.innerText = "Racetrack - 20 food, 20 ore";
         build7_button.innerText = "Shooting Range - 20 food, 20 ore";
         build11_button.innerText = "Spider Bunker - 25 food, 25 ore";
-        build15_button.innerText = "Airfield - 30 food, 40 ore";
+        build15_button.innerText = "Airfield - 35 food, 35 ore";
         build16_button.innerText = "Assembly Scaffolds - 30 food, 40 ore";
         build18_button.innerText = "Supershell - 45 food, 55 ore";
     } 
