@@ -481,6 +481,36 @@ span, div, button{
 .hq_popup_ok:hover{
     background-color:var(--player-color-pale);
 }
+.hq_widget{
+    position:absolute;
+    bottom:-30vh;
+    height:30vh;
+    width:100vw;
+    background-color:var(--player-color-dark);
+    border-top:3px solid black;
+}
+.move_hq_widget{
+    width:10vw;
+    height:auto;
+    font-family:"Almendra SC";
+    font-size:1.5em;
+    background-color:var(--player-color-pale);
+    border-top:3px solid black;
+    border-left:3px solid black;
+    border-right:3px solid black;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    position:absolute;
+    bottom:0px;
+    left:45vw;
+    text-align:center;
+    animation:"bubu 1s forwards";
+}
+.move_hq_widget:hover{
+    background-color:var(--player-color-light);
+    font-weight:600;
+    cursor:pointer;
+}
 /**ENCYCLOPOEDIA**/
 .encycl{
     height:100vh;
@@ -742,7 +772,6 @@ span, div, button{
 .ritem:hover{
     font-weight:700;
 }
-
 /**ANIMATIONS*/
 @keyframes spin{
     0%{
@@ -767,4 +796,23 @@ span, div, button{
         left:20vw;
         transform:rotate(360deg);
     }
+}
+@keyframes hq_widget_opener_rise{
+    0%{bottom:0px;}
+    100%{bottom:30vh;}
+}
+@keyframes hq_widget_opener_lower{
+    0%{bottom:30vh;}
+    100%{bottom:0px;}
+}
+@keyframes hq_widget_rise{
+    0%{bottom:-30vh;}
+    100%{bottom:0px;}
+}
+@keyframes hq_widget_lower{
+    0%{bottom:0px;}
+    100%{bottom:-30vh;}
+}
+@keyframes bubu{
+    0%{content:"bubu";}
 }

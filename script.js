@@ -81,6 +81,10 @@ const unit7_button = document.querySelector(".buy_unit7");
 const unit8_button = document.querySelector(".buy_unit8");
 const unit9_button = document.querySelector(".buy_unit9");
 
+const hq_widget = document.querySelector(".hq_widget");
+const hq_widget_move_button = document.querySelector(".move_hq_widget");
+let hq_widget_state = 0;
+
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
 const encycl_entry1 = document.querySelector(".encycl_select_1");
@@ -337,6 +341,20 @@ function open_research(){
     }
     else{
         hq_popup("You need to build the University first")
+    }
+}
+function move_hq_widget(){
+    if(hq_widget_state===0){
+        hq_widget_move_button.style.animation="hq_widget_opener_rise 0.5s forwards";
+        hq_widget.style.animation="hq_widget_rise 0.5s forwards";
+        hq_widget_move_button.innerText="DOWN";
+        hq_widget_state=1;
+    }
+    else{
+        hq_widget_move_button.style.animation="hq_widget_opener_lower 0.5s forwards";
+        hq_widget.style.animation="hq_widget_lower 0.5s forwards";
+        hq_widget_move_button.innerText="UP";
+        hq_widget_state=0;
     }
 }
 function update_resource_counters(){
@@ -1559,6 +1577,11 @@ smenu_play.onclick= load_assets;
 hq_close.onclick= () => hq_menu.style.display="none";
 hq_encycl.onclick = open_encycl;
 encycl_close.onclick = () => encycl.style.display="none";
+hq_popup_ok.onclick= () => hq_popup_div.style.display="none";
+hq_research.onclick=open_research;
+research_close.onclick= () => research.style.display="none";
+hq_widget_move_button.onclick=move_hq_widget;
+
 build1_button.onclick = () => buy_building_do(1);
 build2_button.onclick = () => buy_building_do(2);
 build3_button.onclick = () => buy_building_do(3);
@@ -1577,6 +1600,7 @@ build15_button.onclick = () => buy_building_do(15);
 build16_button.onclick = () => buy_building_do(16);
 build17_button.onclick = () => buy_building_do(17);
 build18_button.onclick = () => buy_building_do(18);
+
 r1r1.onclick = () => buy_research_do(1);
 r1r2.onclick = () => buy_research_do(2);
 r1r3.onclick = () => buy_research_do(3);
@@ -1594,7 +1618,6 @@ r4r2.onclick = () => buy_research_do(14);
 r4r3.onclick = () => buy_research_do(15);
 r4r4.onclick = () => buy_research_do(16);
 
-hq_popup_ok.onclick= () => hq_popup_div.style.display="none";
 hq_market.onclick=open_marketplace;
 marketplace_close.onclick= () =>marketplace.style.display="none";
 ore_to_food.onclick = () => do_trade(1);
@@ -1607,9 +1630,6 @@ oil_to_food.onclick = () => do_trade(7);
 hazardite_to_food.onclick = () => do_trade(8);
 gems_to_ore.onclick = () => do_trade(9);
 aluminium_to_ore.onclick = () => do_trade(10);
-
-hq_research.onclick=open_research;
-research_close.onclick= () => research.style.display="none";
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
