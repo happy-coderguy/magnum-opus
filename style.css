@@ -36,6 +36,7 @@
 
     --hq-market-unlocked:#ff0000;
     --hq-university-unlocked:#ff0000;
+    --hq-healthbar-color:#00ff00;
 
     --r1r1-purchased:#aaaabb;
     --r1r2-purchased:#aaaabb;
@@ -488,6 +489,9 @@ span, div, button{
     width:100vw;
     background-color:var(--player-color-dark);
     border-top:3px solid black;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
 }
 .move_hq_widget{
     width:10vw;
@@ -511,6 +515,28 @@ span, div, button{
     font-weight:600;
     cursor:pointer;
 }
+.hq_widget_alpha, .hq_widget_beta, .hq_widget_citrus{
+    width:33.3%;
+    height:99%;
+}
+.hq_widget_healthbar_container{
+    margin:0px;
+    padding:0px;
+    background:#ff0000;
+    width:90%;
+    height:15%;
+    border:2px solid black;
+    margin-top:-1px;
+}
+.hq_widget_healthbar{
+    margin:-2px;
+    padding:0px;
+    border:2px solid black;
+    background:var(--hq-healthbar-color);
+    width: 50%;
+    height:100%;
+}
+
 /**ENCYCLOPOEDIA**/
 .encycl{
     height:100vh;

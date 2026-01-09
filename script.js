@@ -84,6 +84,7 @@ const unit9_button = document.querySelector(".buy_unit9");
 const hq_widget = document.querySelector(".hq_widget");
 const hq_widget_move_button = document.querySelector(".move_hq_widget");
 let hq_widget_state = 0;
+const hq_healthbar=document.querySelector(".hq_widget_healthbar");
 
 const encycl = document.querySelector(".encycl");
 const encycl_close = document.querySelector(".encycl_close");
@@ -287,6 +288,7 @@ let player_buildings = [];
 let player_research = [];
 let player_hq_health = 100;
 let player_hq_maxhealth = 100;
+let player_hq_pcent_health = 100;
 let building_inq;
 
 //this is for goofy easter egg
@@ -370,6 +372,14 @@ function update_resource_counters(){
     oil_amount_label2.innerText= player_oil;
     hazardite_amount_label2.innerText= player_hazardite;
     aluminium_amount_label2.innerText= player_aluminium;
+}
+function update_hq_healthbar(){
+    player_hq_pcent_health=(100/player_hq_maxhealth)*player_hq_health;
+    hq_healthbar.style.width=player_hq_pcent_health+"%";
+    if(player_hq_pcent_health>75){root.style.setProperty("--hq-healthbar-color", "#00ff00");}
+    else if(player_hq_pcent_health>50){root.style.setProperty("--hq-healthbar-color", "#99ff00");}
+    else if(player_hq_pcent_health>25){root.style.setProperty("--hq-healthbar-color", "#ffff00");}
+    else{root.style.setProperty("--hq-healthbar-color", "#ff9900");}
 }
 function open_encycl_entry(entry){
     switch(entry){
@@ -1637,4 +1647,5 @@ for (let i = 1; i <= 75; i++) {
 }
 
 update_resource_counters();
+update_hq_healthbar();
 //you used to call me on yo cell phone
