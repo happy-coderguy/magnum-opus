@@ -24,6 +24,7 @@ const choose_yox_empire = document.querySelector(".choose_yox_empire");
 const choose_pastans = document.querySelector(".choose_pastans");
 const choose_scrapbots = document.querySelector(".choose_scrapbots");
 const choose_humans = document.querySelector(".choose_humans");
+let hq_naming_list = [];
 
 const tile_container = document.querySelector(".tiles");
 
@@ -166,6 +167,7 @@ const encycl_entry75 = document.querySelector(".encycl_select_75");
 const encycl_infobox_title = document.querySelector(".encycl_infobox_title");
 const encycl_infobox_text = document.querySelector(".encycl_infobox_text");
 const encycl_infobox_image = document.querySelector(".encycl_infobox_image");
+let encycl_infobox_data;
 
 const marketplace=document.querySelector(".marketplace");
 const marketplace_close = document.querySelector(".marketplace_close");
@@ -299,12 +301,8 @@ let time = d.getTime();
 function show_settings(){
     //code for goofy easter egg
     const e = new Date
-    if ((time+178)==e.getTime()){
-        settings.style.background="linear-gradient(#ff0000, #00ff00)";
-    }
-    else{
-        settings.style.background="#44ee44";
-    }
+    if ((time+178)==e.getTime()){settings.style.background="linear-gradient(#ff0000, #00ff00)";}
+    else{settings.style.background="#44ee44";}
     //actual code for showing settings
     settings.style.display="block";
 }
@@ -317,17 +315,10 @@ function open_encycl(){
 function open_marketplace(){
     if(player_buildings.includes("Marketplace")){
         marketplace.style.display="block";
-        if(player_buildings.includes("Shopping Center")){
-            marketplace2.style.display="flex";
-        }
-        else{
-            marketplace2.style.display="none";
-        }
+        if(player_buildings.includes("Shopping Center")){marketplace2.style.display="flex";}
+        else{marketplace2.style.display="none";}
     }
-    else{
-        hq_popup("You need to build the Marketplace first")
-    }
-
+    else{hq_popup("You need to build the Marketplace first")}
 }
 function open_research(){
     if(player_buildings.includes("University")){
@@ -384,381 +375,235 @@ function update_hq_healthbar(){
 function open_encycl_entry(entry){
     switch(entry){
         case 1:
-            encycl_infobox_title.innerText="Labourer";
-            encycl_infobox_image.src="images/humans/labourer.png";
-            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
-            break; 
+            encycl_infobox_data=["Labourer", "images/humans/labourer.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
+            break;
         case 2:
-            encycl_infobox_title.innerText="Spearman";
-            encycl_infobox_image.src="images/humans/spearman.png";
-            encycl_infobox_text.innerText="Weak melee unit. Uses sharp pointy.";
+            encycl_infobox_data=["Spearman", "images/humans/spearman.png", "Weak melee unit. Uses sharp pointy."];
             break;
         case 3:
-            encycl_infobox_title.innerText="Swordsman";
-            encycl_infobox_image.src="images/humans/swordsman.png";
-            encycl_infobox_text.innerText="Melee unit. Likes sunshine and beef.";
+            encycl_infobox_data=["Swordsman", "images/humans/swordsman.png", "Melee unit. Likes sunshine and beef."];
             break;
         case 4:
-            encycl_infobox_title.innerText="Horseman";
-            encycl_infobox_image.src="images/humans/horseman.png";
-            encycl_infobox_text.innerText="Fast melee unit. Neigh neigh";
+            encycl_infobox_data=["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"];
             break;
         case 5:
-            encycl_infobox_title.innerText="Archer";
-            encycl_infobox_image.src="images/humans/archer.png";
-            encycl_infobox_text.innerText="Can shoot arrows (maybe)";
+            encycl_infobox_data=["Archer", "images/humans/archer.png", "Can shoot arrows (maybe)"];
             break;
         case 6:
-            encycl_infobox_title.innerText="Musketeer";
-            encycl_infobox_image.src="images/humans/musketeer.png";
-            encycl_infobox_text.innerText="Own a musket for home defence. Can shoot and stab";
-            break;    
+            encycl_infobox_data=["Musketeer", "images/humans/musketeer.png", "Own a musket for home defence. Can shoot and stab"];
+            break;
         case 7:
-            encycl_infobox_title.innerText="Gun Car";
-            encycl_infobox_image.src="images/humans/gun_car.png";
-            encycl_infobox_text.innerText="Vroom pyew";
+            encycl_infobox_data=["Gun Car", "images/humans/gun_car.png", "Vroom pyew"];
             break;
         case 8:
-            encycl_infobox_title.innerText="Juggernaut";
-            encycl_infobox_image.src="images/humans/juggernaut.png";
-            encycl_infobox_text.innerText="Real tough guy";
+            encycl_infobox_data=["Juggernaut", "images/humans/juggernaut.png", "Real tough guy"];
             break;
         case 9:
-            encycl_infobox_title.innerText="Tank";
-            encycl_infobox_image.src="images/humans/tank.png";
-            encycl_infobox_text.innerText="Slow and big but deadly. Not historically accurate.";
+            encycl_infobox_data=["Tank", "images/humans/tank.png", "Slow and big but deadly. Not historically accurate."];
             break;
         case 10:
-            encycl_infobox_title.innerText="Fusilli";
-            encycl_infobox_image.src="images/pastans/fusilli.png";
-            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            encycl_infobox_data=["Fusilli", "images/pastans/fusilli.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
             break;
         case 11:
-            encycl_infobox_title.innerText="Penne";
-            encycl_infobox_image.src="images/pastans/penne.png";
-            encycl_infobox_text.innerText="Shoots lasers from its hand. Weak but cheap";
+            encycl_infobox_data=["Penne", "images/pastans/penne.png", "Shoots lasers from its hand. Weak but cheap"];
             break;
         case 12:
-            encycl_infobox_title.innerText="Rigatoni";
-            encycl_infobox_image.src="images/pastans/rigatoni.png";
-            encycl_infobox_text.innerText="A bombastic stabby man.";
+            encycl_infobox_data=["Rigatoni", "images/pastans/rigatoni.png", "A bombastic stabby man."];
             break;
         case 13:
-            encycl_infobox_title.innerText="Lasagna";
-            encycl_infobox_image.src="images/pastans/lasagna.png";
-            encycl_infobox_text.innerText="Goes nice close to its enemies and then BLEHHH";
+            encycl_infobox_data=["Lasagna", "images/pastans/lasagna.png", "Goes nice close to its enemies and then BLEHHH"];
             break;
         case 14:
-            encycl_infobox_title.innerText="Orechiette";
-            encycl_infobox_image.src="images/pastans/orechiette.png";
-            encycl_infobox_text.innerText="Ranged unit with many lasers.";
+            encycl_infobox_data=["Orechiette", "images/pastans/orechiette.png", "Ranged unit with many lasers."];
             break;
         case 15:
-            encycl_infobox_title.innerText="Spaghetti";
-            encycl_infobox_image.src="images/pastans/spaghetti.png";
-            encycl_infobox_text.innerText="Grandma's cooking leads to psychic awakening";
+            encycl_infobox_data=["Spaghetti", "images/pastans/spaghetti.png", "Grandma's cooking leads to psychic awakening"];
             break;
         case 16:
-            encycl_infobox_title.innerText="Tagliatelle";
-            encycl_infobox_image.src="images/pastans/tagliatelle.png";
-            encycl_infobox_text.innerText="Little gremlin big gun";
+            encycl_infobox_data=["Tagliatelle", "images/pastans/tagliatelle.png", "Little gremlin big gun"];
             break;
         case 17:
-            encycl_infobox_title.innerText="Farfalle";
-            encycl_infobox_image.src="images/pastans/farfalle.png";
-            encycl_infobox_text.innerText="It's ya boy Farfie who attacks twice. DJ Farfie OUT";
+            encycl_infobox_data=["Farfalle", "images/pastans/farfalle.png", "It's ya boy Farfie who attacks twice. DJ Farfie OUT"];
             break;
         case 18:
-            encycl_infobox_title.innerText="Macaroni";
-            encycl_infobox_image.src="images/pastans/macaroni.png";
-            encycl_infobox_text.innerText="Like El Macho but so macho he doesn't die, melee";
+            encycl_infobox_data=["Macaroni", "images/pastans/macaroni.png", "Like El Macho but so macho he doesn't die, melee"];
             break;
         case 19:
-            encycl_infobox_title.innerText="Builder";
-            encycl_infobox_image.src="images/scrapbots/builder.png";
-            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            encycl_infobox_data=["Builder", "images/scrapbots/builder.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
             break;
         case 20:
-            encycl_infobox_title.innerText="Fodder";
-            encycl_infobox_image.src="images/scrapbots/fodder.png";
-            encycl_infobox_text.innerText="Melee. Lacks the intelligence to care about being fodder";
+            encycl_infobox_data=["Fodder", "images/scrapbots/fodder.png", "Melee. Lacks the intelligence to care about being fodder"];
             break;
         case 21:
-            encycl_infobox_title.innerText="Fighter";
-            encycl_infobox_image.src="images/scrapbots/fighter.png";
-            encycl_infobox_text.innerText="Punchy punchy boi";
+            encycl_infobox_data=["Fighter", "images/scrapbots/fighter.png", "Punchy punchy boi"];
             break;
         case 22:
-            encycl_infobox_title.innerText="Sprinter";
-            encycl_infobox_image.src="images/scrapbots/sprinter.png";
-            encycl_infobox_text.innerText="Melee that shockingly can't run because no legs.";
+            encycl_infobox_data=["Sprinter", "images/scrapbots/sprinter.png", "Melee that shockingly can't run because no legs."];
             break;
         case 23:
-            encycl_infobox_title.innerText="Shooter";
-            encycl_infobox_image.src="images/scrapbots/shooter.png";
-            encycl_infobox_text.innerText="Most self-explanatory unit";
+            encycl_infobox_data=["Shooter", "images/scrapbots/shooter.png", "Most self-explanatory unit"];
             break;
         case 24:
-            encycl_infobox_title.innerText="Skirmisher";
-            encycl_infobox_image.src="images/scrapbots/skirmisher.png";
-            encycl_infobox_text.innerText="Forgive me for naming it skirmisher even though it's not one";
+            encycl_infobox_data=["Skirmisher", "images/scrapbots/skirmisher.png", "Forgive me for naming it skirmisher even though it's not one"];
             break;
         case 25:
-            encycl_infobox_title.innerText="Pursuer";
-            encycl_infobox_image.src="images/scrapbots/pursuer.png";
-            encycl_infobox_text.innerText="Be you here or be you there I shall reduce you to thin air";
+            encycl_infobox_data=["Pursuer", "images/scrapbots/pursuer.png", "Be you here or be you there I shall reduce you to thin air"];
             break;
         case 26:
-            encycl_infobox_title.innerText="Destroyer";
-            encycl_infobox_image.src="images/scrapbots/destroyer.png";
-            encycl_infobox_text.innerText="Unstoppable melee that will touch your opponents";
+            encycl_infobox_data=["Destroyer", "images/scrapbots/destroyer.png", "Unstoppable melee that will touch your opponents"];
             break;
         case 27:
-            encycl_infobox_title.innerText="Annihilator";
-            encycl_infobox_image.src="images/scrapbots/annihilator.png";
-            encycl_infobox_text.innerText="Mike, why is the sun flying towards us?";
+            encycl_infobox_data=["Annihilator", "images/scrapbots/annihilator.png", "Mike, why is the sun flying towards us?"];
             break;
         case 28:
-            encycl_infobox_title.innerText="Gnome";
-            encycl_infobox_image.src="images/yox_empire/gnome.png";
-            encycl_infobox_text.innerText="A builder unit. When it ends its turn on a resource it makes a mine for you.";
+            encycl_infobox_data=["Gnome", "images/yox_empire/gnome.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
             break;
         case 29:
-            encycl_infobox_title.innerText="Kobold";
-            encycl_infobox_image.src="images/yox_empire/kobold.png";
-            encycl_infobox_text.innerText="Melee unit that somehow manages to punch";
+            encycl_infobox_data=["Kobold", "images/yox_empire/kobold.png", "Melee unit that somehow manages to punch"];
             break;
         case 30:
-            encycl_infobox_title.innerText="Hoplite";
-            encycl_infobox_image.src="images/yox_empire/hoplite.png";
-            encycl_infobox_text.innerText="Clickity click-clack, a discombobulating attack";
+            encycl_infobox_data=["Hoplite", "images/yox_empire/hoplite.png", "Clickity click-clack, a discombobulating attack"];
             break;
         case 31:
-            encycl_infobox_title.innerText="Strider";
-            encycl_infobox_image.src="images/yox_empire/strider.png";
-            encycl_infobox_text.innerText="Fast and melee";
+            encycl_infobox_data=["Strider", "images/yox_empire/strider.png", "Fast and melee"];
             break;
         case 32:
-            encycl_infobox_title.innerText="Slingslime";
-            encycl_infobox_image.src="images/yox_empire/slingslime.png";
-            encycl_infobox_text.innerText="Shoots rocks cutely";
+            encycl_infobox_data=["Slingslime", "images/yox_empire/slingslime.png", "Shoots rocks cutely"];
             break;
         case 33:
-            encycl_infobox_title.innerText="Lich";
-            encycl_infobox_image.src="images/yox_empire/lich.png";
-            encycl_infobox_text.innerText="I cast big fat laser";
+            encycl_infobox_data=["Lich", "images/yox_empire/lich.png", "I cast big fat laser"];
             break;
         case 34:
-            encycl_infobox_title.innerText="Cerberus";
-            encycl_infobox_image.src="images/yox_empire/cerberus.png";
-            encycl_infobox_text.innerText="Fast, shoots you, punches you";
+            encycl_infobox_data=["Cerberus", "images/yox_empire/cerberus.png", "Fast, shoots you, punches you"];
             break;
         case 35:
-            encycl_infobox_title.innerText="Leviathan";
-            encycl_infobox_image.src="images/yox_empire/leviathan.png";
-            encycl_infobox_text.innerText="Eats kobolds for breakfast";
+            encycl_infobox_data=["Leviathan", "images/yox_empire/leviathan.png", "Eats kobolds for breakfast"];
             break;
         case 36:
-            encycl_infobox_title.innerText="Reaper";
-            encycl_infobox_image.src="images/yox_empire/reaper.png";
-            encycl_infobox_text.innerText="Deadly elite unit that will probably kill you";
+            encycl_infobox_data=["Reaper", "images/yox_empire/reaper.png", "Deadly elite unit that will probably kill you"];
             break;
         case 37:
-            encycl_infobox_title.innerText="Farm";
-            encycl_infobox_image.src="images/icons/food.png";
-            encycl_infobox_text.innerText="Gives you 5 more food each turn";
+            encycl_infobox_data=["Farm", "images/icons/food.png", "Gives you 5 more food each turn"];
             break;
         case 38:
-            encycl_infobox_title.innerText="Quarry";
-            encycl_infobox_image.src="images/icons/ore.png";
-            encycl_infobox_text.innerText="Gives you 5 more ore each turn";
+            encycl_infobox_data=["Quarry", "images/icons/ore.png", "Gives you 5 more ore each turn"];
             break;
         case 39:
-            encycl_infobox_title.innerText="Marketplace";
-            encycl_infobox_image.src="images/icons/marketplace.png";
-            encycl_infobox_text.innerText="Allows for you to trade basic resources";
+            encycl_infobox_data=["Marketplace", "images/icons/marketplace.png", "Allows for you to trade basic resources"];
             break;
         case 40:
-            encycl_infobox_title.innerText="Walls";
-            encycl_infobox_image.src="images/icons/wall.png";
-            encycl_infobox_text.innerText="City health +50";
+            encycl_infobox_data=["Walls", "images/icons/wall.png", "City health +50"];
             break;
         case 41:
-            encycl_infobox_title.innerText="Mill";
-            encycl_infobox_image.src="images/icons/food.png";
-            encycl_infobox_text.innerText="Gives you 5 more food each turn";
+            encycl_infobox_data=["Mill", "images/icons/food.png", "Gives you 5 more food each turn"];
             break;
         case 42:
-            encycl_infobox_title.innerText="Mineshafts";
-            encycl_infobox_image.src="images/icons/ore.png";
-            encycl_infobox_text.innerText="Gives you 5 more ore each turn";
+            encycl_infobox_data=["Mineshafts", "images/icons/ore.png", "Gives you 5 more ore each turn"];
             break;
         case 43:
-            encycl_infobox_title.innerText="Fortifications";
-            encycl_infobox_image.src="images/icons/fortifications.png";
-            encycl_infobox_text.innerText="City health +50";
+            encycl_infobox_data=["Fortifications", "images/icons/fortifications.png", "City health +50"];
             break;
         case 44:
-            encycl_infobox_title.innerText="University";
-            encycl_infobox_image.src="images/icons/science.png";
-            encycl_infobox_text.innerText="Unlock research";
+            encycl_infobox_data=["University", "images/icons/science.png", "Unlock research"];
             break;
         case 45:
-            encycl_infobox_title.innerText="Shopping Center";
-            encycl_infobox_image.src="images/icons/marketplace.png";
-            encycl_infobox_text.innerText="Allows you to trade premium resources";
+            encycl_infobox_data=["Shopping Center", "images/icons/marketplace.png", "Allows you to trade premium resources"];
             break;
         case 46:
-            encycl_infobox_title.innerText="Hospital";
-            encycl_infobox_image.src="images/icons/hospital.png";
-            encycl_infobox_text.innerText="Units next to your city will heal at the end of your turn";
+            encycl_infobox_data=["Hospital", "images/icons/hospital.png", "Units next to your city will heal at the end of your turn"];
             break;
         case 47:
-            encycl_infobox_title.innerText="Research Center";
-            encycl_infobox_image.src="images/icons/science.png";
-            encycl_infobox_text.innerText="Unlock more research";
+            encycl_infobox_data=["Research Center", "images/icons/science.png", "Unlock more research"];
             break;
         case 48:
-            encycl_infobox_title.innerText="Barracks";
-            encycl_infobox_image.src="images/humans/swordsman.png";
-            encycl_infobox_text.innerText="Allows you to recuit Swordsmen";
+            encycl_infobox_data=["Barracks", "images/humans/swordsman.png", "Allows you to recuit Swordsmen"];
             break;
         case 49:
-            encycl_infobox_title.innerText="Stables";
-            encycl_infobox_image.src="images/humans/horseman.png";
-            encycl_infobox_text.innerText="Allows you to recuit Horsemen";
+            encycl_infobox_data=["Stables", "images/humans/horseman.png", "Allows you to recuit Horsemen"];
             break;
         case 50:
-            encycl_infobox_title.innerText="Archery Range";
-            encycl_infobox_image.src="images/humans/archer.png";
-            encycl_infobox_text.innerText="Allows you to recuit Archers";
+            encycl_infobox_data=["Archery Range", "images/humans/archer.png", "Allows you to recuit Archers"];
             break;
         case 51:
-            encycl_infobox_title.innerText="Shooting Range";
-            encycl_infobox_image.src="images/humans/musketeer.png";
-            encycl_infobox_text.innerText="Allows you to recuit Musketeers. Not to be confused with Shooting Range";
+            encycl_infobox_data=["Shooting Range", "images/humans/musketeer.png", "Allows you to recuit Musketeers. Not to be confused with Shooting Range"];
             break;
         case 52:
-            encycl_infobox_title.innerText="Garage";
-            encycl_infobox_image.src="images/humans/gun_car.png";
-            encycl_infobox_text.innerText="Allows you to recuit Gun Cars, has cool doors";
+            encycl_infobox_data=["Garage", "images/humans/gun_car.png", "Allows you to recuit Gun Cars, has cool doors"];
             break;
         case 53:
-            encycl_infobox_title.innerText="Elite Bootcamp";
-            encycl_infobox_image.src="images/humans/juggernaut.png";
-            encycl_infobox_text.innerText="Allows you to recuit Juggernauts, includes one (1) tree";
+            encycl_infobox_data=["Elite Bootcamp", "images/humans/juggernaut.png", "Allows you to recuit Juggernauts, includes one (1) tree"];
             break;
         case 54:
-            encycl_infobox_title.innerText="Tank Park";
-            encycl_infobox_image.src="images/humans/tank.png";
-            encycl_infobox_text.innerText="Allows you to recuit Tanks, includes two (2) trees";
+            encycl_infobox_data=["Tank Park", "images/humans/tank.png", "Allows you to recuit Tanks, includes two (2) trees"];
             break;
         case 55:
-            encycl_infobox_title.innerText="Spoon";
-            encycl_infobox_image.src="images/pastans/rigatoni.png";
-            encycl_infobox_text.innerText="Allows you to recuit Rigatonines";
+            encycl_infobox_data=["Spoon", "images/pastans/rigatoni.png", "Allows you to recuit Rigatonines"];
             break;
         case 56:
-            encycl_infobox_title.innerText="Baking Tray";
-            encycl_infobox_image.src="images/pastans/lasagna.png";
-            encycl_infobox_text.innerText="Allows you to recuit Lasagnae";
+            encycl_infobox_data=["Baking Tray", "images/pastans/lasagna.png", "Allows you to recuit Lasagnae"];
             break;
         case 57:
-            encycl_infobox_title.innerText="Bowl";
-            encycl_infobox_image.src="images/pastans/orechiette.png";
-            encycl_infobox_text.innerText="Allows you to recuit Orechietti";
+            encycl_infobox_data=["Bowl", "images/pastans/orechiette.png", "Allows you to recuit Orechietti"];
             break;
         case 58:
-            encycl_infobox_title.innerText="Sieve";
-            encycl_infobox_image.src="images/pastans/spaghetti.png";
-            encycl_infobox_text.innerText="Allows you to recuit Spaghettis";
+            encycl_infobox_data=["Sieve", "images/pastans/spaghetti.png", "Allows you to recuit Spaghettis"];
             break;
         case 59:
-            encycl_infobox_title.innerText="Grater";
-            encycl_infobox_image.src="images/pastans/tagliatelle.png";
-            encycl_infobox_text.innerText="Allows you to recuit Tagliatellae";
+            encycl_infobox_data=["Grater", "images/pastans/tagliatelle.png", "Allows you to recuit Tagliatellae"];
             break;
         case 60:
-            encycl_infobox_title.innerText="Plate";
-            encycl_infobox_image.src="images/pastans/farfalle.png";
-            encycl_infobox_text.innerText="Allows you to recuit Farfallae";
+            encycl_infobox_data=["Plate", "images/pastans/farfalle.png", "Allows you to recuit Farfallae"];
             break;
         case 61:
-            encycl_infobox_title.innerText="Pot";
-            encycl_infobox_image.src="images/pastans/macaroni.png";
-            encycl_infobox_text.innerText="Allows you to recuit Macarone";
+            encycl_infobox_data=["Pot", "images/pastans/macaroni.png", "Allows you to recuit Macarone"];
             break;
         case 62:
-            encycl_infobox_title.innerText="Factory";
-            encycl_infobox_image.src="images/scrapbots/fighter.png";
-            encycl_infobox_text.innerText="Allows you to recuit Fighters";
+            encycl_infobox_data=["Factory", "images/scrapbots/fighter.png", "Allows you to recuit Fighters"];
             break;
         case 63:
-            encycl_infobox_title.innerText="Racetrack";
-            encycl_infobox_image.src="images/scrapbots/sprinter.png";
-            encycl_infobox_text.innerText="Allows you to recuit Sprinters, is the most boring circle track possible";
+            encycl_infobox_data=["Racetrack", "images/scrapbots/sprinter.png", "Allows you to recuit Sprinters, is the most boring circle track possible"];
             break;
         case 64:
-            encycl_infobox_title.innerText="Shooting Range";
-            encycl_infobox_image.src="images/scrapbots/shooter.png";
-            encycl_infobox_text.innerText="Allows you to recuit Shooters. Not to be confused with Shooting Range";
+            encycl_infobox_data=["Shooting Range", "images/scrapbots/shooter.png", "Allows you to recuit Shooters. Not to be confused with Shooting Range"];
             break;
         case 65:
-            encycl_infobox_title.innerText="Spider Bunker";
-            encycl_infobox_image.src="images/scrapbots/skirmisher.png";
-            encycl_infobox_text.innerText="Allows you to recuit Skirmishers, it's not a cave.";
+            encycl_infobox_data=["Spider Bunker", "images/scrapbots/skirmisher.png", "Allows you to recuit Skirmishers, it's not a cave."];
             break;
         case 66:
-            encycl_infobox_title.innerText="Airfield";
-            encycl_infobox_image.src="images/scrapbots/pursuer.png";
-            encycl_infobox_text.innerText="Allows you to recuit Pursuers";
+            encycl_infobox_data=["Airfield", "images/scrapbots/pursuer.png", "Allows you to recuit Pursuers"];
             break;
         case 67:
-            encycl_infobox_title.innerText="Assembly Scaffolds";
-            encycl_infobox_image.src="images/scrapbots/destroyer.png";
-            encycl_infobox_text.innerText="Allows you to recuit Destroyers. Looks like a spaceship launch pad";
+            encycl_infobox_data=["Assembly Scaffolds", "images/scrapbots/destroyer.png", "Allows you to recuit Destroyers. Looks like a spaceship launch pad"];
             break;
         case 68:
-            encycl_infobox_title.innerText="Supershell";
-            encycl_infobox_image.src="images/scrapbots/annihilator.png";
-            encycl_infobox_text.innerText="Allows you to recuit Annihilators, like a dyson sphere but it builds the sun";
+            encycl_infobox_data=["Supershell", "images/scrapbots/annihilator.png", "Allows you to recuit Annihilators, like a dyson sphere but it builds the sun"];
             break;
         case 69:
-            encycl_infobox_title.innerText="Graveyard";
-            encycl_infobox_image.src="images/yox_empire/hoplite.png";
-            encycl_infobox_text.innerText="Allows you to recuit Hoplites, has spiky trees";
+            encycl_infobox_data=["Graveyard", "images/yox_empire/hoplite.png", "Allows you to recuit Hoplites, has spiky trees"];
             break;
         case 70:
-            encycl_infobox_title.innerText="Silent Trees";
-            encycl_infobox_image.src="images/yox_empire/strider.png";
-            encycl_infobox_text.innerText="Allows you to recuit Striders";
+            encycl_infobox_data=["Silent Trees", "images/yox_empire/strider.png", "Allows you to recuit Striders"];
             break;
         case 71:
-            encycl_infobox_title.innerText="Damp Cave";
-            encycl_infobox_image.src="images/yox_empire/slingslime.png";
-            encycl_infobox_text.innerText="Allows you to recuit Slingslimes. Hat shop included";
+            encycl_infobox_data=["Damp Cave", "images/yox_empire/slingslime.png", "Allows you to recuit Slingslimes. Hat shop included"];
             break;
         case 72:
-            encycl_infobox_title.innerText="Forbidden Library";
-            encycl_infobox_image.src="images/yox_empire/lich.png";
-            encycl_infobox_text.innerText="Allows you to recuit Liches";
+            encycl_infobox_data=["Forbidden Library", "images/yox_empire/lich.png", "Allows you to recuit Liches"];
             break;
         case 73:
-            encycl_infobox_title.innerText="Hell's Kennel";
-            encycl_infobox_image.src="images/yox_empire/cerberus.png";
-            encycl_infobox_text.innerText="Allows you to recuit Cerberuses";
+            encycl_infobox_data=["Hell's Kennel", "images/yox_empire/cerberus.png", "Allows you to recuit Cerberuses"];
             break;
         case 74:
-            encycl_infobox_title.innerText="Big Pit";
-            encycl_infobox_image.src="images/yox_empire/leviathan.png";
-            encycl_infobox_text.innerText="Allows you to recuit Leviathans, it's very big";
+            encycl_infobox_data=["Big Pit", "images/yox_empire/leviathan.png", "Allows you to recuit Leviathans, it's very big"];
             break;
         case 75:
-            encycl_infobox_title.innerText="Tower of Souls";
-            encycl_infobox_image.src="images/yox_empire/reaper.png";
-            encycl_infobox_text.innerText="Allows you to recuit Reapers, has cool floating wisps";
+            encycl_infobox_data=["Tower of Souls", "images/yox_empire/reaper.png", "Allows you to recuit Reapers, has cool floating wisps"];
             break;
     }
+    encycl_infobox_title.innerText=encycl_infobox_data[0];
+    encycl_infobox_image.src=encycl_infobox_data[1];
+    encycl_infobox_text.innerText=encycl_infobox_data[2];
+
 }
 function hq_popup(text){
     hq_popup_div.style.display="block";
@@ -1332,27 +1177,22 @@ function load_assets(){
     function next_image(){
         loader.src = "images/"+loading_images[linknum];
         linknum++;
-        if(linknum < loading_images.length){
-            setTimeout(next_image, 100);    
-        }
+        if(linknum < loading_images.length){setTimeout(next_image, 100);    }
         else{
-            end_load();
+            loader_cover.style.display="none";
+            loader.style.display="none";
+            root.style.setProperty("--back-image", "url(images/backgrounds/black.jpg)");
+            choose_faction();
         }
     }
     next_image();
-}
-function end_load(){
-    loader_cover.style.display="none";
-    loader.style.display="none";
-    root.style.setProperty("--back-image", "url(images/backgrounds/black.jpg)");
-    choose_faction();
 }
 function choose_faction(){
     faction_choose.style.display="block";
     choose_yox_empire.onclick = function(){
         faction_choose.style.display="none";
         player_faction = "yox_empire";
-        root.style.setProperty("--player-color-pale", "#8855ee");
+        root.style.setProperty("--player-color-pale", "#9264ee");
         root.style.setProperty("--player-color-light", "#9966ff");
         root.style.setProperty("--player-color-dark", "#310080");
         generate_map();
@@ -1378,88 +1218,34 @@ function choose_faction(){
         player_faction = "scrapbots";
         root.style.setProperty("--player-color-pale", "#ee9955");     
         root.style.setProperty("--player-color-light", "#ffaa66");
-        root.style.setProperty("--player-color-dark", "#aa5500");
+        root.style.setProperty("--player-color-dark", "#ad5a06");
         generate_map();
     }
 }
 function generate_map(){
     //HQ
-    if(player_faction==="humans"){
-        unit1_button.innerText="Labourer - 10 food";
-        unit2_button.innerText="Spearman - 10 food, 5 ore";
-        unit3_button.innerText="Warrior - 20 food, 10 ore";
-        unit4_button.innerText="Horseman - 20 food, 10 ore";
-        unit5_button.innerText="Archer - 10 food, 15 ore";
-        unit6_button.innerText = "Musketeer - 20 food, 20 ore";
-        unit7_button.innerText = "Gun car - 15 food, 30 ore, 1 aluminium";
-        unit8_button.innerText = "Juggernaut - 30 food, 30 ore, 1 hazardite";
-        unit9_button.innerText = "Tank - 25 food, 50 ore, 1 oil, 1 gem";
+    if(player_faction==="humans"){hq_naming_list=["Labourer - 10 food", "Spearman - 10 food, 5 ore", "Warrior - 20 food, 10 ore", "Horseman - 20 food, 10 ore", "Archer - 10 food, 15 ore", "Musketeer - 20 food, 20 ore", "Gun car - 15 food, 30 ore, 1 aluminium", "Juggernaut - 30 food, 30 ore, 1 hazardite", "Tank - 25 food, 50 ore, 1 oil, 1 gem", "Barracks - 10 food, 10 ore", "Stables - 20 food, 20 ore", "Archery Range - 20 food, 20 ore", "Shooting Range - 25 food, 25 ore", "Garage - 35 food, 35 ore", "Elite Bootcamp - 40 food, 30 ore", "Tank Park - 45 food, 55 ore"];} 
+    else if (player_faction === "pastans") {hq_naming_list = ["Fusilli - 10 food", "Penne - 10 food, 5 ore", "Rigatoni - 20 food, 10 ore", "Lasagna - 15 food, 15 ore", "Orechiette - 15 food, 20 ore", "Spaghetti - 25 food, 20 ore", "Tagliatelle - 20 food, 30 ore, 1 hazardite", "Farfalle - 30 food, 15 ore, 1 gem", "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium", "Spoon - 10 food, 10 ore", "Baking Tray - 20 food, 20 ore", "Bowl - 20 food, 20 ore", "Sieve - 25 food, 25 ore", "Grater - 35 food, 35 ore", "Plate - 30 food, 40 ore", "Pot - 45 food, 55 ore"];} 
+    else if (player_faction === "scrapbots") {hq_naming_list = ["Worker - 10 ore", "Fodder - 5 food, 5 ore", "Fighter - 10 food, 10 ore", "Sprinter - 10 food, 15 ore", "Shooter - 10 food, 15 ore", "Skirmisher - 15 food, 15 ore", "Pursuer - 20 food, 20 ore, 1 aluminium", "Destroyer - 25 food, 25 ore, 1 oil", "Annihilator - 25 food, 50 ore, 1 gem, 1 hazardite", "Factory - 10 food, 10 ore", "Racetrack - 20 food, 20 ore", "Shooting Range - 20 food, 20 ore", "Spider Bunker - 25 food, 25 ore", "Airfield - 35 food, 35 ore", "Assembly Scaffolds - 30 food, 40 ore", "Supershell - 45 food, 55 ore"];} 
+    else {hq_naming_list = ["Gnome - 10 food", "Kobold - 10 food, 10 ore", "Hoplite - 15 food, 15 ore", "Strider - 20 food, 15 ore", "Slingslime - 20 food, 15 ore", "Lich - 30 food, 20 ore", "Cerberus - 20 food, 20 ore, 1 aluminium", "Leviathan - 30 food, 30 ore, 1 oil", "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite", "Graveyard - 10 food, 10 ore", "Silent Trees - 20 food, 20 ore", "Damp Cave - 20 food, 20 ore", "Forbidden Library - 25 food, 25 ore", "Hell's Kennel - 35 food, 35 ore", "Big Pit - 40 food, 30 ore", "Tower of Souls - 45 food, 55 ore"];}
+    
+    unit1_button.innerText=hq_naming_list[0];
+    unit2_button.innerText=hq_naming_list[1];
+    unit3_button.innerText=hq_naming_list[2];
+    unit4_button.innerText=hq_naming_list[3];
+    unit5_button.innerText=hq_naming_list[4];
+    unit6_button.innerText=hq_naming_list[5];
+    unit7_button.innerText=hq_naming_list[6];
+    unit8_button.innerText=hq_naming_list[7];
+    unit9_button.innerText=hq_naming_list[8];
 
-        build3_button.innerText = "Barracks - 10 food, 10 ore";
-        build6_button.innerText = "Stables - 20 food, 20 ore";
-        build7_button.innerText = "Archery Range - 20 food, 20 ore";
-        build11_button.innerText = "Shooting Range - 25 food, 25 ore";
-        build15_button.innerText = "Garage - 35 food, 35 ore";
-        build16_button.innerText = "Elite Bootcamp - 40 food, 30 ore";
-        build18_button.innerText = "Tank Park - 45 food, 55 ore";
-    } 
-    else if (player_faction === "pastans") {
-        unit1_button.innerText = "Fusilli - 10 food";
-        unit2_button.innerText = "Penne - 10 food, 5 ore";
-        unit3_button.innerText = "Rigatoni - 20 food, 10 ore";
-        unit4_button.innerText = "Lasagna - 15 food, 15 ore";
-        unit5_button.innerText = "Orechiette - 15 food, 20 ore";
-        unit6_button.innerText = "Spaghetti - 25 food, 20 ore";
-        unit7_button.innerText = "Tagliatelle - 20 food, 30 ore, 1 hazardite";
-        unit8_button.innerText = "Farfalle - 30 food, 15 ore, 1 gem";
-        unit9_button.innerText = "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium";
-        
-        build3_button.innerText = "Spoon - 10 food, 10 ore";
-        build6_button.innerText = "Baking Tray - 20 food, 20 ore";
-        build7_button.innerText = "Bowl - 20 food, 20 ore";
-        build11_button.innerText = "Sieve - 25 food, 25 ore";
-        build15_button.innerText = "Grater - 35 food, 35 ore";
-        build16_button.innerText = "Plate - 30 food, 40 ore";
-        build18_button.innerText = "Pot - 45 food, 55 ore";
-    } 
-    else if (player_faction === "scrapbots") {
-        unit1_button.innerText = "Worker - 10 ore";
-        unit2_button.innerText = "Fodder - 5 food, 5 ore";
-        unit3_button.innerText = "Fighter - 10 food, 10 ore";
-        unit4_button.innerText = "Sprinter - 10 food, 15 ore";
-        unit5_button.innerText = "Shooter - 10 food, 15 ore";
-        unit6_button.innerText = "Skirmisher - 15 food, 15 ore";
-        unit7_button.innerText = "Pursuer - 20 food, 20 ore, 1 aluminium";
-        unit8_button.innerText = "Destroyer - 25 food, 25 ore, 1 oil";
-        unit9_button.innerText = "Annihilator - 25 food, 50 ore, 1 gem, 1 hazardite";
-
-        build3_button.innerText = "Factory - 10 food, 10 ore";
-        build6_button.innerText = "Racetrack - 20 food, 20 ore";
-        build7_button.innerText = "Shooting Range - 20 food, 20 ore";
-        build11_button.innerText = "Spider Bunker - 25 food, 25 ore";
-        build15_button.innerText = "Airfield - 35 food, 35 ore";
-        build16_button.innerText = "Assembly Scaffolds - 30 food, 40 ore";
-        build18_button.innerText = "Supershell - 45 food, 55 ore";
-    } 
-    else{
-        unit1_button.innerText = "Gnome - 10 food";
-        unit2_button.innerText = "Kobold - 10 food, 10 ore";
-        unit3_button.innerText = "Hoplite - 15 food, 15 ore";
-        unit4_button.innerText = "Strider - 20 food, 15 ore";
-        unit5_button.innerText = "Slingslime - 20 food, 15 ore";
-        unit6_button.innerText = "Lich - 30 food, 20 ore";
-        unit7_button.innerText = "Cerberus - 20 food, 20 ore, 1 aluminium";
-        unit8_button.innerText = "Leviathan - 30 food, 30 ore, 1 oil";
-        unit9_button.innerText = "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite";
-
-        build3_button.innerText = "Graveyard - 10 food, 10 ore";
-        build6_button.innerText = "Silent Trees - 20 food, 20 ore";
-        build7_button.innerText = "Damp Cave - 20 food, 20 ore";
-        build11_button.innerText = "Forbidden Library - 25 food, 25 ore";
-        build15_button.innerText = "Hell's Kennel - 35 food, 35 ore";
-        build16_button.innerText = "Big Pit - 40 food, 30 ore";
-        build18_button.innerText = "Tower of Souls - 45 food, 55 ore";
-    }
+    build3_button.innerText=hq_naming_list[9];
+    build6_button.innerText=hq_naming_list[10];
+    build7_button.innerText=hq_naming_list[11];
+    build11_button.innerText=hq_naming_list[12];
+    build15_button.innerText=hq_naming_list[13];
+    build16_button.innerText=hq_naming_list[14];
+    build18_button.innerText=hq_naming_list[15];
 
     //MAIN MAP
     hotbar.style.display = "block";
@@ -1500,18 +1286,10 @@ function generate_map(){
             }
             console.log("e")
             if (x===2 && y===2){
-                if (player_faction === "humans"){
-                    tile.src = "images/tiles/humans_hq.png";
-                }
-                else if (player_faction === "scrapbots"){
-                    tile.src = "images/tiles/scrapbots_hq.png";
-                }
-                else if (player_faction === "pastans"){
-                    tile.src = "images/tiles/pastans_hq.png";
-                }
-                else  if (player_faction === "yox_empire"){
-                    tile.src = "images/tiles/yox_empire_hq.png";
-                }
+                if (player_faction === "humans"){tile.src = "images/tiles/humans_hq.png";}
+                else if (player_faction === "scrapbots"){tile.src = "images/tiles/scrapbots_hq.png";}
+                else if (player_faction === "pastans"){tile.src = "images/tiles/pastans_hq.png";}
+                else  if (player_faction === "yox_empire"){tile.src = "images/tiles/yox_empire_hq.png";}
                 tile.onclick=()=>hq_menu.style.display="block";
             }
             else if (x===2 && y===24){
@@ -1541,9 +1319,7 @@ function generate_map(){
             else if ((x===13 && y===23) || (x===8 && y===18)){
                 tile.src="images/tiles/aluminium.png";
             }
-            else{
-                tile.src = "images/tiles/land.png";
-            }
+            else{tile.src = "images/tiles/land.png";}
             tile_container.appendChild(tile);
         }
     }
