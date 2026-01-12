@@ -8,6 +8,7 @@
     --yox-empire-color-light:#9966ff;
     --pastans-color-light:#66ffbb;
     --scrapbots-color-light:#ffaa66;
+    --player-color:#000000;
     --player-color-pale:#000000;
     --player-color-light:#000000;
     --player-color-dark:#000000;
@@ -24,8 +25,6 @@
     --oil-color:#222222;
     --oil-color-light:#444444;
     
-    --unit-one-unlocked:#ffffff;
-    --unit-two-unlocked:#ffffff;
     --unit-three-unlocked:#ff0000;
     --unit-four-unlocked:#ff0000;
     --unit-five-unlocked:#ff0000;
@@ -33,6 +32,8 @@
     --unit-seven-unlocked:#ff0000;
     --unit-eight-unlocked:#ff0000;
     --unit-nine-unlocked:#ff0000;
+    --research-facility-unlocked:#ff0000;
+    --shopping-center-unlocked:#ff0000;
 
     --hq-market-unlocked:#ff0000;
     --hq-university-unlocked:#ff0000;
@@ -230,30 +231,14 @@ span, div, button{
     text-align:center;
     font-size:2em;
 }
-.choose_humans{
-    background-color:var(--human-color);
-}
-.choose_yox_empire{
-    background-color:var(--yox-empire-color);
-}
-.choose_scrapbots{
-    background-color:var(--scrapbots-color);
-}
-.choose_pastans{
-    background-color:var(--pastans-color);
-}
-.choose_humans:hover{
-    background-color:var(--human-color-light);
-}
-.choose_yox_empire:hover{
-    background-color:var(--yox-empire-color-light);
-}
-.choose_scrapbots:hover{
-    background-color:var(--scrapbots-color-light);
-}
-.choose_pastans:hover{
-    background-color:var(--pastans-color-light);
-}
+.choose_humans{background-color:var(--human-color);}
+.choose_yox_empire{background-color:var(--yox-empire-color);}
+.choose_scrapbots{background-color:var(--scrapbots-color);}
+.choose_pastans{background-color:var(--pastans-color);}
+.choose_humans:hover{background-color:var(--human-color-light);}
+.choose_yox_empire:hover{background-color:var(--yox-empire-color-light);}
+.choose_scrapbots:hover{background-color:var(--scrapbots-color-light);}
+.choose_pastans:hover{background-color:var(--pastans-color-light);}
 .choose_humans:hover, .choose_yox_empire:hover, .choose_scrapbots:hover, .choose_pastans:hover{
     cursor:pointer;
 }
@@ -415,35 +400,17 @@ span, div, button{
     font-weight:600;
     cursor:pointer;
 }
-.buy_unit1:hover{
-    border:2px solid var(--unit-one-unlocked);
-}
-.buy_unit2:hover{
-    border:2px solid var(--unit-two-unlocked);
-}
-.buy_unit3:hover{
-    border:2px solid var(--unit-three-unlocked);
-}
-.buy_unit4:hover{
-    border:2px solid var(--unit-four-unlocked);
-}
-.buy_unit5:hover{
-    border:2px solid var(--unit-five-unlocked);
-}
-.buy_unit6:hover{
-    border:2px solid var(--unit-six-unlocked);
-}
-.buy_unit7:hover{
-    border:2px solid var(--unit-seven-unlocked);
-}
-.buy_unit8:hover{
-    border:2px solid var(--unit-eight-unlocked);
-}
-.buy_unit9:hover{
-    border:2px solid var(--unit-nine-unlocked);
-}
+.buy_unit3:hover{border:2px solid var(--unit-three-unlocked);}
+.buy_unit4:hover{border:2px solid var(--unit-four-unlocked);}
+.buy_unit5:hover{border:2px solid var(--unit-five-unlocked);}
+.buy_unit6:hover{border:2px solid var(--unit-six-unlocked);}
+.buy_unit7:hover{border:2px solid var(--unit-seven-unlocked);}
+.buy_unit8:hover{border:2px solid var(--unit-eight-unlocked);}
+.buy_unit9:hover{border:2px solid var(--unit-nine-unlocked);}
+.buy_building13:hover{border:2px solid var(--shopping-center-unlocked);}
+.buy_building17:hover{border:2px solid var(--research-facility-unlocked);}
 
-.hq_buildings .buything{
+.hq_buildings > .buything{
     height:5%;
 }
 .hq_popup{
@@ -535,6 +502,26 @@ span, div, button{
     background:var(--hq-healthbar-color);
     width: 50%;
     height:100%;
+}
+.hqw_healthtext_container{
+    font-family:"Almendra SC";
+    width:90%;
+    text-align:center;
+    color:white;
+    height:10%;
+    font-size:1.4em;
+}
+.hqw_resource_counter{
+    width:90%;
+    height:75%;
+    border:2px solid black;
+    margin:0px;
+    padding:0px;
+    background-color:var(--player-color-pale);
+    display:flex;
+    flex-direction:column;
+    flex-wrap: wrap;
+    justify-content:center;
 }
 
 /**ENCYCLOPOEDIA**/
