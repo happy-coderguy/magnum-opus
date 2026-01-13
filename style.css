@@ -246,7 +246,19 @@ span, div, button{
 .tile{
     position:absolute;
     image-rendering: pixelated;
+
+}
+.tileimg{
+    image-rendering: pixelated;
     z-index:2;
+    position: relative;
+    object-fit:fill;
+}
+.unit{
+    z-index:3;
+    image-rendering: pixelated;
+    object-fit:cover;
+    position: relative;
 }
 .hotbar{
     position:fixed;

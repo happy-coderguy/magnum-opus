@@ -231,7 +231,6 @@ const r4r4 = document.querySelector(".r4r4");
 
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/swordsman.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
-
 let player = {
     food:5000,
     ore:5000,
@@ -246,8 +245,35 @@ let player = {
     hq_maxhealth:100,
     hq_pcenthealth:100,
 };
-
 let building_inq;
+
+//UNIT STUFF 
+class Unit{
+    constructor(name, id, maxhealth, x, y, filepath){
+        this.name=name;
+        this.id=id;
+        this.maxhealth=maxhealth;
+        this.health=maxhealth;
+        this.x=x;
+        this.y=y;
+        this.filepath=filepath;
+    }
+    render_unit(){
+        const existing=document.querySelector(`.u${this.id}`);
+        if(existing){existing.remove();}
+
+        const tile=document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
+
+        const unit_render=document.createElement("img");
+        unit_render.classList.add("unit");
+        unit_render.classList.add(`u${this.id}`);
+        unit_render.src=this.filepath;
+        unit_render.style.width="128px";
+        unit_render.style.height="128px";
+
+        tile.appendChild(unit_render);
+    }
+}
 
 //this is for goofy easter egg
 const d = new Date
@@ -1191,13 +1217,21 @@ function generate_map(){
     hotbar.style.display = "block";
     for (let x = 1; x<26; x++){
         for (let y = 1; y<26; y++){
-            const tile = document.createElement("img");
+            const tile = document.createElement("div");
             tile.classList.add("tile");
             tile.style.position = "absolute";
             tile.style.left = (x-1)*128+"px";
             tile.style.top = (y-1)*128+"px";
             tile.style.width = "128px";
             tile.style.height = "128px";
+            tile.setAttribute("data-x", x);
+            tile.setAttribute("data-y", y);
+            const tileimg = document.createElement("img");
+            tileimg.classList.add("tileimg");
+            tileimg.style.width="128px";
+            tileimg.style.height="128px";
+            tileimg.style.padding="0px";
+            tileimg.style.margin="0px";
             if (x===1 && y===1){
                 tile.classList.add("top_left_anchor");
             }
@@ -1226,41 +1260,42 @@ function generate_map(){
             }
             console.log("e")
             if (x===2 && y===2){
-                if (player.faction === "humans"){tile.src = "images/tiles/humans_hq.png";}
-                else if (player.faction === "scrapbots"){tile.src = "images/tiles/scrapbots_hq.png";}
-                else if (player.faction === "pastans"){tile.src = "images/tiles/pastans_hq.png";}
-                else  if (player.faction === "yox_empire"){tile.src = "images/tiles/yox_empire_hq.png";}
+                if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
+                else if (player.faction === "scrapbots"){tileimg.src = "images/tiles/scrapbots_hq.png";}
+                else if (player.faction === "pastans"){tileimg.src = "images/tiles/pastans_hq.png";}
+                else  if (player.faction === "yox_empire"){tileimg.src = "images/tiles/yox_empire_hq.png";}
                 tile.onclick=()=>hq_menu.style.display="block";
             }
             else if (x===2 && y===24){
-                tile.src = "images/tiles/" + enemy1 + "_hq.png";
+                tileimg.src = "images/tiles/" + enemy1 + "_hq.png";
             }
             else if (x===24 && y===2){
-                tile.src = "images/tiles/" + enemy2 + "_hq.png";
+                tileimg.src = "images/tiles/" + enemy2 + "_hq.png";
             }
             else if (x===24 && y===24){
-                tile.src = "images/tiles/" + enemy3 + "_hq.png";
+                tileimg.src = "images/tiles/" + enemy3 + "_hq.png";
             }
             else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22) || (x===19 && y===23) || (x===4 && y===24) || (x===3 && y===19) || (x===11 && y===11) || (x===15 && y===15)){
-                tile.src = "images/tiles/mine.png";
+                tileimg.src = "images/tiles/mine.png";
             }
             else if ((x===4 && y===2) || (x===3 && y===7) || (x==24 && y===4) || (x===19 && y===3) || (x===22 && y===24) || (x===23 && y===19) || (x===2 && y===22) || (x===7 && y===23) || (x===11 && y===15) || (x===15 && y===11)){
-                tile.src = "images/tiles/food.png";
+                tileimg.src = "images/tiles/food.png";
             }
             else if ((x===13 && y===3) || (x===18 && y===18)){
-                tile.src="images/tiles/oil.png";
+                tileimg.src="images/tiles/oil.png";
             }
             else if ((x===3 && y===13) || (x===18 && y===8)){
-                tile.src="images/tiles/hazardite.png";
+                tileimg.src="images/tiles/hazardite.png";
             }
             else if ((x===23 && y===13) || (x===8 && y===8)){
-                tile.src="images/tiles/gems.png";
+                tileimg.src="images/tiles/gems.png";
             }
             else if ((x===13 && y===23) || (x===8 && y===18)){
-                tile.src="images/tiles/aluminium.png";
+                tileimg.src="images/tiles/aluminium.png";
             }
-            else{tile.src = "images/tiles/land.png";}
+            else{tileimg.src = "images/tiles/land.png";}
             tile_container.appendChild(tile);
+            tile.appendChild(tileimg);
         }
     }
     game_start();
@@ -1291,7 +1326,15 @@ function game_start(){
             });
         }
     });
+
     update_resource_counters();
+    update_hq_healthbar();
+
+    //test area for  to run at game start
+
+    const bubu = new Unit("bubu", 1, 1, 10, 10, "images/pastans/farfalle.png");
+    bubu.render_unit();
+
 }
 
 //ONCLICK ASSIGNMENTS
@@ -1362,6 +1405,4 @@ for (let i = 1; i <= 75; i++) {
     btn.onclick = () => open_encycl_entry(i);    
 }
 
-update_resource_counters();
-update_hq_healthbar();
 //you used to call me on yo cell phone
