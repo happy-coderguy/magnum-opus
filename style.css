@@ -246,18 +246,20 @@ span, div, button{
 .tile{
     position:absolute;
     image-rendering: pixelated;
+    display:grid;
+    grid-area: 1/1;
+    object-fit:cover;
 
 }
 .tileimg{
     image-rendering: pixelated;
     z-index:2;
     position: relative;
-    object-fit:fill;
 }
 .unit{
     z-index:3;
+    margin-top:-128px;
     image-rendering: pixelated;
-    object-fit:cover;
     position: relative;
 }
 .hotbar{
@@ -533,6 +535,7 @@ span, div, button{
     display:flex;
     flex-direction:column;
     flex-wrap: wrap;
+    font-family:"Almendra SC";
     justify-content:center;
 }
 

@@ -231,47 +231,106 @@ const r4r4 = document.querySelector(".r4r4");
 
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/swordsman.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
+let global_units=[];
 let player = {
-    food:5000,
-    ore:5000,
-    oil:500,
-    hazardite:500,
-    aluminium:500,
-    gems:500,
+    food:5000, ore:5000, oil:500, hazardite:500, aluminium:500, gems:500,
+    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
     buildings:[],
     research:[],
-    hq_health:100,
-    hq_maxhealth:100,
-    hq_pcenthealth:100,
+    units:[],
+    hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
+};
+let bot1 = {
+    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    faction:"",
+    buildings:[],
+    research:[],
+    units:[],
+    hq_health:100, hq_maxhealth:100,
+};
+let bot2 = {
+    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    faction:"",
+    buildings:[],
+    research:[],
+    units:[],
+    hq_health:100, hq_maxhealth:100,
+};
+let bot3 = {
+    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    faction:"",
+    buildings:[],
+    research:[],
+    units:[],
+    hq_health:100, hq_maxhealth:100,
 };
 let building_inq;
+let current_id=456;
+let correct_x;
 
 //UNIT STUFF 
+function assign_id(){
+    current_id+=1;
+    return current_id;
+}
+function get_unit_by_pos(x, y){
+    for(let unit of global_units){
+        if(unit.x===x && unit.y===y){
+            return unit;
+        }
+    }
+    return null;
+}
 class Unit{
-    constructor(name, id, maxhealth, x, y, filepath){
+    constructor(name, maxhealth, movement, x, y, filepath, owner){
         this.name=name;
-        this.id=id;
+        this.id=assign_id();
+        this.filepath=filepath;
+        this.owner=owner;
+
         this.maxhealth=maxhealth;
         this.health=maxhealth;
         this.x=x;
         this.y=y;
-        this.filepath=filepath;
+        this.movement=movement;
+
+        global_units.push(this);
+        if(owner==="player"){this.owner_obj=player;}
+        else if(owner==="bot1"){this.owner_obj=bot1;}
+        else if(owner==="bot2"){this.owner_obj=bot2;}
+        else{this.owner_obj=bot3;}
+        this.owner_obj.units.push(this);
     }
     render_unit(){
         const existing=document.querySelector(`.u${this.id}`);
         if(existing){existing.remove();}
-
-        const tile=document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
-
+        const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
         const unit_render=document.createElement("img");
         unit_render.classList.add("unit");
         unit_render.classList.add(`u${this.id}`);
         unit_render.src=this.filepath;
         unit_render.style.width="128px";
         unit_render.style.height="128px";
-
-        tile.appendChild(unit_render);
+        tile_parent.appendChild(unit_render);
+    }
+    take_damage(damage){
+        this.health-=damage;
+        //animation?
+        if(this.health<=0){
+            //DEATH
+            const existing=document.querySelector(`.u${this.id}`);
+            if(existing){existing.remove();}
+            global_units.splice(global_units.indexOf(this), 1);
+            this.owner_obj.units.splice(this.owner_obj.units.indexOf(this), 1);
+        }
+    }
+    deal_damage(damage, target_x, target_y){
+        let target=get_unit_by_pos(target_x, target_y);
+        target.take_damage(damage);
     }
 }
 
@@ -1258,7 +1317,6 @@ function generate_map(){
                 enemy2 = "scrapbots";
                 enemy3 = "pastans"; 
             }
-            console.log("e")
             if (x===2 && y===2){
                 if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
                 else if (player.faction === "scrapbots"){tileimg.src = "images/tiles/scrapbots_hq.png";}
@@ -1294,6 +1352,8 @@ function generate_map(){
                 tileimg.src="images/tiles/aluminium.png";
             }
             else{tileimg.src = "images/tiles/land.png";}
+            //else{tileimg.src = "importan.png";}
+        
             tile_container.appendChild(tile);
             tile.appendChild(tileimg);
         }
@@ -1326,14 +1386,18 @@ function game_start(){
             });
         }
     });
-
     update_resource_counters();
     update_hq_healthbar();
 
-    //test area for  to run at game start
+    //test area for #### to run at game start
+    
+    //let bubu = new Unit("bubu", 1, 10, 3, 3,"images/yox_empire/hoplite.png", "player");
+    //bubu.render_unit();
+    
+    
 
-    const bubu = new Unit("bubu", 1, 1, 10, 10, "images/pastans/farfalle.png");
-    bubu.render_unit();
+    update_resource_counters();
+    update_hq_healthbar();
 
 }
 
