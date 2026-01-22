@@ -30,6 +30,7 @@ const tile_container = document.querySelector(".tiles");
 
 const hotbar = document.querySelector(".hotbar");
 const next_turn = document.querySelector(".next_turn");
+const unit_hotbar = document.querySelector(".unit_hotbar");
 
 const hq_menu = document.querySelector(".hq_menu");
 const hq_close = document.querySelector(".hq_close");
@@ -271,8 +272,10 @@ let bot3 = {
 let building_inq;
 let current_id=456;
 let correct_x;
+let active_unit;
+let research_32_status=0;
 
-//UNIT STUFF 
+/**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
     current_id+=1;
     return current_id;
@@ -285,18 +288,24 @@ function get_unit_by_pos(x, y){
     }
     return null;
 }
+//find empty spot by player hq
+function FESBP(){
+    if(get_unit_by_pos(3,3)===null){return [3,3];}
+    else if(get_unit_by_pos(2,3)===null){return [2,3];}
+    else if(get_unit_by_pos(3,2)===null){return [3,2];}
+    else if(get_unit_by_pos(1,3)===null){return [1,3];}
+    else if(get_unit_by_pos(3,1)===null){return [3,1];}
+    else if(get_unit_by_pos(1,2)===null){return [1,2];}
+    else if(get_unit_by_pos(2,1)===null){return [2,1];}
+    else if(get_unit_by_pos(1,1)===null){return [1,1];}
+    else{return null;}
+}
 class Unit{
-    constructor(name, maxhealth, movement, x, y, filepath, owner){
+    constructor(name, maxhealth, movement, x, y, type, filepath, owner){
         this.name=name;
         this.id=assign_id();
         this.filepath=filepath;
         this.owner=owner;
-
-        this.maxhealth=maxhealth;
-        this.health=maxhealth;
-        this.x=x;
-        this.y=y;
-        this.movement=movement;
 
         global_units.push(this);
         if(owner==="player"){this.owner_obj=player;}
@@ -304,6 +313,16 @@ class Unit{
         else if(owner==="bot2"){this.owner_obj=bot2;}
         else{this.owner_obj=bot3;}
         this.owner_obj.units.push(this);
+
+        this.type=type;    
+        this.maxhealth=maxhealth;
+        this.health=maxhealth;
+        this.x=x;
+        this.y=y;
+        this.movement=movement;
+        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1;}
+        if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1;}
+        this.maxmovement=this.movement;
     }
     render_unit(){
         const existing=document.querySelector(`.u${this.id}`);
@@ -315,6 +334,7 @@ class Unit{
         unit_render.src=this.filepath;
         unit_render.style.width="128px";
         unit_render.style.height="128px";
+        if(this.owner==="player"){unit_render.onclick=this.activate_unit.bind(this);}
         tile_parent.appendChild(unit_render);
     }
     take_damage(damage){
@@ -332,13 +352,55 @@ class Unit{
         let target=get_unit_by_pos(target_x, target_y);
         target.take_damage(damage);
     }
+    move_unit(dest_x, dest_y){
+        let distance_gone = Math.abs(this.x-dest_x)+Math.abs(this.y-dest_y)
+        if(get_unit_by_pos(dest_x, dest_y)==null){
+            this.x=dest_x;
+            this.y=dest_y;
+            this.render_unit();
+            this.activate_unit();
+            this.movement-=distance_gone;
+        }  
+    }
+    activate_unit(){
+        const all_tiles=document.querySelectorAll(".tileimg");
+        if(active_unit===this.id){
+            all_tiles.forEach((tile => {
+                tile.style.filter="brightness(100%)";
+                tile.onclick=nothing;
+            }))
+            active_unit=null;
+            hotbar.style.display="block";
+            unit_hotbar.style.display="none";
+        }
+        else if(active_unit==null){
+            active_unit=this.id;
+            hotbar.style.display="none";
+            unit_hotbar.style.display="block";
+            all_tiles.forEach((tile => {
+                const tilex=tile.getAttribute("data-x");
+                const tiley=tile.getAttribute("data-y");
+                //distance checker
+                //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
+                if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement){
+                    tile.style.filter="brightness(0%)";
+                }
+                else{
+                    tile.onclick = () =>this.move_unit(tilex, tiley);
+                }
+            }))
+        }
+    }
+}
+function render_all_units(){
+    global_units.forEach((unit => unit.render_unit()));
 }
 
 //this is for goofy easter egg
 const d = new Date
 let time = d.getTime();
 
-/**FUNCTIONS**/
+/**GENERAL FUNCTIONS**/
 function show_settings(){
     //code for goofy easter egg
     const e = new Date
@@ -346,6 +408,9 @@ function show_settings(){
     else{settings.style.background="#44ee44";}
     //actual code for showing settings
     settings.style.display="block";
+}
+function open_hq(){
+    if(active_unit==null){hq_menu.style.display="block";}
 }
 function open_encycl(){
     encycl.style.display = "block";
@@ -733,6 +798,7 @@ function buy_building_do(building_number){
                 player.food=player.food-5;
                 player.ore=player.ore-5;
                 build1_button.innerText = "Built";
+                player.food_gain+=5;
             }
             break;
         case 2:
@@ -742,6 +808,7 @@ function buy_building_do(building_number){
                 player.buildings.push("Quarry");
                 player.food=player.food-5;
                 player.ore=player.ore-5;
+                player.ore_gain+=5;
                 build2_button.innerText = "Built";
             }
             break;
@@ -821,6 +888,7 @@ function buy_building_do(building_number){
                 player.buildings.push("Mill");
                 player.food=player.food-20;
                 player.ore=player.ore-20;
+                player.food_gain+=5;
                 build8_button.innerText = "Built";
             }
             break;
@@ -831,6 +899,7 @@ function buy_building_do(building_number){
                 player.buildings.push("Mineshafts");
                 player.food=player.food-20;
                 player.ore=player.ore-20;
+                player.ore_gain+=5;
                 build9_button.innerText = "Built";
             }
             break;
@@ -970,6 +1039,7 @@ function buy_research_do(research_id){
                 player.food-=10;
                 player.ore-=10;
                 player.research.push("11");
+                player.food_gain+=5;
                 root.style.setProperty("--r1r1-purchased", "#00ff00");
                 r1r1.innerText="Researched";
             }
@@ -980,6 +1050,7 @@ function buy_research_do(research_id){
             else{
                 player.food-=10;
                 player.ore-=10;
+                player.ore_gain+=5;
                 player.research.push("12");
                 root.style.setProperty("--r1r2-purchased", "#00ff00");
                 r1r2.innerText="Researched";
@@ -1007,6 +1078,7 @@ function buy_research_do(research_id){
                 player.research.push("14");
                 root.style.setProperty("--r1r4-purchased", "#00ff00");
                 r1r4.innerText="Researched";
+                player.units.forEach((unit) => {if(unit.type==="worker"){unit.movement+=1; unit.maxmovement+=1;}})
             }
             break;
         case 5:
@@ -1069,6 +1141,7 @@ function buy_research_do(research_id){
                 r3r3.style.display="none";
                 r3r4.style.display="none";
                 research_row3.style.background="#ff0000";
+                player.units.forEach((unit) => {if(unit.type==="worker"){unit.movement+=1; unit.maxmovement+=1;}})
             }
             break;
         case 10:
@@ -1085,6 +1158,12 @@ function buy_research_do(research_id){
                 r3r3.style.display="none";
                 r3r4.style.display="none";
                 research_row3.style.background="#ff0000";
+                research_32_status=2;
+                if(player.faction==="humans"){unit1_button.innerText="Labourer - FREE";}
+                else if(player.faction==="pastans"){unit1_button.innerText="Fusilli - FREE";}
+                else if(player.faction==="scrapbots"){unit1_button.innerText="Builder - FREE";}
+                else {unit1_button.innerText="Gnome - FREE";}
+                
             }
             break;
         case 11:
@@ -1140,6 +1219,7 @@ function buy_research_do(research_id){
             else{
                 player.ore-=25;
                 player.food-=25;
+                player.food_gain+=5;
                 player.research.push("41");
                 root.style.setProperty("--r4r1-purchased", "#00ff00");
                 r4r1.innerText="Researched";
@@ -1151,6 +1231,7 @@ function buy_research_do(research_id){
             else{
                 player.ore-=25;
                 player.food-=25;
+                player.ore_gain+=5;
                 player.research.push("42");
                 root.style.setProperty("--r4r2-purchased", "#00ff00");
                 r4r2.innerText="Researched";
@@ -1185,6 +1266,132 @@ function buy_research_do(research_id){
     }
     update_hq_healthbar();
     update_resource_counters();
+}
+function buy_unit_do(unit_number){
+    if(FESBP()==null){hq_popup("No space around HQ")}
+    else{
+        switch(player.faction){
+            case "humans":
+                switch(unit_number){
+                    case 1:
+                        if(player.food<10 && research_32_status!==2){hq_popup("You don't have enough resources");}
+                        else{
+                            if(research_32_status!==2){player.food-=10;}
+                            else{research_32_status=0;}
+                            let pipi = new Unit("Labourer", 10, 2, FESBP()[0], FESBP()[1], "worker", "images/humans/labourer.png", "player");
+                            pipi.render_unit();
+                            unit1_button.innerText="Purchased!";
+                            unit1_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit1_button.innerText="Labourer - 10 food";
+                                unit1_button.onclick = () => buy_unit_do(1);
+                            }, 400)
+                            //name, maxhealth, movement, x, y, type, filepath, owner
+                        }
+                        break;
+                    case 2:
+                        if(player.food<10 || player.ore<5){hq_popup("You don't have enough resources");}
+                        else{
+                            player.food-=10;
+                            player.ore-=5;
+                            let pipi = new Unit("Spearman", 15, 2, FESBP()[0], FESBP()[1], "melee", "images/humans/spearman.png", "player");
+                            pipi.render_unit();
+                            unit2_button.innerText="Purchased!";
+                            unit2_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit2_button.innerText="Spearman - 10 food";
+                                unit2_button.onclick = () => buy_unit_do(1);
+                            }, 400)
+                        }
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;    
+                }
+                break;
+            case "pastans":
+                switch(unit_number){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;    
+                }
+                break;
+            case "scrapbots":
+                switch(unit_number){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;    
+                }
+                break;
+            case "yox_empire":
+                switch(unit_number){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;    
+                }
+                break;
+        }
+    }
+    update_resource_counters();
+}
+function nothing(){
+    console.log("Have a nice day!");
 }
 //GAME STARTING FUNCTIONS 
 function load_assets(){
@@ -1291,6 +1498,8 @@ function generate_map(){
             tileimg.style.height="128px";
             tileimg.style.padding="0px";
             tileimg.style.margin="0px";
+            tileimg.setAttribute("data-x", x);
+            tileimg.setAttribute("data-y", y);
             if (x===1 && y===1){
                 tile.classList.add("top_left_anchor");
             }
@@ -1298,40 +1507,40 @@ function generate_map(){
                 tile.classList.add("bottom_right_anchor");
             }
             if (player.faction === "humans"){
-                enemy1 = "scrapbots";
-                enemy2 = "pastans";
-                enemy3 = "yox_empire";
+                bot1.faction = "scrapbots";
+                bot2.faction = "pastans";
+                bot3.faction = "yox_empire";
             }
             else if (player.faction === "scrapbots"){
-                enemy1 = "humans";
-                enemy2 = "pastans";
-                enemy3 = "yox_empire";
+                bot1.faction = "humans";
+                bot2.faction = "pastans";
+                bot3.faction = "yox_empire";
             }
             else if (player.faction === "pastans"){
-                enemy1 = "humans";
-                enemy2 = "scrapbots";
-                enemy3 = "yox_empire";
+                bot1.faction = "humans";
+                bot2.faction = "scrapbots";
+                bot3.faction = "yox_empire";
             }
             else{
-                enemy1 = "humans";
-                enemy2 = "scrapbots";
-                enemy3 = "pastans"; 
+                bot1.faction = "humans";
+                bot2.faction = "scrapbots";
+                bot3.faction = "pastans"; 
             }
             if (x===2 && y===2){
                 if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
                 else if (player.faction === "scrapbots"){tileimg.src = "images/tiles/scrapbots_hq.png";}
                 else if (player.faction === "pastans"){tileimg.src = "images/tiles/pastans_hq.png";}
                 else  if (player.faction === "yox_empire"){tileimg.src = "images/tiles/yox_empire_hq.png";}
-                tile.onclick=()=>hq_menu.style.display="block";
+                tile.onclick=open_hq;
             }
             else if (x===2 && y===24){
-                tileimg.src = "images/tiles/" + enemy1 + "_hq.png";
+                tileimg.src = "images/tiles/" + bot1.faction + "_hq.png";
             }
             else if (x===24 && y===2){
-                tileimg.src = "images/tiles/" + enemy2 + "_hq.png";
+                tileimg.src = "images/tiles/" + bot2.faction + "_hq.png";
             }
             else if (x===24 && y===24){
-                tileimg.src = "images/tiles/" + enemy3 + "_hq.png";
+                tileimg.src = "images/tiles/" + bot3.faction + "_hq.png";
             }
             else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22) || (x===19 && y===23) || (x===4 && y===24) || (x===3 && y===19) || (x===11 && y===11) || (x===15 && y===15)){
                 tileimg.src = "images/tiles/mine.png";
@@ -1386,19 +1595,17 @@ function game_start(){
             });
         }
     });
-    update_resource_counters();
-    update_hq_healthbar();
 
     //test area for #### to run at game start
     
-    //let bubu = new Unit("bubu", 1, 10, 3, 3,"images/yox_empire/hoplite.png", "player");
+    //let bubu = new Unit("bubu", 1, 9, 3, 3, "melee", "images/yox_empire/kobold.png", "player");
     //bubu.render_unit();
+    //render_all_units();
     
     
-
+    
     update_resource_counters();
     update_hq_healthbar();
-
 }
 
 //ONCLICK ASSIGNMENTS
@@ -1433,6 +1640,9 @@ build15_button.onclick = () => buy_building_do(15);
 build16_button.onclick = () => buy_building_do(16);
 build17_button.onclick = () => buy_building_do(17);
 build18_button.onclick = () => buy_building_do(18);
+
+unit1_button.onclick = () => buy_unit_do(1);
+unit2_button.onclick = () => buy_unit_do(2);
 
 r1r1.onclick = () => buy_research_do(1);
 r1r2.onclick = () => buy_research_do(2);

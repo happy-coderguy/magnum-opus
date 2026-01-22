@@ -255,6 +255,7 @@ span, div, button{
     image-rendering: pixelated;
     z-index:2;
     position: relative;
+    filter:brightness(100%);
 }
 .unit{
     z-index:3;
@@ -262,7 +263,7 @@ span, div, button{
     image-rendering: pixelated;
     position: relative;
 }
-.hotbar{
+.hotbar, .unit_hotbar{
     position:fixed;
     bottom:0px;
     right:0px;
@@ -319,6 +320,7 @@ span, div, button{
 .c_img{
     width:32px;
     height:32px;
+    image-rendering: pixelated;
 }
 .food_c_label, .ore_c_label, .oil_c_label, .gems_c_label, .hazardite_c_label, .aluminium_c_label,.food_c_label2, .ore_c_label2, .oil_c_label2, .gems_c_label2, .hazardite_c_label2, .aluminium_c_label2{
     font-size:auto;

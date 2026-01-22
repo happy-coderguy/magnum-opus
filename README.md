@@ -1,2 +1,3 @@
 # Magnum Opus
-A strategy game 
+A strategy game.  
+Starring Brick, the ever-reliable labourer! 
