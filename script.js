@@ -1,3 +1,4 @@
+//WARNING: this code isnt family friendly
 /**DOM stuff**/
 const root = document.querySelector(":root");
 
@@ -230,7 +231,7 @@ const r4r2 = document.querySelector(".r4r2");
 const r4r3 = document.querySelector(".r4r3");
 const r4r4 = document.querySelector(".r4r4");
 
-const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/swordsman.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
+const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/warrior.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
 let global_units=[];
 let player = {
@@ -272,7 +273,7 @@ let bot3 = {
 let building_inq;
 let current_id=456;
 let correct_x;
-let active_unit;
+let active_unit=null;
 let research_32_status=0;
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
@@ -301,7 +302,7 @@ function FESBP(){
     else{return null;}
 }
 class Unit{
-    constructor(name, maxhealth, movement, x, y, type, filepath, owner){
+    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
         this.name=name;
         this.id=assign_id();
         this.filepath=filepath;
@@ -319,6 +320,9 @@ class Unit{
         this.health=maxhealth;
         this.x=x;
         this.y=y;
+        this.attack=attack;
+        this.canattack="yes";
+        this.range=range;
         this.movement=movement;
         if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1;}
         if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1;}
@@ -354,7 +358,7 @@ class Unit{
     }
     move_unit(dest_x, dest_y){
         let distance_gone = Math.abs(this.x-dest_x)+Math.abs(this.y-dest_y)
-        if(get_unit_by_pos(dest_x, dest_y)==null){
+        if(get_unit_by_pos(dest_x, dest_y)===null){
             this.x=dest_x;
             this.y=dest_y;
             this.render_unit();
@@ -364,7 +368,7 @@ class Unit{
     }
     activate_unit(){
         const all_tiles=document.querySelectorAll(".tileimg");
-        if(active_unit===this.id){
+        if(active_unit===this){
             all_tiles.forEach((tile => {
                 tile.style.filter="brightness(100%)";
                 tile.onclick=nothing;
@@ -373,8 +377,8 @@ class Unit{
             hotbar.style.display="block";
             unit_hotbar.style.display="none";
         }
-        else if(active_unit==null){
-            active_unit=this.id;
+        else if(active_unit===null){
+            active_unit=this;
             hotbar.style.display="none";
             unit_hotbar.style.display="block";
             all_tiles.forEach((tile => {
@@ -385,10 +389,21 @@ class Unit{
                 if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement){
                     tile.style.filter="brightness(0%)";
                 }
-                else{
+                else if(!((tilex==="2" || tilex==="24") && (tiley==="2" || tiley==="24"))){
                     tile.onclick = () =>this.move_unit(tilex, tiley);
                 }
             }))
+        }
+        else{
+            if(this.owner!==active_unit.owner){
+              //get fucking attacked
+                if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+                    this.take_damage(active_unit.attack);
+                    active_unit.canattack="no";
+                    active_unit.activate_unit();
+                    console.log(this.health);
+                }
+            }   
         }
     }
 }
@@ -410,7 +425,8 @@ function show_settings(){
     settings.style.display="block";
 }
 function open_hq(){
-    if(active_unit==null){hq_menu.style.display="block";}
+    if(active_unit===null){hq_menu.style.display="block";}
+    else{hq_menu.style.display="none";}
 }
 function open_encycl(){
     encycl.style.display = "block";
@@ -495,7 +511,7 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Spearman", "images/humans/spearman.png", "Weak melee unit. Uses sharp pointy."];
             break;
         case 3:
-            encycl_infobox_data=["Swordsman", "images/humans/swordsman.png", "Melee unit. Likes sunshine and beef."];
+            encycl_infobox_data=["Warrior", "images/humans/warrior.png", "Melee unit. Likes sunshine and beef."];
             break;
         case 4:
             encycl_infobox_data=["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"];
@@ -630,7 +646,7 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Research Center", "images/icons/science.png", "Unlock more research"];
             break;
         case 48:
-            encycl_infobox_data=["Barracks", "images/humans/swordsman.png", "Allows you to recuit Swordsmen"];
+            encycl_infobox_data=["Barracks", "images/humans/warrior.png", "Allows you to recuit Warriors"];
             break;
         case 49:
             encycl_infobox_data=["Stables", "images/humans/horseman.png", "Allows you to recuit Horsemen"];
@@ -1278,7 +1294,7 @@ function buy_unit_do(unit_number){
                         else{
                             if(research_32_status!==2){player.food-=10;}
                             else{research_32_status=0;}
-                            let pipi = new Unit("Labourer", 10, 2, FESBP()[0], FESBP()[1], "worker", "images/humans/labourer.png", "player");
+                            let pipi = new Unit("Labourer", 10, 2, 0, 1, FESBP()[0], FESBP()[1], "worker", "images/humans/labourer.png", "player");
                             pipi.render_unit();
                             unit1_button.innerText="Purchased!";
                             unit1_button.onclick=nothing;
@@ -1286,7 +1302,7 @@ function buy_unit_do(unit_number){
                                 unit1_button.innerText="Labourer - 10 food";
                                 unit1_button.onclick = () => buy_unit_do(1);
                             }, 400)
-                            //name, maxhealth, movement, x, y, type, filepath, owner
+                            //    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
                         }
                         break;
                     case 2:
@@ -1294,19 +1310,47 @@ function buy_unit_do(unit_number){
                         else{
                             player.food-=10;
                             player.ore-=5;
-                            let pipi = new Unit("Spearman", 15, 2, FESBP()[0], FESBP()[1], "melee", "images/humans/spearman.png", "player");
+                            let pipi = new Unit("Spearman", 10, 2, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/spearman.png", "player");
                             pipi.render_unit();
                             unit2_button.innerText="Purchased!";
                             unit2_button.onclick=nothing;
                             setTimeout(() => {
-                                unit2_button.innerText="Spearman - 10 food";
-                                unit2_button.onclick = () => buy_unit_do(1);
+                                unit2_button.innerText="Spearman - 10 food, 5 ore";
+                                unit2_button.onclick = () => buy_unit_do(2);
                             }, 400)
                         }
                         break;
                     case 3:
+                        if(player.food<20 || player.ore<10){hq_popup("You don't have enough resources");}
+                        else if(!player.buildings.includes("Barracks")){hq_popup("Build the Barracks to recruit Warriors");}
+                        else{
+                            player.food-=20;
+                            player.ore-=10;
+                            let pipi = new Unit("Warrior", 20, 2, 7, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/warrior.png", "player");
+                            pipi.render_unit();
+                            unit3_button.innerText="Purchased!";
+                            unit3_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit3_button.innerText="Warrior - 20 food, 10 ore";
+                                unit3_button.onclick = () => buy_unit_do(3);
+                            }, 400)
+                        }
                         break;
                     case 4:
+                        if(player.food<20 || player.ore<10){hq_popup("You don't have enough resources");}
+                        else if(!player.buildings.includes("Stables")){hq_popup("Build the Stables to recruit Horsemen");}
+                        else{
+                            player.food-=20;
+                            player.ore-=10;
+                            let pipi = new Unit("Horseman", 15, 4, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/horseman.png", "player");
+                            pipi.render_unit();
+                            unit4_button.innerText="Purchased!";
+                            unit4_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit4_button.innerText="Horseman - 20 food, 10 ore";
+                                unit4_button.onclick = () => buy_unit_do(4);
+                            }, 400)
+                        }
                         break;
                     case 5:
                         break;
@@ -1643,6 +1687,13 @@ build18_button.onclick = () => buy_building_do(18);
 
 unit1_button.onclick = () => buy_unit_do(1);
 unit2_button.onclick = () => buy_unit_do(2);
+unit3_button.onclick = () => buy_unit_do(3);
+unit4_button.onclick = () => buy_unit_do(4);
+unit5_button.onclick = () => buy_unit_do(5);
+unit6_button.onclick = () => buy_unit_do(6);
+unit7_button.onclick = () => buy_unit_do(7);
+unit8_button.onclick = () => buy_unit_do(8);
+unit9_button.onclick = () => buy_unit_do(9);
 
 r1r1.onclick = () => buy_research_do(1);
 r1r2.onclick = () => buy_research_do(2);
