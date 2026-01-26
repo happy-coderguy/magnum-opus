@@ -234,6 +234,8 @@ const r4r4 = document.querySelector(".r4r4");
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/warrior.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
 let global_units=[];
+let global_resources=[];
+
 let player = {
     food:5000, ore:5000, oil:500, hazardite:500, aluminium:500, gems:500,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
@@ -242,6 +244,7 @@ let player = {
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
+    color:"",
 };
 let bot1 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -251,6 +254,7 @@ let bot1 = {
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
+    color:"",
 };
 let bot2 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -260,6 +264,7 @@ let bot2 = {
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
+    color:"",
 };
 let bot3 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -269,6 +274,7 @@ let bot3 = {
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
+    color:"",
 };
 let building_inq;
 let current_id=456;
@@ -289,6 +295,14 @@ function get_unit_by_pos(x, y){
     }
     return null;
 }
+function get_resource_tile_by_pos(x,y){
+    for(let tile of global_resources){
+        if(tile.x==x && tile.y==y){
+            return tile;
+        }
+    }
+    return null;
+}
 //find empty spot by player hq
 function FESBP(){
     if(get_unit_by_pos(3,3)===null){return [3,3];}
@@ -301,6 +315,7 @@ function FESBP(){
     else if(get_unit_by_pos(1,1)===null){return [1,1];}
     else{return null;}
 }
+
 class Unit{
     constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
         this.name=name;
@@ -328,18 +343,30 @@ class Unit{
         if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1;}
         this.maxmovement=this.movement;
     }
-    render_unit(){
+    render_unit(exhausted){
         const existing=document.querySelector(`.u${this.id}`);
         if(existing){existing.remove();}
         const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
-        const unit_render=document.createElement("img");
-        unit_render.classList.add("unit");
-        unit_render.classList.add(`u${this.id}`);
-        unit_render.src=this.filepath;
-        unit_render.style.width="128px";
-        unit_render.style.height="128px";
-        if(this.owner==="player"){unit_render.onclick=this.activate_unit.bind(this);}
-        tile_parent.appendChild(unit_render);
+        this.unit_render=document.createElement("img");
+        this.unit_render.classList.add("unit");
+        this.unit_render.classList.add(`u${this.id}`);
+        this.unit_render.src=this.filepath;
+        this.unit_render.style.width="128px";
+        this.unit_render.style.height="128px";
+        if(this.owner==="player"){this.unit_render.onclick=this.activate_unit.bind(this);}
+        if(exhausted==="yes"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
+        else{this.unit_render.style.filter="brightness(100%)";}
+        tile_parent.appendChild(this.unit_render);
+    }
+    check_for_opps(){
+        global_units.forEach((unit => {
+            if(unit.owner_obj!==this.owner_obj && (Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y)) <= this.range){return "yes";}
+        }))
+        return "no";
+    }
+    check_if_exhausted(){
+        if(this.movement<=0 && (this.canattack==="no" || this.check_for_opps()==="no")){this.render_unit("yes");}
+        else{this.render_unit("no");}
     }
     take_damage(damage){
         this.health-=damage;
@@ -361,11 +388,25 @@ class Unit{
         if(get_unit_by_pos(dest_x, dest_y)===null){
             this.x=dest_x;
             this.y=dest_y;
-            this.render_unit();
-            this.activate_unit();
             this.movement-=distance_gone;
+            this.check_if_exhausted();
+            this.activate_unit();
+            if(this.type==="worker"){this.worker_buildcheck();}
         }  
     }
+    worker_buildcheck(){
+        if(this.type==="worker" && get_resource_tile_by_pos(this.x, this.y)!==null){
+            const the_resources_in_question=get_resource_tile_by_pos(this.x, this.y);
+            if(the_resources_in_question.owner==="unoccupied"){
+                the_resources_in_question.owner===this.owner;
+                the_resources_in_question.tileimg.src="images/tiles/"+the_resources_in_question.resource+"_developed.png";
+                the_resources_in_question.tileimg.style.border="2px solid";
+                the_resources_in_question.tileimg.style.borderColor=this.owner_obj.color;
+                this.take_damage(52);
+            }
+        }
+    }
+    
     activate_unit(){
         const all_tiles=document.querySelectorAll(".tileimg");
         if(active_unit===this){
@@ -380,7 +421,7 @@ class Unit{
         else if(active_unit===null){
             active_unit=this;
             hotbar.style.display="none";
-            unit_hotbar.style.display="block";
+            unit_hotbar.style.display="flex";
             all_tiles.forEach((tile => {
                 const tilex=tile.getAttribute("data-x");
                 const tiley=tile.getAttribute("data-y");
@@ -409,6 +450,36 @@ class Unit{
 }
 function render_all_units(){
     global_units.forEach((unit => unit.render_unit()));
+}
+class Resource_tile{
+    constructor(resource, x, y, owner, tileimg){
+        this.resource=resource;
+        this.x=x;
+        this.y=y;
+        this.owner=owner;
+        this.tileimg=tileimg;
+
+        if(owner==="player"){this.owner_obj=player;}
+        else if(owner==="bot1"){this.owner_obj=bot1;}
+        else if(owner==="bot2"){this.owner_obj=bot2;}
+        else{this.owner_obj=bot3;}
+    }
+    produce_resources(){
+        switch(this.resource){
+            case "food":
+                break;
+            case "mine":
+                break;
+            case "hazardite":
+                break;
+            case "oil":
+                break;
+            case "gems":
+                break;
+            case "aluminium":
+                break;
+        }
+    }
 }
 
 //this is for goofy easter egg
@@ -1464,37 +1535,41 @@ function choose_faction(){
     choose_yox_empire.onclick = function(){
         faction_choose.style.display="none";
         player.faction = "yox_empire";
+        player.color="#6200ff";
         root.style.setProperty("--player-color-pale", "#9264ee");
         root.style.setProperty("--player-color-light", "#9966ff");
         root.style.setProperty("--player-color-dark", "#310080");
-        root.style.setProperty("--player-color", "#6200ff")
+        root.style.setProperty("--player-color", "#6200ff");
         generate_map();
     }
     choose_humans.onclick = function(){
         faction_choose.style.display="none";
         player.faction = "humans";
+        player.color="#0fc9fc";
         root.style.setProperty("--player-color-pale", "#66ccee");
         root.style.setProperty("--player-color-light", "#77ddff");
         root.style.setProperty("--player-color-dark", "#0986a9");
-        root.style.setProperty("--player-color", "#0fc9fc")
+        root.style.setProperty("--player-color", "#0fc9fc");
         generate_map();
     }
     choose_pastans.onclick = function(){
         faction_choose.style.display="none";
         player.faction = "pastans";
+        player.color="#00ff6a";
         root.style.setProperty("--player-color-pale", "#55eeaa");
         root.style.setProperty("--player-color-light", "#66ffbb");
         root.style.setProperty("--player-color-dark", "#00aa47");
-        root.style.setProperty("--player-color", "#00ff6a")
+        root.style.setProperty("--player-color", "#00ff6a");
         generate_map();
     }
     choose_scrapbots.onclick = function(){
         faction_choose.style.display="none";
         player.faction = "scrapbots";
+        player.color="#ff8000";
         root.style.setProperty("--player-color-pale", "#ee9955");     
         root.style.setProperty("--player-color-light", "#ffaa66");
         root.style.setProperty("--player-color-dark", "#ad5a06");
-        root.style.setProperty("--player-color", "#ff8000")
+        root.style.setProperty("--player-color", "#ff8000");
         generate_map();
     }
 }
@@ -1552,23 +1627,36 @@ function generate_map(){
             }
             if (player.faction === "humans"){
                 bot1.faction = "scrapbots";
+                bot1.color="#ff8000";
                 bot2.faction = "pastans";
+                bot2.color="#00ff6a";
                 bot3.faction = "yox_empire";
+                bot3.color="#6200ff";
             }
             else if (player.faction === "scrapbots"){
                 bot1.faction = "humans";
+                bot1.color="#0fc9fc";
                 bot2.faction = "pastans";
+                bot2.color="#00ff6a";
                 bot3.faction = "yox_empire";
+                bot3.color="#6200ff";
             }
             else if (player.faction === "pastans"){
                 bot1.faction = "humans";
+                bot1.color="#0fc9fc";
                 bot2.faction = "scrapbots";
+                bot2.color="#ff8000";
                 bot3.faction = "yox_empire";
+                bot3.color="#6200ff";
             }
             else{
                 bot1.faction = "humans";
+                bot1.color="#0fc9fc";
                 bot2.faction = "scrapbots";
+                bot2.color="#ff8000";
                 bot3.faction = "pastans"; 
+                bot3.color="#00ff6a";
+
             }
             if (x===2 && y===2){
                 if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
@@ -1588,21 +1676,36 @@ function generate_map(){
             }
             else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22) || (x===19 && y===23) || (x===4 && y===24) || (x===3 && y===19) || (x===11 && y===11) || (x===15 && y===15)){
                 tileimg.src = "images/tiles/mine.png";
+                const popo = new Resource_tile("mine", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
             }
             else if ((x===4 && y===2) || (x===3 && y===7) || (x==24 && y===4) || (x===19 && y===3) || (x===22 && y===24) || (x===23 && y===19) || (x===2 && y===22) || (x===7 && y===23) || (x===11 && y===15) || (x===15 && y===11)){
                 tileimg.src = "images/tiles/food.png";
+                const popo = new Resource_tile("food", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
+
             }
             else if ((x===13 && y===3) || (x===18 && y===18)){
                 tileimg.src="images/tiles/oil.png";
+                const popo = new Resource_tile("oil", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
+
             }
             else if ((x===3 && y===13) || (x===18 && y===8)){
                 tileimg.src="images/tiles/hazardite.png";
+                const popo = new Resource_tile("hazardite", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
             }
             else if ((x===23 && y===13) || (x===8 && y===8)){
                 tileimg.src="images/tiles/gems.png";
+                const popo = new Resource_tile("gems", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
             }
             else if ((x===13 && y===23) || (x===8 && y===18)){
                 tileimg.src="images/tiles/aluminium.png";
+                const popo = new Resource_tile("aluminium", x, y, "unoccupied", tileimg);
+                global_resources.push(popo);
+
             }
             else{tileimg.src = "images/tiles/land.png";}
             //else{tileimg.src = "importan.png";}
