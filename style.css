@@ -325,6 +325,17 @@ span, div, button{
     font-size:auto;
     font-family:"Almendra SC";
 }
+.unit_health_text, .unit_name_text, .unit_move_text{
+    color:black;
+    font-weight:600;
+    font-family:"Almendra SC";
+    font-size:2em;
+}
+.unit_hotbar{
+    flex-direction:row;
+    justify-content:center;
+    gap:20px;
+}
 /**HQ MENU**/
 .hq_menu{
     position:absolute;
@@ -801,6 +812,21 @@ span, div, button{
 .ritem:hover{
     font-weight:700;
 }
+/**damage text, only here temply**/
+.damage_effect{
+    position:absolute;
+    z-index:5000;
+    height:auto;
+    display:none;
+    width:128px;
+    text-align:center;
+}
+.damage_text{
+    font-family:sans-serif;
+    color:red;
+    font-size:2.5em;
+}
+
 /**ANIMATIONS*/
 @keyframes spin{
     0%{

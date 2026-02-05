@@ -32,6 +32,14 @@ const tile_container = document.querySelector(".tiles");
 const hotbar = document.querySelector(".hotbar");
 const next_turn = document.querySelector(".next_turn");
 const unit_hotbar = document.querySelector(".unit_hotbar");
+const unit_chealth_text = document.querySelector(".unit_chealth_text");
+const unit_mhealth_text = document.querySelector(".unit_mhealth_text");
+const unit_cmove_text = document.querySelector(".unit_cmove_text");
+const unit_mmove_text = document.querySelector(".unit_mmove_text");
+const unit_name_text = document.querySelector(".unit_name_text");
+
+const damage_text_container = document.querySelector(".damage_effect");
+const damage_text = document.querySelector(".damage_text");
 
 const hq_menu = document.querySelector(".hq_menu");
 const hq_close = document.querySelector(".hq_close");
@@ -281,6 +289,9 @@ let current_id=456;
 let correct_x;
 let active_unit=null;
 let research_32_status=0;
+let rename_this_variable;
+let damage_text_animation_counter=0;
+let bs_variable;
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
@@ -291,7 +302,7 @@ function get_unit_by_pos(x, y){
     for(let unit of global_units){
         if(unit.x===x && unit.y===y){
             return unit;
-        }
+        }   
     }
     return null;
 }
@@ -354,15 +365,24 @@ class Unit{
         this.unit_render.style.width="128px";
         this.unit_render.style.height="128px";
         if(this.owner==="player"){this.unit_render.onclick=this.activate_unit.bind(this);}
+        else{this.unit_render.onclick=this.get_attacked.bind(this);}
         if(exhausted==="yes"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
-        else{this.unit_render.style.filter="brightness(100%)";}
+        else{this.unit_render.style.filter="brightness(100%) opacity(100%)";}
         tile_parent.appendChild(this.unit_render);
     }
     check_for_opps(){
+        bs_variable=false;
         global_units.forEach((unit => {
-            if(unit.owner_obj!==this.owner_obj && (Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y)) <= this.range){return "yes";}
+            if(unit.owner_obj!==this.owner_obj && ((Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y)) <= this.range)){
+                bs_variable=true;
+            }
         }))
-        return "no";
+        if(!bs_variable){
+            return "no";    
+        }
+        else{
+            return "yes";
+        }
     }
     check_if_exhausted(){
         if(this.movement<=0 && (this.canattack==="no" || this.check_for_opps()==="no")){this.render_unit("yes");}
@@ -370,7 +390,15 @@ class Unit{
     }
     take_damage(damage){
         this.health-=damage;
-        //animation?
+        damage_text.innerText="-"+damage;
+        damage_text_container.style.display="block";
+        rename_this_variable = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
+        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
+        damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
+        damage_text_container.style.filter="opacity(100%)";
+        damage_text_animation_counter=0;
+        setTimeout(damage_text_animation, 10);
+
         if(this.health<=0){
             //DEATH
             const existing=document.querySelector(`.u${this.id}`);
@@ -397,8 +425,9 @@ class Unit{
     worker_buildcheck(){
         if(this.type==="worker" && get_resource_tile_by_pos(this.x, this.y)!==null){
             const the_resources_in_question=get_resource_tile_by_pos(this.x, this.y);
+            console.log(the_resources_in_question);
             if(the_resources_in_question.owner==="unoccupied"){
-                the_resources_in_question.owner===this.owner;
+                the_resources_in_question.owner=this.owner;
                 the_resources_in_question.tileimg.src="images/tiles/"+the_resources_in_question.resource+"_developed.png";
                 the_resources_in_question.tileimg.style.border="2px solid";
                 the_resources_in_question.tileimg.style.borderColor=this.owner_obj.color;
@@ -422,29 +451,33 @@ class Unit{
             active_unit=this;
             hotbar.style.display="none";
             unit_hotbar.style.display="flex";
+            unit_chealth_text.innerText=this.health;
+            unit_mhealth_text.innerText=this.maxhealth;
+            unit_cmove_text.innerText=this.movement;
+            unit_mmove_text.innerText=this.maxmovement;
+            unit_name_text.innerText=this.name;
+            
             all_tiles.forEach((tile => {
-                const tilex=tile.getAttribute("data-x");
-                const tiley=tile.getAttribute("data-y");
+                const tilex=parseInt(tile.getAttribute("data-x"));
+                const tiley=parseInt(tile.getAttribute("data-y"));
                 //distance checker
                 //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
                 if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement){
-                    tile.style.filter="brightness(0%)";
+                    tile.style.filter="brightness(10%)";
                 }
-                else if(!((tilex==="2" || tilex==="24") && (tiley==="2" || tiley==="24"))){
+                else if(!((tilex===2 || tilex===24) && (tiley===2 || tiley===24))){
                     tile.onclick = () =>this.move_unit(tilex, tiley);
                 }
             }))
         }
-        else{
-            if(this.owner!==active_unit.owner){
-              //get fucking attacked
-                if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
-                    this.take_damage(active_unit.attack);
-                    active_unit.canattack="no";
-                    active_unit.activate_unit();
-                    console.log(this.health);
-                }
-            }   
+    }
+    get_attacked(){
+        //get fucking attacked
+        if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+            this.take_damage(active_unit.attack);
+            active_unit.canattack="no";
+            active_unit.check_if_exhausted();
+            active_unit.activate_unit();
         }
     }
 }
@@ -487,6 +520,10 @@ const d = new Date
 let time = d.getTime();
 
 /**GENERAL FUNCTIONS**/
+function print(item){
+    console.log(item);
+    //chat is this shitty coding
+}
 function show_settings(){
     //code for goofy easter egg
     const e = new Date
@@ -541,6 +578,18 @@ function move_hq_widget(){
         hq_widget.style.animation="hq_widget_lower 0.5s forwards";
         hq_widget_move_button.innerText="UP";
         hq_widget_state=0;
+    }
+}
+function damage_text_animation(){
+    if(damage_text_animation_counter===100){
+        damage_text_container.style.display="none";
+    }
+    else{
+        damage_text_animation_counter+=1;
+        damage_text_container.style.filter="opacity("+(100-damage_text_animation_counter)+"%)";
+        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ (56-damage_text_animation_counter))+"px";
+        setTimeout(damage_text_animation, 10);
+
     }
 }
 function update_resource_counters(){
@@ -1355,7 +1404,7 @@ function buy_research_do(research_id){
     update_resource_counters();
 }
 function buy_unit_do(unit_number){
-    if(FESBP()==null){hq_popup("No space around HQ")}
+    if(FESBP()===null){hq_popup("No space around HQ")}
     else{
         switch(player.faction){
             case "humans":
@@ -1506,7 +1555,7 @@ function buy_unit_do(unit_number){
     update_resource_counters();
 }
 function nothing(){
-    console.log("Have a nice day!");
+    print("Have a nice day!")
 }
 //GAME STARTING FUNCTIONS 
 function load_assets(){
@@ -1744,8 +1793,8 @@ function game_start(){
     });
 
     //test area for #### to run at game start
-    
-    //let bubu = new Unit("bubu", 1, 9, 3, 3, "melee", "images/yox_empire/kobold.png", "player");
+    //    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
+    //let bubu = new Unit("bubu", 1000, 10, 10, 10, 3, 3, "melee", "images/yox_empire/kobold.png", "bot1");
     //bubu.render_unit();
     //render_all_units();
     
