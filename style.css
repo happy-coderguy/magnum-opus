@@ -56,6 +56,10 @@
     --r4r3-purchased:#ffffff;
     --r4r4-purchased:#ffffff;
 }
+html, body{
+    margin:0;
+    padding:0;
+}
 body{
     width:100vw;
     height:100vh;
@@ -288,6 +292,7 @@ span, div, button{
 }
 .next_turn:hover{
     background-color:#4444aa;
+    cursor:pointer;
 }
 .counters_container{
     position:absolute;
@@ -325,7 +330,7 @@ span, div, button{
     font-size:auto;
     font-family:"Almendra SC";
 }
-.unit_health_text, .unit_name_text, .unit_move_text{
+.unit_health_text, .unit_name_text, .unit_move_text, .unit_attack_text_container{
     color:black;
     font-weight:600;
     font-family:"Almendra SC";
@@ -335,6 +340,21 @@ span, div, button{
     flex-direction:row;
     justify-content:center;
     gap:20px;
+    align-items:center;
+}
+.unit_hotbar_closer{
+    background-color:#2222aa;
+    height:auto;
+    padding-right:10px;
+    width:auto;
+    font-family:"Almendra SC";
+    color:white;
+    font-size:2em;
+    border:2px solid black;
+}
+.unit_hotbar_closer:hover{
+    cursor:pointer;
+    background-color:#4444cc;
 }
 /**HQ MENU**/
 .hq_menu{

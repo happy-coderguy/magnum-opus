@@ -37,6 +37,11 @@ const unit_mhealth_text = document.querySelector(".unit_mhealth_text");
 const unit_cmove_text = document.querySelector(".unit_cmove_text");
 const unit_mmove_text = document.querySelector(".unit_mmove_text");
 const unit_name_text = document.querySelector(".unit_name_text");
+const unit_rattack_text = document.querySelector(".unit_rattack_text");
+const unit_battack_text = document.querySelector(".unit_battack_text");
+const unit_hotbar_closer = document.querySelector(".unit_hotbar_closer");
+const unit_move_text_cont = document.querySelector(".unit_move_text");
+const unit_attack_text_cont = document.querySelector(".unit_attack_text_container");
 
 const damage_text_container = document.querySelector(".damage_effect");
 const damage_text = document.querySelector(".damage_text");
@@ -292,6 +297,7 @@ let research_32_status=0;
 let rename_this_variable;
 let damage_text_animation_counter=0;
 let bs_variable;
+let linknum;
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
@@ -350,11 +356,12 @@ class Unit{
         this.canattack="yes";
         this.range=range;
         this.movement=movement;
-        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1;}
-        if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1;}
-        this.maxmovement=this.movement;
+        this.maxmovement=movement;
+        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
+        if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
+        if(this.owner_obj.research.includes("22") && this.type==="melee"){this.maxhealth+=5; this.health+=5;}
     }
-    render_unit(exhausted){
+    render_unit(state){
         const existing=document.querySelector(`.u${this.id}`);
         if(existing){existing.remove();}
         const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
@@ -366,7 +373,8 @@ class Unit{
         this.unit_render.style.height="128px";
         if(this.owner==="player"){this.unit_render.onclick=this.activate_unit.bind(this);}
         else{this.unit_render.onclick=this.get_attacked.bind(this);}
-        if(exhausted==="yes"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
+        if(state==="exhausted"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
+        else if(state==="outofrange"){this.unit_render.style.filter="brightness(10%) opacity(100%)";}
         else{this.unit_render.style.filter="brightness(100%) opacity(100%)";}
         tile_parent.appendChild(this.unit_render);
     }
@@ -385,8 +393,8 @@ class Unit{
         }
     }
     check_if_exhausted(){
-        if(this.movement<=0 && (this.canattack==="no" || this.check_for_opps()==="no")){this.render_unit("yes");}
-        else{this.render_unit("no");}
+        if(this.movement<=0 && (this.canattack==="no" || this.check_for_opps()==="no")){this.render_unit("exhausted");}
+        else{this.render_unit("normal");}
     }
     take_damage(damage){
         this.health-=damage;
@@ -435,14 +443,33 @@ class Unit{
             }
         }
     }
-    
+    update_unit_hotbar(){
+        unit_chealth_text.innerText=this.health;
+        unit_mhealth_text.innerText=this.maxhealth;
+        unit_cmove_text.innerText=this.movement;
+        unit_mmove_text.innerText=this.maxmovement;
+        unit_name_text.innerText=this.name;
+        unit_rattack_text.innerText=this.attack;
+        unit_battack_text.innerText="";
+        unit_move_text_cont.style.display="block";
+        unit_attack_text_cont.style.display="block";
+        if(this.owner_obj.research.includes("44")){unit_battack_text.innerText="+5";}
+    }
     activate_unit(){
         const all_tiles=document.querySelectorAll(".tileimg");
         if(active_unit===this){
             all_tiles.forEach((tile => {
                 tile.style.filter="brightness(100%)";
                 tile.onclick=nothing;
+                let change_the_name=get_resource_tile_by_pos(tile.getAttribute("data-x"), tile.getAttribute("data-y"));
+                if(change_the_name !== null){
+                    change_the_name.tileimg.onclick = change_the_name.update_u_hotbar.bind(change_the_name);
+                }
             }))
+            global_units.forEach((unit => {
+                unit.check_if_exhausted();
+            }))
+
             active_unit=null;
             hotbar.style.display="block";
             unit_hotbar.style.display="none";
@@ -451,38 +478,56 @@ class Unit{
             active_unit=this;
             hotbar.style.display="none";
             unit_hotbar.style.display="flex";
-            unit_chealth_text.innerText=this.health;
-            unit_mhealth_text.innerText=this.maxhealth;
-            unit_cmove_text.innerText=this.movement;
-            unit_mmove_text.innerText=this.maxmovement;
-            unit_name_text.innerText=this.name;
+            this.update_unit_hotbar();
             
             all_tiles.forEach((tile => {
                 const tilex=parseInt(tile.getAttribute("data-x"));
                 const tiley=parseInt(tile.getAttribute("data-y"));
                 //distance checker
                 //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
-                if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement){
+                if( ((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement) || ((tilex===2 || tilex===24) && (tiley===2 || tiley===24)) || (get_unit_by_pos(tilex, tiley)!==null)){
                     tile.style.filter="brightness(10%)";
                 }
-                else if(!((tilex===2 || tilex===24) && (tiley===2 || tiley===24))){
+                else{
                     tile.onclick = () =>this.move_unit(tilex, tiley);
                 }
+                if(this.x===tilex && this.y===tiley){
+                    tile.style.filter="brightness(100%)";
+                }
+                
+            }))
+            global_units.forEach((unit => {
+                if((Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y))>this.range || this.canattack==="no"){unit.render_unit("outofrange");}
+                if(this.type==="ranged" && (Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y))===1){unit.render_unit("outofrange");}
+                if(this.owner_obj===unit.owner_obj){unit.render_unit("outofrange");}
+                if(unit===this){unit.render_unit("no");}
             }))
         }
     }
     get_attacked(){
         //get fucking attacked
-        if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+        if(active_unit===null){
+            unit_hotbar.style.display="flex";
+            hotbar.style.display="none";
+            this.update_unit_hotbar();
+        }
+        else if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
             this.take_damage(active_unit.attack);
             active_unit.canattack="no";
             active_unit.check_if_exhausted();
             active_unit.activate_unit();
         }
+        else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range)){
+            this.take_damage(active_unit.attack);
+            active_unit.canattack="no";
+            active_unit.check_if_exhausted();
+            active_unit.activate_unit();
+        }
+
     }
 }
 function render_all_units(){
-    global_units.forEach((unit => unit.render_unit()));
+    global_units.forEach((unit => unit.check_if_exhausted()));
 }
 class Resource_tile{
     constructor(resource, x, y, owner, tileimg){
@@ -491,6 +536,9 @@ class Resource_tile{
         this.y=y;
         this.owner=owner;
         this.tileimg=tileimg;
+        this.health=25;
+        this.maxhealth=25;
+        this.tileimg.onclick=this.update_u_hotbar.bind(this);
 
         if(owner==="player"){this.owner_obj=player;}
         else if(owner==="bot1"){this.owner_obj=bot1;}
@@ -513,6 +561,15 @@ class Resource_tile{
                 break;
         }
     }
+    update_u_hotbar(){
+        unit_hotbar.style.display="flex";
+        hotbar.style.display="none";
+        unit_chealth_text.innerText=this.health;
+        unit_mhealth_text.innerText=this.maxhealth;
+        unit_name_text.innerText=this.resource + " (" + this.owner + ")";
+        unit_attack_text_cont.style.display="none";
+        unit_move_text_cont.style.display="none";
+    }
 }
 
 //this is for goofy easter egg
@@ -531,6 +588,15 @@ function show_settings(){
     else{settings.style.background="#44ee44";}
     //actual code for showing settings
     settings.style.display="block";
+}
+function unit_hotbar_close_do(){
+    if(active_unit!==null){
+        active_unit.activate_unit();
+    }
+    else{
+        unit_hotbar.style.display="none";
+        hotbar.style.display="flex";
+    }
 }
 function open_hq(){
     if(active_unit===null){hq_menu.style.display="block";}
@@ -1237,6 +1303,7 @@ function buy_research_do(research_id){
                 player.research.push("22");
                 root.style.setProperty("--r2r2-purchased", "#00ff00");
                 r2r2.innerText="Researched";
+                player.units.forEach((unit) => {if(unit.type==="melee"){unit.health+=5; unit.maxhealth+=5;}})
             }
             break;
         case 7:
@@ -1262,7 +1329,7 @@ function buy_research_do(research_id){
                 root.style.setProperty("--r2r4-purchased", "#00ff00");
                 r2r4.innerText="Researched";
                 r4r3.innerText="Impenetrable Walls - 10 food 40 ore - +50 city health";
-                r4r4.innerText="DESTROY - 30 food 30 ore - +5 damage against cities";
+                r4r4.innerText="DESTROY - 30 food 30 ore - +5 damage to all melee units";
             }
             break;
         case 9:
@@ -1404,6 +1471,7 @@ function buy_research_do(research_id){
     update_resource_counters();
 }
 function buy_unit_do(unit_number){
+    //this function is terribly made, I know. for now I just want this game to work
     if(FESBP()===null){hq_popup("No space around HQ")}
     else{
         switch(player.faction){
@@ -1415,7 +1483,7 @@ function buy_unit_do(unit_number){
                             if(research_32_status!==2){player.food-=10;}
                             else{research_32_status=0;}
                             let pipi = new Unit("Labourer", 10, 2, 0, 1, FESBP()[0], FESBP()[1], "worker", "images/humans/labourer.png", "player");
-                            pipi.render_unit();
+                            pipi.render_unit("no");
                             unit1_button.innerText="Purchased!";
                             unit1_button.onclick=nothing;
                             setTimeout(() => {
@@ -1431,7 +1499,7 @@ function buy_unit_do(unit_number){
                             player.food-=10;
                             player.ore-=5;
                             let pipi = new Unit("Spearman", 10, 2, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/spearman.png", "player");
-                            pipi.render_unit();
+                            pipi.render_unit("no");
                             unit2_button.innerText="Purchased!";
                             unit2_button.onclick=nothing;
                             setTimeout(() => {
@@ -1447,7 +1515,7 @@ function buy_unit_do(unit_number){
                             player.food-=20;
                             player.ore-=10;
                             let pipi = new Unit("Warrior", 20, 2, 7, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/warrior.png", "player");
-                            pipi.render_unit();
+                            pipi.render_unit("no");
                             unit3_button.innerText="Purchased!";
                             unit3_button.onclick=nothing;
                             setTimeout(() => {
@@ -1463,7 +1531,7 @@ function buy_unit_do(unit_number){
                             player.food-=20;
                             player.ore-=10;
                             let pipi = new Unit("Horseman", 15, 4, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/horseman.png", "player");
-                            pipi.render_unit();
+                            pipi.render_unit("no");
                             unit4_button.innerText="Purchased!";
                             unit4_button.onclick=nothing;
                             setTimeout(() => {
@@ -1473,8 +1541,36 @@ function buy_unit_do(unit_number){
                         }
                         break;
                     case 5:
+                        if(player.food<10 || player.ore<15){hq_popup("You don't have enough resources");}
+                        else if(!player.buildings.includes("Archery Range")){hq_popup("Build the Archery Range to recruit Archers");}
+                        else{
+                            player.food-=10;
+                            player.ore-=15;
+                            let pipi = new Unit("Archer", 10, 2, 5, 2, FESBP()[0], FESBP()[1], "ranged", "images/humans/archer.png", "player");
+                            pipi.render_unit("no");
+                            unit5_button.innerText="Purchased!";
+                            unit5_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit5_button.innerText="Archer - 10 food, 15 ore";
+                                unit5_button.onclick = () => buy_unit_do(5);
+                            }, 400)
+                        }
                         break;
                     case 6:
+                        if(player.food<20 || player.ore<20){hq_popup("You don't have enough resources");}
+                        else if(!player.buildings.includes("Shooting Range")){hq_popup("Build the Shooting Range to recruit Musketeers");}
+                        else{
+                            player.food-=20;
+                            player.ore-=20;
+                            let pipi = new Unit("Musketeer", 20, 2, 7, 2, FESBP()[0], FESBP()[1], "skirmisher", "images/humans/musketman.png", "player");
+                            pipi.render_unit("no");
+                            unit6_button.innerText="Purchased!";
+                            unit6_button.onclick=nothing;
+                            setTimeout(() => {
+                                unit6_button.innerText="Musketeer - 20 food, 20 ore";
+                                unit6_button.onclick = () => buy_unit_do(6);
+                            }, 400)
+                        }
                         break;
                     case 7:
                         break;
@@ -1794,8 +1890,8 @@ function game_start(){
 
     //test area for #### to run at game start
     //    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
-    //let bubu = new Unit("bubu", 1000, 10, 10, 10, 3, 3, "melee", "images/yox_empire/kobold.png", "bot1");
-    //bubu.render_unit();
+    let bubu = new Unit("bubu", 1000, 10, 10, 10, 3, 3, "melee", "images/yox_empire/kobold.png", "bot1");
+    bubu.render_unit("no");
     //render_all_units();
     
     
@@ -1817,6 +1913,7 @@ hq_popup_ok.onclick= () => hq_popup_div.style.display="none";
 hq_research.onclick=open_research;
 research_close.onclick= () => research.style.display="none";
 hq_widget_move_button.onclick=move_hq_widget;
+unit_hotbar_closer.onclick=unit_hotbar_close_do;
 
 build1_button.onclick = () => buy_building_do(1);
 build2_button.onclick = () => buy_building_do(2);
