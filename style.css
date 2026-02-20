@@ -330,7 +330,7 @@ span, div, button{
     font-size:auto;
     font-family:"Almendra SC";
 }
-.unit_health_text, .unit_name_text, .unit_move_text, .unit_attack_text_container{
+.unit_health_text, .unit_name_text, .unit_move_text, .unit_attack_text_container, .unit_range_text_container{
     color:black;
     font-weight:600;
     font-family:"Almendra SC";

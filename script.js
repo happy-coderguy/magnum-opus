@@ -42,6 +42,8 @@ const unit_battack_text = document.querySelector(".unit_battack_text");
 const unit_hotbar_closer = document.querySelector(".unit_hotbar_closer");
 const unit_move_text_cont = document.querySelector(".unit_move_text");
 const unit_attack_text_cont = document.querySelector(".unit_attack_text_container");
+const unit_range_text = document.querySelector(".unit_range_text");
+const unit_range_text_cont = document.querySelector(".unit_range_text_container");
 
 const damage_text_container = document.querySelector(".damage_effect");
 const damage_text = document.querySelector(".damage_text");
@@ -253,7 +255,7 @@ let player = {
     food:5000, ore:5000, oil:500, hazardite:500, aluminium:500, gems:500,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
-    buildings:[],
+    buildings:["None"],
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
@@ -263,7 +265,7 @@ let bot1 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
-    buildings:[],
+    buildings:["None"],
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
@@ -273,7 +275,7 @@ let bot2 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
-    buildings:[],
+    buildings:["None"],
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
@@ -283,7 +285,7 @@ let bot3 = {
     food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
-    buildings:[],
+    buildings:["None"],
     research:[],
     units:[],
     hq_health:100, hq_maxhealth:100,
@@ -298,6 +300,9 @@ let rename_this_variable;
 let damage_text_animation_counter=0;
 let bs_variable;
 let linknum;
+let upi=[];
+//food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
+
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
@@ -348,6 +353,7 @@ class Unit{
         this.owner_obj.units.push(this);
 
         this.type=type;    
+        //Valid types: 'melee', 'ranged', 'skirmisher', 'worker'
         this.maxhealth=maxhealth;
         this.health=maxhealth;
         this.x=x;
@@ -453,6 +459,7 @@ class Unit{
         unit_battack_text.innerText="";
         unit_move_text_cont.style.display="block";
         unit_attack_text_cont.style.display="block";
+        unit_range_text.innerText=this.range;
         if(this.owner_obj.research.includes("44")){unit_battack_text.innerText="+5";}
     }
     activate_unit(){
@@ -517,7 +524,13 @@ class Unit{
             active_unit.check_if_exhausted();
             active_unit.activate_unit();
         }
-        else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range)){
+        else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+            this.take_damage(active_unit.attack);
+            active_unit.canattack="no";
+            active_unit.check_if_exhausted();
+            active_unit.activate_unit();
+        }
+        else if(active_unit.type==="skirmisher" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
             this.take_damage(active_unit.attack);
             active_unit.canattack="no";
             active_unit.check_if_exhausted();
@@ -569,6 +582,7 @@ class Resource_tile{
         unit_name_text.innerText=this.resource + " (" + this.owner + ")";
         unit_attack_text_cont.style.display="none";
         unit_move_text_cont.style.display="none";
+        unit_range_text_cont.style.display="none";
     }
 }
 
@@ -1471,112 +1485,39 @@ function buy_research_do(research_id){
     update_resource_counters();
 }
 function buy_unit_do(unit_number){
-    //this function is terribly made, I know. for now I just want this game to work
     if(FESBP()===null){hq_popup("No space around HQ")}
     else{
         switch(player.faction){
             case "humans":
                 switch(unit_number){
                     case 1:
-                        if(player.food<10 && research_32_status!==2){hq_popup("You don't have enough resources");}
-                        else{
-                            if(research_32_status!==2){player.food-=10;}
-                            else{research_32_status=0;}
-                            let pipi = new Unit("Labourer", 10, 2, 0, 1, FESBP()[0], FESBP()[1], "worker", "images/humans/labourer.png", "player");
-                            pipi.render_unit("no");
-                            unit1_button.innerText="Purchased!";
-                            unit1_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit1_button.innerText="Labourer - 10 food";
-                                unit1_button.onclick = () => buy_unit_do(1);
-                            }, 400)
-                            //    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
-                        }
+                        //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid - upi
+                        //name, maxhealth, movement, attack, range, x, y, type, filepath, owner - unit
+                        upi=[10, 0, 0, 0, 0, 0, "Labourer", "None", 10, 2, 0, 0, "worker", "images/humans/labourer.png", unit1_button, "Labourer - 10 food", "Labourers", 1];
                         break;
                     case 2:
-                        if(player.food<10 || player.ore<5){hq_popup("You don't have enough resources");}
-                        else{
-                            player.food-=10;
-                            player.ore-=5;
-                            let pipi = new Unit("Spearman", 10, 2, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/spearman.png", "player");
-                            pipi.render_unit("no");
-                            unit2_button.innerText="Purchased!";
-                            unit2_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit2_button.innerText="Spearman - 10 food, 5 ore";
-                                unit2_button.onclick = () => buy_unit_do(2);
-                            }, 400)
-                        }
+                        upi=[10, 5, 0, 0, 0, 0, "Spearman", "None", 10, 2, 5, 1, "melee", "images/humans/spearman.png", unit2_button, "Spearman - 10 food, 5 ore", "Spearmen", 2];
                         break;
                     case 3:
-                        if(player.food<20 || player.ore<10){hq_popup("You don't have enough resources");}
-                        else if(!player.buildings.includes("Barracks")){hq_popup("Build the Barracks to recruit Warriors");}
-                        else{
-                            player.food-=20;
-                            player.ore-=10;
-                            let pipi = new Unit("Warrior", 20, 2, 7, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/warrior.png", "player");
-                            pipi.render_unit("no");
-                            unit3_button.innerText="Purchased!";
-                            unit3_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit3_button.innerText="Warrior - 20 food, 10 ore";
-                                unit3_button.onclick = () => buy_unit_do(3);
-                            }, 400)
-                        }
+                        upi=[20, 10, 0, 0, 0, 0, "Warrior", "Barracks", 20, 2, 7, 1, "melee", "images/humans/warrior.png", unit3_button, "Warrior - 20 food, 10 ore", "Warriors", 3];
                         break;
                     case 4:
-                        if(player.food<20 || player.ore<10){hq_popup("You don't have enough resources");}
-                        else if(!player.buildings.includes("Stables")){hq_popup("Build the Stables to recruit Horsemen");}
-                        else{
-                            player.food-=20;
-                            player.ore-=10;
-                            let pipi = new Unit("Horseman", 15, 4, 5, 1, FESBP()[0], FESBP()[1], "melee", "images/humans/horseman.png", "player");
-                            pipi.render_unit("no");
-                            unit4_button.innerText="Purchased!";
-                            unit4_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit4_button.innerText="Horseman - 20 food, 10 ore";
-                                unit4_button.onclick = () => buy_unit_do(4);
-                            }, 400)
-                        }
+                        upi=[20, 10, 0, 0, 0, 0, "Horseman", "Stables", 15, 4, 5, 1, "melee", "images/humans/horseman.png", unit4_button, "Horseman - 20 food, 10 ore", "Horsemen", 4];                        
                         break;
                     case 5:
-                        if(player.food<10 || player.ore<15){hq_popup("You don't have enough resources");}
-                        else if(!player.buildings.includes("Archery Range")){hq_popup("Build the Archery Range to recruit Archers");}
-                        else{
-                            player.food-=10;
-                            player.ore-=15;
-                            let pipi = new Unit("Archer", 10, 2, 5, 2, FESBP()[0], FESBP()[1], "ranged", "images/humans/archer.png", "player");
-                            pipi.render_unit("no");
-                            unit5_button.innerText="Purchased!";
-                            unit5_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit5_button.innerText="Archer - 10 food, 15 ore";
-                                unit5_button.onclick = () => buy_unit_do(5);
-                            }, 400)
-                        }
+                        upi=[10, 15, 0, 0, 0, 0, "Archer", "Archery Range", 10, 2, 5, 2, "ranged", "images/humans/archer.png", unit5_button, "Archer - 10 food, 15 ore", "Archers", 5];
                         break;
                     case 6:
-                        if(player.food<20 || player.ore<20){hq_popup("You don't have enough resources");}
-                        else if(!player.buildings.includes("Shooting Range")){hq_popup("Build the Shooting Range to recruit Musketeers");}
-                        else{
-                            player.food-=20;
-                            player.ore-=20;
-                            let pipi = new Unit("Musketeer", 20, 2, 7, 2, FESBP()[0], FESBP()[1], "skirmisher", "images/humans/musketman.png", "player");
-                            pipi.render_unit("no");
-                            unit6_button.innerText="Purchased!";
-                            unit6_button.onclick=nothing;
-                            setTimeout(() => {
-                                unit6_button.innerText="Musketeer - 20 food, 20 ore";
-                                unit6_button.onclick = () => buy_unit_do(6);
-                            }, 400)
-                        }
+                        upi=[20, 20, 0, 0, 0, 0, "Musketman", "Shooting Range", 20, 2, 7, 2, "skirmisher", "images/humans/musketman.png", unit6_button, "Musketman - 20 food, 20 ore", "Musketmen", 6];
                         break;
                     case 7:
+                        upi=[15, 30, 0, 0, 1, 0, "Gun Car", "Garage", 25, 5, 7, 2, "ranged", "images/humans/gun_car.png", unit7_button, "Gun Car - 15 food, 30 ore, 1 aluminium", "Gun Cars", 7];
                         break;
                     case 8:
+                        upi=[30, 30, 0, 0, 0, 1, "Juggernaut", "Elite Bootcamp", 40, 2, 12, 2, "melee", "images/humans/juggernaut.png", unit8_button, "Juggernaut - 30 food, 30 ore, 1 hazardite", "Juggernauts", 8];
                         break;
                     case 9:
+                        upi=[25, 50, 1, 1, 0, 0, "Tank", "Tank Park", 50, 3, 15, 2, "skirmisher", "images/humans/tank.png", unit9_button, "Tank - 25 food, 50 ore, 1 oil, 1 gem", "Tanks", 9];
                         break;    
                 }
                 break;
@@ -1647,6 +1588,30 @@ function buy_unit_do(unit_number){
                 }
                 break;
         }
+        if((player.food < upi[0] || player.ore < upi[1] || player.oil < upi[2] || player.gems < upi[3] || player.aluminium < upi[4] || player.hazardite < upi[5]) && !(upi[12]==="worker" && research_32_status===2)){hq_popup("You don't have enough resources");}
+        else if(!player.buildings.includes(upi[7])){hq_popup("Build the "+upi[7]+" to recruit "+upi[16]);}
+        else{
+            if(upi[12]==="worker" && research_32_status===2){research_32_status=0;}
+            else{
+                player.food-=upi[0];
+                player.ore-=upi[1];
+                player.oil-=upi[2];
+                player.gems-=upi[3];
+                player.aluminium-=upi[4];
+                player.hazardite-=upi[5];
+            }
+            let pipi = new Unit(upi[6], upi[8], upi[9], upi[10], upi[11], FESBP()[0], FESBP()[1], upi[12], upi[13], "player");
+            pipi.render_unit();
+            let unit_button=upi[14];
+            unit_button.innerText="Purchased!";
+            unit_button.onclick=nothing;
+            setTimeout(() => {
+                unit_button.innerText=upi[15];
+                unit_button.onclick = () => buy_unit_do(upi[17]);
+            }, 400)
+        }
+
+
     }
     update_resource_counters();
 }
@@ -1720,7 +1685,7 @@ function choose_faction(){
 }
 function generate_map(){
     //HQ
-    if(player.faction==="humans"){hq_naming_list=["Labourer - 10 food", "Spearman - 10 food, 5 ore", "Warrior - 20 food, 10 ore", "Horseman - 20 food, 10 ore", "Archer - 10 food, 15 ore", "Musketeer - 20 food, 20 ore", "Gun car - 15 food, 30 ore, 1 aluminium", "Juggernaut - 30 food, 30 ore, 1 hazardite", "Tank - 25 food, 50 ore, 1 oil, 1 gem", "Barracks - 10 food, 10 ore", "Stables - 20 food, 20 ore", "Archery Range - 20 food, 20 ore", "Shooting Range - 25 food, 25 ore", "Garage - 35 food, 35 ore", "Elite Bootcamp - 40 food, 30 ore", "Tank Park - 45 food, 55 ore"];} 
+    if(player.faction==="humans"){hq_naming_list=["Labourer - 10 food", "Spearman - 10 food, 5 ore", "Warrior - 20 food, 10 ore", "Horseman - 20 food, 10 ore", "Archer - 10 food, 15 ore", "Musketman - 20 food, 20 ore", "Gun car - 15 food, 30 ore, 1 aluminium", "Juggernaut - 30 food, 30 ore, 1 hazardite", "Tank - 25 food, 50 ore, 1 oil, 1 gem", "Barracks - 10 food, 10 ore", "Stables - 20 food, 20 ore", "Archery Range - 20 food, 20 ore", "Shooting Range - 25 food, 25 ore", "Garage - 35 food, 35 ore", "Elite Bootcamp - 40 food, 30 ore", "Tank Park - 45 food, 55 ore"];} 
     else if (player.faction === "pastans") {hq_naming_list = ["Fusilli - 10 food", "Penne - 10 food, 5 ore", "Rigatoni - 20 food, 10 ore", "Lasagna - 15 food, 15 ore", "Orechiette - 15 food, 20 ore", "Spaghetti - 25 food, 20 ore", "Tagliatelle - 20 food, 30 ore, 1 hazardite", "Farfalle - 30 food, 15 ore, 1 gem", "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium", "Spoon - 10 food, 10 ore", "Baking Tray - 20 food, 20 ore", "Bowl - 20 food, 20 ore", "Sieve - 25 food, 25 ore", "Grater - 35 food, 35 ore", "Plate - 30 food, 40 ore", "Pot - 45 food, 55 ore"];} 
     else if (player.faction === "scrapbots") {hq_naming_list = ["Worker - 10 ore", "Fodder - 5 food, 5 ore", "Fighter - 10 food, 10 ore", "Sprinter - 10 food, 15 ore", "Shooter - 10 food, 15 ore", "Skirmisher - 15 food, 15 ore", "Pursuer - 20 food, 20 ore, 1 aluminium", "Destroyer - 25 food, 25 ore, 1 oil", "Annihilator - 25 food, 50 ore, 1 gem, 1 hazardite", "Factory - 10 food, 10 ore", "Racetrack - 20 food, 20 ore", "Shooting Range - 20 food, 20 ore", "Spider Bunker - 25 food, 25 ore", "Airfield - 35 food, 35 ore", "Assembly Scaffolds - 30 food, 40 ore", "Supershell - 45 food, 55 ore"];} 
     else {hq_naming_list = ["Gnome - 10 food", "Kobold - 10 food, 10 ore", "Hoplite - 15 food, 15 ore", "Strider - 20 food, 15 ore", "Slingslime - 20 food, 15 ore", "Lich - 30 food, 20 ore", "Cerberus - 20 food, 20 ore, 1 aluminium", "Leviathan - 30 food, 30 ore, 1 oil", "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite", "Graveyard - 10 food, 10 ore", "Silent Trees - 20 food, 20 ore", "Damp Cave - 20 food, 20 ore", "Forbidden Library - 25 food, 25 ore", "Hell's Kennel - 35 food, 35 ore", "Big Pit - 40 food, 30 ore", "Tower of Souls - 45 food, 55 ore"];}
@@ -1889,10 +1854,7 @@ function game_start(){
     });
 
     //test area for #### to run at game start
-    //    constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
-    let bubu = new Unit("bubu", 1000, 10, 10, 10, 3, 3, "melee", "images/yox_empire/kobold.png", "bot1");
-    bubu.render_unit("no");
-    //render_all_units();
+
     
     
     
