@@ -1524,18 +1524,25 @@ function buy_unit_do(unit_number){
             case "pastans":
                 switch(unit_number){
                     case 1:
+                        upi=[10, 0, 0, 0, 0, 0, "Fusilli", "None", 10, 2, 0, 0, "worker", "images/pastans/fusilli.png", unit1_button, "Fusilli - 10 food", "My name is Yoshikage Kira. I'm 33 years old. My house is in the northeast section of Morioh, where all the villas are, and I am not married. I work as an employee for the Kame Yu department stores, and I get home every day by 8 PM at the latest. I don't smoke, but I occasionally drink. I'm in bed by 11 PM, and make sure I get eight hours of sleep, no matter what. After having a glass of warm milk and doing about twenty minutes of stretches before going to bed, I usually have no problems sleeping until morning. Just like a baby, I wake up without any fatigue or stress in the morning. I was told there were no issues at my last check-up. I'm trying to explain that I'm a person who wishes to live a very quiet life. I take care not to trouble myself with any enemies, like winning and losing, that would cause me to lose sleep at night. That is how I deal with society, and I know that is what brings me happiness. Although, if I were to fight I wouldn't lose to anyone.", 1];
                         break;
                     case 2:
+                        upi=[10, 5, 0, 0, 0, 0, "Penne", "None", 5, 2, 5, 2, "ranged", "images/pastans/penne.png", unit2_button, "Penne - 10 food, 5 ore", "pennee", 2];
                         break;
                     case 3:
+                        upi=[20, 10, 0, 0, 0, 0, "Rigatoni", "Spoon", 20, 2, 7, 1, "melee", "images/pastans/rigatoni.png", unit3_button, "Rigatoni - 20 food, 10 ore", "Rigatonines", 3];
                         break;
                     case 4:
+                        upi=[15, 15, 0, 0, 0, 0, "Lasagna", "Baking Tray", 25, 1, 8, 1, "melee", "images/pastans/lasagna.png", unit4_button, "Lasagna - 15 food, 15 ore", "Lasagnae", 4];
                         break;
                     case 5:
+                        upi=[15, 20, 0, 0, 0, 0, "Orechiette", "Bowl", 15, 2, 7, 2, "ranged", "images/pastans/orechiette.png", unit5_button, "Orechiette - 15 food, 20 ore", "Orechietti", 5];
                         break;
                     case 6:
+                        upi=[25, 20, 0, 0, 0, 0, "Spaghetti", "Sieve", 20, 2, 7, 3, "skirmisher", "images/pastans/spaghetti.png", unit6_button, "Spaghetti - 25 food, 20 ore", "Spaghettis", 6];
                         break;
                     case 7:
+                        upi=[20, 10, 0, 0, 0, 0, "Rigatoni", "Spoon", 20, 2, 7, 1, "melee", "images/pastans/rigatoni.png", unit3_button, "Rigatoni - 20 food, 10 ore", "Rigatonines", 3];
                         break;
                     case 8:
                         break;
