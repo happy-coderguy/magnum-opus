@@ -1,4 +1,3 @@
-//WARNING: this code isnt family friendly
 /**DOM stuff**/
 const root = document.querySelector(":root");
 
@@ -512,7 +511,7 @@ class Unit{
         }
     }
     get_attacked(){
-        //get fucking attacked
+        //get parsnipping attacked
         if(active_unit===null){
             unit_hotbar.style.display="flex";
             hotbar.style.display="none";
@@ -593,7 +592,7 @@ let time = d.getTime();
 /**GENERAL FUNCTIONS**/
 function print(item){
     console.log(item);
-    //chat is this shitty coding
+    //chat is this rhubarby coding
 }
 function show_settings(){
     //code for goofy easter egg
@@ -882,7 +881,7 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Grater", "images/pastans/tagliatelle.png", "Allows you to recuit Tagliatellae"];
             break;
         case 60:
-            encycl_infobox_data=["Plate", "images/pastans/farfalle.png", "Allows you to recuit Farfallae"];
+            encycl_infobox_data=["Plate", "images/pastans/farfalle.png", "Allows you to recuit Farfallen"];
             break;
         case 61:
             encycl_infobox_data=["Pot", "images/pastans/macaroni.png", "Allows you to recuit Macarone"];
@@ -1542,33 +1541,44 @@ function buy_unit_do(unit_number){
                         upi=[25, 20, 0, 0, 0, 0, "Spaghetti", "Sieve", 20, 2, 7, 3, "skirmisher", "images/pastans/spaghetti.png", unit6_button, "Spaghetti - 25 food, 20 ore", "Spaghettis", 6];
                         break;
                     case 7:
-                        upi=[20, 10, 0, 0, 0, 0, "Rigatoni", "Spoon", 20, 2, 7, 1, "melee", "images/pastans/rigatoni.png", unit3_button, "Rigatoni - 20 food, 10 ore", "Rigatonines", 3];
+                        upi=[20, 30, 0, 0, 0, 1, "Tagliatelle", "Grater", 30, 2, 10, 2, "ranged", "images/pastans/tagliatelle.png", unit7_button, "Tagliatelle - 20 food, 30 ore, 1 hazardite", "Tagliatellae", 7];
                         break;
                     case 8:
+                        upi=[30, 15, 0, 1, 0, 0, "Farfalle", "Plate", 25, 3, 10, 1, "melee", "images/pastans/farfalle.png", unit8_button, "Farfalle - 30 food, 15 ore, 1 gem", "Farfallen", 8];                        
                         break;
                     case 9:
+                        upi=[30, 30, 1, 0, 1, 0, "Macaroni", "Pot", 40, 2, 10, 1, "melee", "images/pastans/macaroni.png", unit9_button, "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium", "Macarone", 9];
                         break;    
                 }
                 break;
             case "scrapbots":
                 switch(unit_number){
                     case 1:
+                        upi=[0, 10, 0, 0, 0, 0, "Builder", "None", 10, 2, 0, 0, "worker", "images/scrapbots/builder.png", unit1_button, "Builder - 10 ore", "Builders", 1];
                         break;
                     case 2:
+                        upi=[5, 5, 0, 0, 0, 0, "Fodder", "None", 10, 2, 3, 1, "melee", "images/scrapbots/fodder.png", unit2_button, "Fodder - 5 food, 5 ore", "Fodders", 2];
                         break;
                     case 3:
+                        upi=[10, 10, 0, 0, 0, 0, "Fighter", "Factory", 15, 2, 5, 1, "melee", "images/scrapbots/fighter.png", unit3_button, "Fighter - 10 food, 10 ore", "Fighters", 3];
                         break;
                     case 4:
+                        upi=[10, 15, 0, 0, 0, 0, "Sprinter", "Racetrack", 10, 6, 3, 1, "melee", "images/scrapbots/sprinter.png", unit4_button, "Sprinter - 10 food, 15 ore", "Sprinters", 4];
                         break;
                     case 5:
+                        upi=[10, 15, 0, 0, 0, 0, "Shooter", "Shooting Range", 15, 2, 5, 2, "ranged", "images/scrapbots/shooter.png", unit5_button, "Shooter - 10 food, 15 ore", "Shooters", 5];
                         break;
                     case 6:
+                        upi=[15, 15, 0, 0, 0, 0, "Skirmisher", "Spider Bunker", 20, 3, 5, 0, "melee", "images/scrapbots/skirmisher.png", unit6_button, "Skirmisher - 15 food, 15 ore", "Skirmishers", 6];
                         break;
                     case 7:
+                        upi=[20, 20, 0, 0, 1, 0, "Pursuer", "Airfield", 25, 2, 7, 2, "skirmisher", "images/scrapbots/pursuer.png", unit7_button, "Pursuer - 20 food, 20 ore, 1 aluminium", "Pursuers", 7];
                         break;
                     case 8:
+                        upi=[25, 25, 1, 0, 0, 0, "Destroyer", "Assembly Scaffolds", 30, 2, 5, 1, "melee", "images/scrapbots/destroyer.png", unit8_button, "Destroyer - 25 food, 25 ore, 1 oil", "Destroyers", 8];
                         break;
                     case 9:
+                        upi=[25, 50, 0, 1, 0, 1, "Annihilator", "Supershell", 10, 2, 20, 4, "ranged", "images/scrapbots/annihilator.png", unit9_button, "Fighter - 25 food, 50 ore, 1 gem, 1 hazardite", "Annihilators", 9];
                         break;    
                 }
                 break;
