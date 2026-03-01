@@ -362,9 +362,11 @@ class Unit{
         this.range=range;
         this.movement=movement;
         this.maxmovement=movement;
-        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
         if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
+        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
         if(this.owner_obj.research.includes("22") && this.type==="melee"){this.maxhealth+=5; this.health+=5;}
+        if(this.owner_obj.research.includes("44") && this.type==="melee"){this.damage+=5;}
+        if(this.owner_obj.research.includes("21") && this.tyle==="ranged"){this.range+=1;}
     }
     render_unit(state){
         const existing=document.querySelector(`.u${this.id}`);
@@ -459,7 +461,6 @@ class Unit{
         unit_move_text_cont.style.display="block";
         unit_attack_text_cont.style.display="block";
         unit_range_text.innerText=this.range;
-        if(this.owner_obj.research.includes("44")){unit_battack_text.innerText="+5";}
     }
     activate_unit(){
         const all_tiles=document.querySelectorAll(".tileimg");
@@ -704,7 +705,7 @@ function update_hq_healthbar(){
 function open_encycl_entry(entry){
     switch(entry){
         case 1:
-            encycl_infobox_data=["Labourer", "images/humans/labourer.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
+            encycl_infobox_data=["Labourer", "images/humans/labourer.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
             break;
         case 2:
             encycl_infobox_data=["Spearman", "images/humans/spearman.png", "Weak melee unit. Uses sharp pointy."];
@@ -716,7 +717,7 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"];
             break;
         case 5:
-            encycl_infobox_data=["Archer", "images/humans/archer.png", "Can shoot arrows (maybe)"];
+            encycl_infobox_data=["Archer", "images/humans/archer.png", "Can shoot arrows"];
             break;
         case 6:
             encycl_infobox_data=["Musketeer", "images/humans/musketeer.png", "Own a musket for home defence. Can shoot and stab"];
@@ -728,10 +729,10 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Juggernaut", "images/humans/juggernaut.png", "Real tough guy"];
             break;
         case 9:
-            encycl_infobox_data=["Tank", "images/humans/tank.png", "Slow and big but deadly. Not historically accurate."];
+            encycl_infobox_data=["Tank", "images/humans/tank.png", "Fast and big and deadly. Not historically accurate."];
             break;
         case 10:
-            encycl_infobox_data=["Fusilli", "images/pastans/fusilli.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
+            encycl_infobox_data=["Fusilli", "images/pastans/fusilli.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
             break;
         case 11:
             encycl_infobox_data=["Penne", "images/pastans/penne.png", "Shoots lasers from its hand. Weak but cheap"];
@@ -752,13 +753,13 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Tagliatelle", "images/pastans/tagliatelle.png", "Little gremlin big gun"];
             break;
         case 17:
-            encycl_infobox_data=["Farfalle", "images/pastans/farfalle.png", "It's ya boy Farfie who attacks twice. DJ Farfie OUT"];
+            encycl_infobox_data=["Farfalle", "images/pastans/farfalle.png", "It's ya boy Farfie who attacks enemies. DJ Farfie OUT"];
             break;
         case 18:
             encycl_infobox_data=["Macaroni", "images/pastans/macaroni.png", "Like El Macho but so macho he doesn't die, melee"];
             break;
         case 19:
-            encycl_infobox_data=["Builder", "images/scrapbots/builder.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
+            encycl_infobox_data=["Builder", "images/scrapbots/builder.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
             break;
         case 20:
             encycl_infobox_data=["Fodder", "images/scrapbots/fodder.png", "Melee. Lacks the intelligence to care about being fodder"];
@@ -782,10 +783,10 @@ function open_encycl_entry(entry){
             encycl_infobox_data=["Destroyer", "images/scrapbots/destroyer.png", "Unstoppable melee that will touch your opponents"];
             break;
         case 27:
-            encycl_infobox_data=["Annihilator", "images/scrapbots/annihilator.png", "Mike, why is the sun flying towards us?"];
+            encycl_infobox_data=["Annihilator", "images/scrapbots/annihilator.png", "Sir, why is the sun flying towards us?"];
             break;
         case 28:
-            encycl_infobox_data=["Gnome", "images/yox_empire/gnome.png", "A builder unit. When it ends its turn on a resource it makes a mine for you."];
+            encycl_infobox_data=["Gnome", "images/yox_empire/gnome.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
             break;
         case 29:
             encycl_infobox_data=["Kobold", "images/yox_empire/kobold.png", "Melee unit that somehow manages to punch"];
@@ -1254,9 +1255,9 @@ function buy_research_do(research_id){
                 player.food-=10;
                 player.ore-=10;
                 player.research.push("11");
-                player.food_gain+=5;
                 root.style.setProperty("--r1r1-purchased", "#00ff00");
                 r1r1.innerText="Researched";
+                player.food_gain+=5;
             }
             break;
         case 2:
@@ -1265,10 +1266,10 @@ function buy_research_do(research_id){
             else{
                 player.food-=10;
                 player.ore-=10;
-                player.ore_gain+=5;
                 player.research.push("12");
                 root.style.setProperty("--r1r2-purchased", "#00ff00");
                 r1r2.innerText="Researched";
+                player.ore_gain+=5;
             }
             break;
         case 3:
@@ -1279,9 +1280,9 @@ function buy_research_do(research_id){
                 player.ore-=10;
                 player.research.push("13");
                 root.style.setProperty("--r1r3-purchased", "#00ff00");
+                r1r3.innerText="Researched";
                 player.hq_maxhealth+=25;
                 player.hq_health+=25;
-                r1r3.innerText="Researched";
             }
             break;
         case 4:
@@ -1305,6 +1306,7 @@ function buy_research_do(research_id){
                 player.research.push("21");
                 root.style.setProperty("--r2r1-purchased", "#00ff00");
                 r2r1.innerText="Researched";
+                player.units.forEach((unit) => {if(unit.type==="ranged"){unit.range+=1;}})
             }
             break;
         case 6:
@@ -1435,10 +1437,10 @@ function buy_research_do(research_id){
             else{
                 player.ore-=25;
                 player.food-=25;
-                player.food_gain+=5;
                 player.research.push("41");
                 root.style.setProperty("--r4r1-purchased", "#00ff00");
                 r4r1.innerText="Researched";
+                player.food_gain+=5;
             }
             break;
         case 14:
@@ -1447,10 +1449,10 @@ function buy_research_do(research_id){
             else{
                 player.ore-=25;
                 player.food-=25;
-                player.ore_gain+=5;
                 player.research.push("42");
                 root.style.setProperty("--r4r2-purchased", "#00ff00");
                 r4r2.innerText="Researched";
+                player.ore_gain+=5;
             }
             break;
         case 15:
@@ -1462,9 +1464,9 @@ function buy_research_do(research_id){
                 player.food-=10;
                 player.research.push("43");
                 root.style.setProperty("--r4r3-purchased", "#00ff00");
+                r4r3.innerText="Researched";
                 player.hq_health+=50;
                 player.hq_maxhealth+=50;
-                r4r3.innerText="Researched";
             }
             break;
         case 16:
@@ -1477,6 +1479,7 @@ function buy_research_do(research_id){
                 player.research.push("44");
                 root.style.setProperty("--r4r4-purchased", "#00ff00");
                 r4r4.innerText="Researched";
+                player.units.forEach((unit) => {if(unit.type==="melee"){unit.damage+=5;}})
             }
             break;
     }
@@ -1547,7 +1550,7 @@ function buy_unit_do(unit_number){
                         upi=[30, 15, 0, 1, 0, 0, "Farfalle", "Plate", 25, 3, 10, 1, "melee", "images/pastans/farfalle.png", unit8_button, "Farfalle - 30 food, 15 ore, 1 gem", "Farfallen", 8];                        
                         break;
                     case 9:
-                        upi=[30, 30, 1, 0, 1, 0, "Macaroni", "Pot", 40, 2, 10, 1, "melee", "images/pastans/macaroni.png", unit9_button, "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium", "Macarone", 9];
+                        upi=[30, 30, 1, 0, 1, 0, "Macaroni", "Pot", 40, 2, 13, 1, "melee", "images/pastans/macaroni.png", unit9_button, "Macaroni - 30 food, 30 ore, 1 oil, 1 aluminium", "Macarone", 9];
                         break;    
                 }
                 break;
@@ -1585,22 +1588,31 @@ function buy_unit_do(unit_number){
             case "yox_empire":
                 switch(unit_number){
                     case 1:
+                        upi=[10, 0, 0, 0, 0, 0, "Gnome", "None", 10, 2, 0, 0, "worker", "images/yox_empire/gnome.png", unit1_button, "Gnome - 10 food", "Gnomes", 1];
                         break;
                     case 2:
+                        upi=[10, 10, 0, 0, 0, 0, "Kobold", "None", 12, 2, 5, 1, "melee", "images/yox_empire/kobold.png", unit2_button, "Kobold - 10 food, 10 ore", "Kobolds", 2];
                         break;
                     case 3:
+                        upi=[15, 15, 0, 0, 0, 0, "Hoplite", "Graveyard", 20, 2, 7, 1, "melee", "images/yox_empire/hoplite.png", unit3_button, "Hoplite - 15 food, 15 ore", "Hoplites", 3];
                         break;
                     case 4:
+                        upi=[20, 15, 0, 0, 0, 0, "Strider", "Silent Trees", 22, 3, 5, 1, "melee", "images/yox_empire/strider.png", unit4_button, "Strider - 20 food, 15 ore", "Strider", 4];
                         break;
                     case 5:
+                        upi=[20, 15, 0, 0, 0, 0, "Slingslime", "Damp Cave", 20, 2, 5, 2, "ranged", "images/yox_empire/slingslime.png", unit5_button, "Slingslime - 20 food, 15 ore", "Slingslimes", 5];
                         break;
                     case 6:
+                        upi=[30, 20, 0, 0, 0, 0, "Lich", "Forbidden Library", 22, 2, 9, 2, "ranged", "images/yox_empire/lich.png", unit6_button, "Lich - 30 food, 20 ore", "Liches", 6];
                         break;
                     case 7:
+                        upi=[20, 20, 0, 0, 1, 0, "Cerberus", "Hell's Kennel", 20, 2, 6, 3, "skirmisher", "images/yox_empire/cerberus.png", unit7_button, "Cerberus - 20 food, 20 ore, 1 aluminium", "Cerberi", 7];      //kinda iffy with this one, cerberuses/cerberusses doesnt sound ok to me
                         break;
                     case 8:
+                        upi=[30, 30, 1, 0, 0, 0, "Leviathan", "Big Pit", 42, 1, 14, 1, "melee", "images/yox_empire/leviathan.png", unit8_button, "Leviathan - 30 food, 30 ore, 1 oil", "Leviathans", 8];
                         break;
                     case 9:
+                        upi=[40, 40, 0, 1, 0, 1, "Reaper", "Tower of Souls", 40, 3, 12, 1, "melee", "images/yox_empire/reaper.png", unit9_button, "Reaper - 40 food, 40 ore, 1 gem, 1 hazardite", "Reapers", 9];
                         break;    
                 }
                 break;
