@@ -251,7 +251,7 @@ let global_units=[];
 let global_resources=[];
 
 let player = {
-    food:5000, ore:5000, oil:500, hazardite:500, aluminium:500, gems:500,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
     buildings:["None"],
@@ -259,9 +259,10 @@ let player = {
     units:[],
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
     color:"",
+    name:"Player", x:2, y:2, hq_doc:0,
 };
 let bot1 = {
-    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
     buildings:["None"],
@@ -269,9 +270,10 @@ let bot1 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
+    name:"Computer 1", x:2, y:24, hq_doc:0,
 };
 let bot2 = {
-    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
     buildings:["None"],
@@ -279,9 +281,10 @@ let bot2 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
+    name:"Computer 2",  x:24, y:2, hq_doc:0,
 };
 let bot3 = {
-    food:0, ore:0, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
     faction:"",
     buildings:["None"],
@@ -289,6 +292,7 @@ let bot3 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
+    name:"Computer 3",  x:24, y:24, hq_doc:0,
 };
 let building_inq;
 let current_id=456;
@@ -300,6 +304,7 @@ let damage_text_animation_counter=0;
 let bs_variable;
 let linknum;
 let upi=[];
+let hq_damage_taken;
 //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
 
 
@@ -466,12 +471,12 @@ class Unit{
         const all_tiles=document.querySelectorAll(".tileimg");
         if(active_unit===this){
             all_tiles.forEach((tile => {
+                const tilex=parseInt(tile.getAttribute("data-x"));
+                const tiley=parseInt(tile.getAttribute("data-y"));
                 tile.style.filter="brightness(100%)";
-                tile.onclick=nothing;
+                if(!((tilex===2 || tilex===24) && (tiley===2 || tiley===24))){tile.onclick=nothing;}
                 let change_the_name=get_resource_tile_by_pos(tile.getAttribute("data-x"), tile.getAttribute("data-y"));
-                if(change_the_name !== null){
-                    change_the_name.tileimg.onclick = change_the_name.update_u_hotbar.bind(change_the_name);
-                }
+                if(change_the_name !== null){change_the_name.tileimg.onclick = change_the_name.update_u_hotbar.bind(change_the_name);}
             }))
             global_units.forEach((unit => {
                 unit.check_if_exhausted();
@@ -492,16 +497,21 @@ class Unit{
                 const tiley=parseInt(tile.getAttribute("data-y"));
                 //distance checker
                 //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
-                if( ((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement) || ((tilex===2 || tilex===24) && (tiley===2 || tiley===24)) || (get_unit_by_pos(tilex, tiley)!==null)){
-                    tile.style.filter="brightness(10%)";
-                }
-                else{
-                    tile.onclick = () =>this.move_unit(tilex, tiley);
+                //hq checker
+                //(tilex===2 || tilex===24) && (tiley===2 || tiley===24)
+                if(((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement) || (get_unit_by_pos(tilex, tiley)!==null)){tile.style.filter="brightness(10%)";}
+                else if(!((tilex===2 || tilex===24) && (tiley===2 || tiley===24))){tile.onclick = () => this.move_unit(tilex, tiley);}
+                
+
+                if((tilex===2 || tilex===24) && (tiley===2 || tiley===24)){
+                    if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.range || this.canattack==="no"){tile.style.filter="brightness(10%)";}
+                    else if(this.type==="ranged" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))===1){tile.style.filter="brightness(10%)";}
+                    else{tile.style.filter="brightness(100%)";}
+                    if(this.owner_obj.x===tilex && this.owner_obj.y===tiley){tile.style.filter="brightness(10%)";}
                 }
                 if(this.x===tilex && this.y===tiley){
                     tile.style.filter="brightness(100%)";
                 }
-                
             }))
             global_units.forEach((unit => {
                 if((Math.abs(this.x-unit.x)+Math.abs(this.y-unit.y))>this.range || this.canattack==="no"){unit.render_unit("outofrange");}
@@ -584,6 +594,47 @@ class Resource_tile{
         unit_move_text_cont.style.display="none";
         unit_range_text_cont.style.display="none";
     }
+}
+function attack_hq(ownerobj){
+    hq_damage_taken = 0;
+    //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
+    if(active_unit===null){
+        unit_hotbar.style.display="flex";
+        hotbar.style.display="none";
+        unit_chealth_text.innerText=ownerobj.hq_health;
+        unit_mhealth_text.innerText=ownerobj.hq_maxhealth;
+        unit_name_text.innerText=ownerobj.name+" HQ";
+        unit_attack_text_cont.style.display="none";
+        unit_move_text_cont.style.display="none";
+        unit_range_text_cont.style.display="none";
+    }
+    else if(active_unit.type==="melee" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+    else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+    else if(active_unit.type==="skirmisher" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+    if(hq_damage_taken!==0){
+        active_unit.canattack="no";
+        active_unit.check_if_exhausted();
+        active_unit.activate_unit();
+        ownerobj.hq_health-=hq_damage_taken;
+        damage_text.innerText="-"+hq_damage_taken;
+        damage_text_container.style.display="block";
+        rename_this_variable = ownerobj.hq_doc;
+        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
+        damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
+        damage_text_container.style.filter="opacity(100%)";
+        damage_text_animation_counter=0;
+        setTimeout(damage_text_animation, 10);
+        if(ownerobj.hq_health<1){
+            //leave for now
+        }
+    }
+
 }
 
 //this is for goofy easter egg
@@ -1795,7 +1846,6 @@ function generate_map(){
                 bot2.color="#ff8000";
                 bot3.faction = "pastans"; 
                 bot3.color="#00ff6a";
-
             }
             if (x===2 && y===2){
                 if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
@@ -1803,15 +1853,22 @@ function generate_map(){
                 else if (player.faction === "pastans"){tileimg.src = "images/tiles/pastans_hq.png";}
                 else  if (player.faction === "yox_empire"){tileimg.src = "images/tiles/yox_empire_hq.png";}
                 tile.onclick=open_hq;
+                player.hq_doc=tile;
             }
             else if (x===2 && y===24){
                 tileimg.src = "images/tiles/" + bot1.faction + "_hq.png";
+                tile.onclick= () => attack_hq(bot1);
+                bot1.hq_doc=tile;
             }
             else if (x===24 && y===2){
                 tileimg.src = "images/tiles/" + bot2.faction + "_hq.png";
+                tile.onclick= () => attack_hq(bot2);
+                bot2.hq_doc=tile;
             }
             else if (x===24 && y===24){
                 tileimg.src = "images/tiles/" + bot3.faction + "_hq.png";
+                tile.onclick= () => attack_hq(bot3);
+                bot3.hq_doc=tile;
             }
             else if ((x===2 && y===4) || (x===7 && y===3) || (x===22 && y===2) || (x===23 && y===7) || (x===24 && y===22) || (x===19 && y===23) || (x===4 && y===24) || (x===3 && y===19) || (x===11 && y===11) || (x===15 && y===15)){
                 tileimg.src = "images/tiles/mine.png";
@@ -1882,11 +1939,12 @@ function game_start(){
         }
     });
 
-    //test area for #### to run at game start
+    //test area for xyz to run at game start
+    //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
+    let bubu = new Unit("Bubu", 1, 99, 52, 1, 7, 7, "melee", "important.png", "player");
+    bubu.render_unit();
 
-    
-    
-    
+
     update_resource_counters();
     update_hq_healthbar();
 }

@@ -57,6 +57,7 @@
     --r4r4-purchased:#ffffff;
 
     --baabaa:#ffffff;
+    /**why is this here? good question**/
 }
 html, body{
     margin:0;
@@ -557,13 +558,14 @@ span, div, button{
     text-align:center;
     color:white;
     height:10%;
-    font-size:1.4em;
+    font-size:1.3em;
 }
 .hqw_resource_counter{
     width:90%;
-    height:75%;
+    height:70%;
     border:2px solid black;
     margin:0px;
+    margin-top:2.75%;
     padding:0px;
     background-color:var(--player-color-pale);
     display:flex;
@@ -571,6 +573,7 @@ span, div, button{
     flex-wrap: wrap;
     font-family:"Almendra SC";
     justify-content:center;
+    font-size:0.9em;
 }
 
 /**ENCYCLOPOEDIA**/
