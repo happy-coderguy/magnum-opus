@@ -19,6 +19,10 @@ const loader_cover = document.querySelector(".loader_cover");
 const lc_text = document.querySelector(".lc_text");
 const lc_image = document.querySelector(".lc_image");
 
+const gameover_screen = document.querySelector(".gameover_screen");
+const victory_screen = document.querySelector(".victory_screen");
+const timeout_screen = document.querySelector(".timeout_screen");
+
 const faction_choose = document.querySelector(".faction_choose");
 const choose_yox_empire = document.querySelector(".choose_yox_empire");
 const choose_pastans = document.querySelector(".choose_pastans");
@@ -29,8 +33,9 @@ let hq_naming_list = [];
 const tile_container = document.querySelector(".tiles");
 
 const hotbar = document.querySelector(".hotbar");
-const next_turn = document.querySelector(".next_turn");
+const next_turn_button = document.querySelector(".next_turn_button");
 const unit_hotbar = document.querySelector(".unit_hotbar");
+const unit_health_text=document.querySelector(".unit_health_text");
 const unit_chealth_text = document.querySelector(".unit_chealth_text");
 const unit_mhealth_text = document.querySelector(".unit_mhealth_text");
 const unit_cmove_text = document.querySelector(".unit_cmove_text");
@@ -247,12 +252,13 @@ const r4r4 = document.querySelector(".r4r4");
 
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/warrior.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
+const bot_personalities=["turtle", "spammer", "balanced"];
 let global_units=[];
 let global_resources=[];
 
 let player = {
-    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
-    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    food:1000000, ore:1000000, oil:0, hazardite:0, aluminium:0, gems:0,
+    food_gain:5, ore_gain:5, 
     faction:"",
     buildings:["None"],
     research:[],
@@ -260,10 +266,11 @@ let player = {
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
     color:"",
     name:"Player", x:2, y:2, hq_doc:0,
+    alive:"yes",
 };
 let bot1 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
-    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
     research:[],
@@ -271,10 +278,12 @@ let bot1 = {
     hq_health:100, hq_maxhealth:100,
     color:"",
     name:"Computer 1", x:2, y:24, hq_doc:0,
+    alive:"yes",
+    personality:"",
 };
 let bot2 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
-    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
     research:[],
@@ -282,10 +291,12 @@ let bot2 = {
     hq_health:100, hq_maxhealth:100,
     color:"",
     name:"Computer 2",  x:24, y:2, hq_doc:0,
+    alive:"yes",
+    personality:"",
 };
 let bot3 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
-    food_gain:5, ore_gain:5, oil_gain:0, hazardite_gain:0, aluminium_gain:0, gems_gain:0,
+    food_gain:5, ore_gain:5, 
     faction:"",
     buildings:["None"],
     research:[],
@@ -293,6 +304,8 @@ let bot3 = {
     hq_health:100, hq_maxhealth:100,
     color:"",
     name:"Computer 3",  x:24, y:24, hq_doc:0,
+    alive:"yes",
+    personality:"",
 };
 let building_inq;
 let current_id=456;
@@ -305,8 +318,9 @@ let bs_variable;
 let linknum;
 let upi=[];
 let hq_damage_taken;
+let mine_damage_taken;
+let turn_number=1;
 //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
-
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
@@ -370,8 +384,8 @@ class Unit{
         if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
         if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
         if(this.owner_obj.research.includes("22") && this.type==="melee"){this.maxhealth+=5; this.health+=5;}
-        if(this.owner_obj.research.includes("44") && this.type==="melee"){this.damage+=5;}
-        if(this.owner_obj.research.includes("21") && this.tyle==="ranged"){this.range+=1;}
+        if(this.owner_obj.research.includes("44") && this.type==="melee"){this.attack+=5;}
+        if(this.owner_obj.research.includes("21") && this.type==="ranged"){this.range+=1;}
     }
     render_unit(state){
         const existing=document.querySelector(`.u${this.id}`);
@@ -408,17 +422,18 @@ class Unit{
         if(this.movement<=0 && (this.canattack==="no" || this.check_for_opps()==="no")){this.render_unit("exhausted");}
         else{this.render_unit("normal");}
     }
-    take_damage(damage){
+    take_damage(damage, muted){
         this.health-=damage;
-        damage_text.innerText="-"+damage;
-        damage_text_container.style.display="block";
-        rename_this_variable = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
-        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
-        damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
-        damage_text_container.style.filter="opacity(100%)";
-        damage_text_animation_counter=0;
-        setTimeout(damage_text_animation, 10);
-
+        if(this.owner_obj.alive==="yes" && muted==="no"){
+            damage_text.innerText="-"+damage;
+            damage_text_container.style.display="block";
+            rename_this_variable = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
+            damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
+            damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
+            damage_text_container.style.filter="opacity(100%)";
+            damage_text_animation_counter=0;
+            setTimeout(damage_text_animation, 10);
+        }
         if(this.health<=0){
             //DEATH
             const existing=document.querySelector(`.u${this.id}`);
@@ -429,7 +444,7 @@ class Unit{
     }
     deal_damage(damage, target_x, target_y){
         let target=get_unit_by_pos(target_x, target_y);
-        target.take_damage(damage);
+        target.take_damage(damage, "no");
     }
     move_unit(dest_x, dest_y){
         let distance_gone = Math.abs(this.x-dest_x)+Math.abs(this.y-dest_y)
@@ -448,14 +463,16 @@ class Unit{
             console.log(the_resources_in_question);
             if(the_resources_in_question.owner==="unoccupied"){
                 the_resources_in_question.owner=this.owner;
+                the_resources_in_question.owner_obj=this.owner_obj;
                 the_resources_in_question.tileimg.src="images/tiles/"+the_resources_in_question.resource+"_developed.png";
                 the_resources_in_question.tileimg.style.border="2px solid";
                 the_resources_in_question.tileimg.style.borderColor=this.owner_obj.color;
-                this.take_damage(52);
+                this.take_damage(52, "yes");
             }
         }
     }
     update_unit_hotbar(){
+        unit_health_text.style.display="block";
         unit_chealth_text.innerText=this.health;
         unit_mhealth_text.innerText=this.maxhealth;
         unit_cmove_text.innerText=this.movement;
@@ -500,12 +517,20 @@ class Unit{
                 //hq checker
                 //(tilex===2 || tilex===24) && (tiley===2 || tiley===24)
                 if(((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement) || (get_unit_by_pos(tilex, tiley)!==null)){tile.style.filter="brightness(10%)";}
+                else if(get_resource_tile_by_pos(tilex, tiley)!==null){
+                    if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.range || this.canattack==="no"){tile.style.filter="brightness(10%)";}
+                    else if(this.type==="ranged" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))===1){tile.style.filter="brightness(10%)";}
+                    if(this.type==="worker" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))<=this.movement && get_resource_tile_by_pos(tilex, tiley).owner==="unoccupied"){tile.style.filter="brightness(110%)";}
+                    else if(this.type==="worker" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))<=this.movement){tile.style.filter="brightness(100%)";}
+
+                }
                 else if(!((tilex===2 || tilex===24) && (tiley===2 || tiley===24))){tile.onclick = () => this.move_unit(tilex, tiley);}
                 
 
                 if((tilex===2 || tilex===24) && (tiley===2 || tiley===24)){
                     if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.range || this.canattack==="no"){tile.style.filter="brightness(10%)";}
                     else if(this.type==="ranged" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))===1){tile.style.filter="brightness(10%)";}
+                    else if(tile.src.includes("destroyed_hq")){tile.style.filter="brightness(10%)"}
                     else{tile.style.filter="brightness(100%)";}
                     if(this.owner_obj.x===tilex && this.owner_obj.y===tiley){tile.style.filter="brightness(10%)";}
                 }
@@ -520,6 +545,7 @@ class Unit{
                 if(unit===this){unit.render_unit("no");}
             }))
         }
+        else if(this.type==="worker" && get_resource_tile_by_pos(this.x, this.y)!==null){get_resource_tile_by_pos(this.x, this.y).update_u_hotbar();}
     }
     get_attacked(){
         //get parsnipping attacked
@@ -529,28 +555,25 @@ class Unit{
             this.update_unit_hotbar();
         }
         else if(active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
-            this.take_damage(active_unit.attack);
+            this.take_damage(active_unit.attack, "no");
             active_unit.canattack="no";
             active_unit.check_if_exhausted();
             active_unit.activate_unit();
         }
         else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
-            this.take_damage(active_unit.attack);
+            this.take_damage(active_unit.attack, "no");
             active_unit.canattack="no";
             active_unit.check_if_exhausted();
             active_unit.activate_unit();
         }
         else if(active_unit.type==="skirmisher" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
-            this.take_damage(active_unit.attack);
+            this.take_damage(active_unit.attack, "no");
             active_unit.canattack="no";
             active_unit.check_if_exhausted();
             active_unit.activate_unit();
         }
 
     }
-}
-function render_all_units(){
-    global_units.forEach((unit => unit.check_if_exhausted()));
 }
 class Resource_tile{
     constructor(resource, x, y, owner, tileimg){
@@ -563,42 +586,100 @@ class Resource_tile{
         this.maxhealth=25;
         this.tileimg.onclick=this.update_u_hotbar.bind(this);
 
-        if(owner==="player"){this.owner_obj=player;}
+        if(owner==="unoccupied"){this.owner_obj=null;}
+        else if(owner==="player"){this.owner_obj=player;}
         else if(owner==="bot1"){this.owner_obj=bot1;}
         else if(owner==="bot2"){this.owner_obj=bot2;}
         else{this.owner_obj=bot3;}
     }
     produce_resources(){
-        switch(this.resource){
-            case "food":
-                break;
-            case "mine":
-                break;
-            case "hazardite":
-                break;
-            case "oil":
-                break;
-            case "gems":
-                break;
-            case "aluminium":
-                break;
+        if(this.owner!=="unoccupied"){
+            switch(this.resource){
+                case "food":
+                    this.owner_obj.food+=5;
+                    break;
+                case "mine":
+                    this.owner_obj.ore+=5;
+                    break;
+                case "hazardite":
+                    this.owner_obj.hazardite+=1;
+                    break;
+                case "oil":
+                    this.owner_obj.oil+=1;
+                    break;
+                case "gems":
+                    this.owner_obj.gems+=1;
+                    break;
+                case "aluminium":
+                    this.owner_obj.aluminium+=1;
+                    break;
+            }
         }
     }
     update_u_hotbar(){
-        unit_hotbar.style.display="flex";
-        hotbar.style.display="none";
-        unit_chealth_text.innerText=this.health;
-        unit_mhealth_text.innerText=this.maxhealth;
-        unit_name_text.innerText=this.resource + " (" + this.owner + ")";
-        unit_attack_text_cont.style.display="none";
-        unit_move_text_cont.style.display="none";
-        unit_range_text_cont.style.display="none";
+        if(active_unit===null){
+            unit_health_text.style.display="block";
+            unit_hotbar.style.display="flex";
+            hotbar.style.display="none";
+            unit_chealth_text.innerText=this.health;
+            unit_mhealth_text.innerText=this.maxhealth;
+            unit_name_text.innerText=this.resource + " (" + this.owner + ")";
+            unit_attack_text_cont.style.display="none";
+            unit_move_text_cont.style.display="none";
+            unit_range_text_cont.style.display="none";
+        }
+        else{
+            mine_damage_taken=0;
+            if((this.owner!=="unoccupied" && this.owner_obj!==active_unit.owner_obj) && active_unit.type==="melee" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+                mine_damage_taken=active_unit.attack;
+            }
+            else if((this.owner!=="unoccupied" && this.owner_obj!==active_unit.owner_obj) && active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+                mine_damage_taken=active_unit.attack;
+            }
+            else if((this.owner!=="unoccupied" && this.owner_obj!==active_unit.owner_obj) && active_unit.type==="skirmisher" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+                mine_damage_taken=active_unit.attack;
+            }
+            else if(active_unit.type==="worker" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.movement)){
+                active_unit.move_unit(this.x, this.y);                
+            }
+
+            if(mine_damage_taken!==0){
+                active_unit.canattack="no";
+                active_unit.check_if_exhausted();
+                active_unit.activate_unit();
+                this.health-=mine_damage_taken;
+                damage_text.innerText="-"+mine_damage_taken;
+                damage_text_container.style.display="block";
+                rename_this_variable = this.tileimg.parentElement;
+                damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
+                damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
+                damage_text_container.style.filter="opacity(100%)";
+                damage_text_animation_counter=0;
+                setTimeout(damage_text_animation, 10);
+
+                if(this.health<1){
+                    this.owner="unoccupied";
+                    this.health=this.maxhealth;
+                    this.owner_obj=null;
+                    this.tileimg.src="images/tiles/"+this.resource+".png";
+                    this.tileimg.style.border="0px solid black";
+
+                    let check_if_bro_waiting_on_this=get_unit_by_pos(this.x, this.y);
+                    if(check_if_bro_waiting_on_this!==null){if(check_if_bro_waiting_on_this.type==="worker"){check_if_bro_waiting_on_this.worker_buildcheck();}}
+                }
+            }
+        }
     }
+      
+}
+function render_all_units(){
+    global_units.forEach((unit => unit.check_if_exhausted()));
 }
 function attack_hq(ownerobj){
     hq_damage_taken = 0;
     //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
     if(active_unit===null){
+        unit_health_text.style.display="block";
         unit_hotbar.style.display="flex";
         hotbar.style.display="none";
         unit_chealth_text.innerText=ownerobj.hq_health;
@@ -607,16 +688,21 @@ function attack_hq(ownerobj){
         unit_attack_text_cont.style.display="none";
         unit_move_text_cont.style.display="none";
         unit_range_text_cont.style.display="none";
+        if(ownerobj.alive==="no"){
+            unit_health_text.style.display="none";
+            unit_name_text.innerText="Ruins";
+        }
     }
-    else if(active_unit.type==="melee" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+    else if(ownerobj.alive==="yes" && active_unit.type==="melee" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
         hq_damage_taken=active_unit.attack;
     }
-    else if(active_unit.type==="ranged" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) !== 1) && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+    else if(ownerobj.alive==="yes" && active_unit.type==="ranged" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) !== 1) && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
         hq_damage_taken=active_unit.attack;
     }
-    else if(active_unit.type==="skirmisher" && (Math.abs(this.x-active_unit.x)+Math.abs(this.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+    else if(ownerobj.alive==="yes" && active_unit.type==="skirmisher" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
         hq_damage_taken=active_unit.attack;
     }
+
     if(hq_damage_taken!==0){
         active_unit.canattack="no";
         active_unit.check_if_exhausted();
@@ -630,11 +716,27 @@ function attack_hq(ownerobj){
         damage_text_container.style.filter="opacity(100%)";
         damage_text_animation_counter=0;
         setTimeout(damage_text_animation, 10);
+
         if(ownerobj.hq_health<1){
-            //leave for now
+            if(ownerobj===player){
+                gameover_screen.style.display="flex";
+                player.alive="no";
+            }
+            else{
+                ownerobj.alive="no";
+                ownerobj.hq_doc.querySelector(".tileimg").src="images/tiles/destroyed_hq.png";
+                for(let unit of global_units){
+                    if(unit.owner_obj===ownerobj){
+                        unit.take_damage(525252525252152, "yes");
+                    }   
+                }
+                if(bot1.alive==="no" && bot2.alive==="no" && bot3.alive==="no"){
+                    victory_screen.style.display="flex";
+                }
+            }
+            
         }
     }
-
 }
 
 //this is for goofy easter egg
@@ -1695,6 +1797,21 @@ function buy_unit_do(unit_number){
     }
     update_resource_counters();
 }
+function next_turn(){
+    turn_number+=1;
+    timeout_screen.style.display="block";
+    global_resources.forEach((resource => resource.produce_resources()));
+    player.food += player.food_gain;
+    player.ore += player.ore_gain;
+    bot1.food += bot1.food_gain;
+    bot1.ore += bot1.ore_gain;
+    bot2.food += bot2.food_gain;
+    bot2.ore += bot2.ore_gain;
+    bot3.food += bot3.food_gain;
+    bot3.ore += bot3.ore_gain;
+    update_resource_counters();
+
+}
 function nothing(){
     print("Have a nice day!")
 }
@@ -1788,6 +1905,43 @@ function generate_map(){
     build16_button.innerText=hq_naming_list[14];
     build18_button.innerText=hq_naming_list[15];
 
+    bot1.personality=bot_personalities[Math.floor(Math.random() * 3)];
+    bot2.personality=bot_personalities[Math.floor(Math.random() * 3)];
+    bot3.personality=bot_personalities[Math.floor(Math.random() * 3)];
+
+    if (player.faction === "humans"){
+        bot1.faction = "scrapbots";
+        bot1.color="#ff8000";
+        bot2.faction = "pastans";
+        bot2.color="#00ff6a";
+        bot3.faction = "yox_empire";
+        bot3.color="#6200ff";
+    }
+    else if (player.faction === "scrapbots"){
+        bot1.faction = "humans";
+        bot1.color="#0fc9fc";
+        bot2.faction = "pastans";
+        bot2.color="#00ff6a";
+        bot3.faction = "yox_empire";
+        bot3.color="#6200ff";
+    }
+    else if (player.faction === "pastans"){
+        bot1.faction = "humans";
+        bot1.color="#0fc9fc";
+        bot2.faction = "scrapbots";
+        bot2.color="#ff8000";
+        bot3.faction = "yox_empire";
+        bot3.color="#6200ff";
+    }
+    else{
+        bot1.faction = "humans";
+        bot1.color="#0fc9fc";
+        bot2.faction = "scrapbots";
+        bot2.color="#ff8000";
+        bot3.faction = "pastans"; 
+        bot3.color="#00ff6a";
+    }
+
     //MAIN MAP
     hotbar.style.display = "block";
     for (let x = 1; x<26; x++){
@@ -1815,38 +1969,7 @@ function generate_map(){
             if (x===25 && y===25){
                 tile.classList.add("bottom_right_anchor");
             }
-            if (player.faction === "humans"){
-                bot1.faction = "scrapbots";
-                bot1.color="#ff8000";
-                bot2.faction = "pastans";
-                bot2.color="#00ff6a";
-                bot3.faction = "yox_empire";
-                bot3.color="#6200ff";
-            }
-            else if (player.faction === "scrapbots"){
-                bot1.faction = "humans";
-                bot1.color="#0fc9fc";
-                bot2.faction = "pastans";
-                bot2.color="#00ff6a";
-                bot3.faction = "yox_empire";
-                bot3.color="#6200ff";
-            }
-            else if (player.faction === "pastans"){
-                bot1.faction = "humans";
-                bot1.color="#0fc9fc";
-                bot2.faction = "scrapbots";
-                bot2.color="#ff8000";
-                bot3.faction = "yox_empire";
-                bot3.color="#6200ff";
-            }
-            else{
-                bot1.faction = "humans";
-                bot1.color="#0fc9fc";
-                bot2.faction = "scrapbots";
-                bot2.color="#ff8000";
-                bot3.faction = "pastans"; 
-                bot3.color="#00ff6a";
-            }
+            
             if (x===2 && y===2){
                 if (player.faction === "humans"){tileimg.src = "images/tiles/humans_hq.png";}
                 else if (player.faction === "scrapbots"){tileimg.src = "images/tiles/scrapbots_hq.png";}
@@ -1941,9 +2064,8 @@ function game_start(){
 
     //test area for xyz to run at game start
     //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
-    let bubu = new Unit("Bubu", 1, 99, 52, 1, 7, 7, "melee", "important.png", "player");
+    let bubu = new Unit("Bubu", 1, 100, 1000, 1, 7, 7, "melee", "important.png", "player");
     bubu.render_unit();
-
 
     update_resource_counters();
     update_hq_healthbar();
@@ -1963,6 +2085,7 @@ hq_research.onclick=open_research;
 research_close.onclick= () => research.style.display="none";
 hq_widget_move_button.onclick=move_hq_widget;
 unit_hotbar_closer.onclick=unit_hotbar_close_do;
+next_turn_button.onclick=next_turn;
 
 build1_button.onclick = () => buy_building_do(1);
 build2_button.onclick = () => buy_building_do(2);

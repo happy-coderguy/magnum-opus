@@ -214,6 +214,49 @@ span, div, button{
     display:none;
     image-rendering:pixelated;
 }
+.gameover_screen, .victory_screen{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    display:none;
+    z-index:400000000000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+.gameover_screen{background-color:black;}
+.victory_screen{background-color:yellow;}
+
+.gameover_text, .victory_text{
+    position: relative;
+    transform: none;
+    width: auto;
+    max-width: 90vw;
+    padding: 0 1rem;
+    text-align: center;
+    font-family:"Almendra SC";
+    user-select:none;
+}
+.gameover_text{
+    color:red;
+    font-size:1em;
+}
+.victory_text{
+    color:black;
+    font-size:3em;
+}
+.timeout_screen{
+    display:none;
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    z-index:400000000000;
+}
 /**GAME START**/
 .faction_choose{
     position:absolute;
@@ -282,7 +325,7 @@ span, div, button{
     z-index:300;
     font-family:"Almendra SC";
 }
-.next_turn{
+.next_turn_button{
     background-color:#000099;
     color:white;
     font-family:"Almendra SC";
@@ -293,7 +336,7 @@ span, div, button{
     border:4px solid black;
     z-index:100;
 }
-.next_turn:hover{
+.next_turn_button:hover{
     background-color:#4444aa;
     cursor:pointer;
 }
@@ -531,8 +574,8 @@ span, div, button{
     font-weight:600;
     cursor:pointer;
 }
-.hq_widget_alpha, .hq_widget_beta, .hq_widget_citrus{
-    width:33.3%;
+.hq_widget_alpha, .hq_widget_beta{
+    width:50%;
     height:99%;
 }
 .hq_widget_healthbar_container{
