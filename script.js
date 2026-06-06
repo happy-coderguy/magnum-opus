@@ -253,6 +253,53 @@ const r4r4 = document.querySelector(".r4r4");
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/warrior.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
 const bot_personalities=["turtle", "spammer", "balanced"];
+//food, ore, oil, gems, alu, haza
+const bot_costlist=[
+    [5,5,0,0,0,0], //0
+    [10,10,0,0,0,0],
+    [20,20,0,0,0,0],
+    [25,25,0,0,0,0],
+    [30,30,0,0,0,0],
+    [35,35,0,0,0,0],
+    [40,40,0,0,0,0],
+    [30,40,0,0,0,0],
+    [40,30,0,0,0,0],
+    [45,55,0,0,0,0], //9
+
+    [10,0,0,0,0,0],
+    [10,5,0,0,0,0],
+    [20,10,0,0,0,0],
+    [10,15,0,0,0,0],
+    [15,30,0,0,1,0],
+    [30,30,0,0,0,1],
+    [25,50,1,1,0,0],
+    [15,15,0,0,0,0],
+    [15,20,0,0,0,0],
+    [25,20,0,0,0,0],
+    [20,30,0,0,0,1],//20
+    [30,15,0,1,0,0],
+    [30,30,1,0,1,0],
+    [0,10,0,0,0,0],
+    [20,20,0,0,1,0],
+    [25,25,1,0,0,0],
+    [25,50,0,1,0,1],
+    [20,15,0,0,0,0],
+    [30,20,0,0,0,0],
+    [30,30,1,0,0,0],
+    [40,40,0,1,0,1], //30
+];
+const faction_unit_cost_ids={ //list 0 is worker cost id, list 1 is fighter ids, list 2 is unit 6 40/30 
+    humans:[[10],[11, 12, 12, 13, 2, 14, 15, 15],[8]],
+    scrapbots:[[23],[0, 1, 13, 13, 17, 24, 25, 26],[7]],
+    pastans:[[10],[11, 12, 17, 18, 19, 20, 21, 22],[7]],
+    yox_empire:[[10],[1, 17, 27, 27, 28, 24, 29, 30],[8]],
+};
+const faction_unit_names={
+    humans:[["labourer"],["spearman", "warrior", "horseman", "archer", "musketman", "gun car", "juggy", "tank"]],
+    scrapbots:[["fusilli"],["penne", "rigatoni", "lasagna", "orechiette", "spaghetti", "tagliatelle", "farfalle", "macaroni"]],
+    pastans:[["worker"],["fodder", "fighter", "sprinter", "shooter", "skirmisher", "pursuer", "destroyer", "annihilator"]],
+    yox_empire:[["gnome"],["kobold", "hoplite", "strider", "slingslime", "lich", "cerberus", "leviathan", "reaper"]],
+}
 let global_units=[];
 let global_resources=[];
 
@@ -269,7 +316,7 @@ let player = {
     alive:"yes",
 };
 let bot1 = {
-    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:100, ore:100, oil:5, hazardite:5, aluminium:0, gems:0,
     food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
@@ -279,7 +326,8 @@ let bot1 = {
     color:"",
     name:"Computer 1", x:2, y:24, hq_doc:0,
     alive:"yes",
-    personality:"",
+    personality:"", development:0, goals:[],
+    cost_ids:[], units_unlocked:[], unit_names:[],
 };
 let bot2 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -292,7 +340,8 @@ let bot2 = {
     color:"",
     name:"Computer 2",  x:24, y:2, hq_doc:0,
     alive:"yes",
-    personality:"",
+    personality:"", development:0, goals:[],
+    cost_ids:[], units_unlocked:[], unit_names:[],
 };
 let bot3 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -305,7 +354,8 @@ let bot3 = {
     color:"",
     name:"Computer 3",  x:24, y:24, hq_doc:0,
     alive:"yes",
-    personality:"",
+    personality:"", development:0, goals:[],
+    cost_ids:[], units_unlocked:[], unit_names:[],
 };
 let building_inq;
 let current_id=456;
@@ -320,6 +370,8 @@ let upi=[];
 let hq_damage_taken;
 let mine_damage_taken;
 let turn_number=1;
+let bot_hypo_buylist_ids=[];
+let bot_hypo_buylist_names=[];
 //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
@@ -1800,6 +1852,9 @@ function buy_unit_do(unit_number){
 function next_turn(){
     turn_number+=1;
     timeout_screen.style.display="block";
+    bot_turn(bot1);
+    bot_turn(bot2);
+    bot_turn(bot3);
     global_resources.forEach((resource => resource.produce_resources()));
     player.food += player.food_gain;
     player.ore += player.ore_gain;
@@ -1810,8 +1865,95 @@ function next_turn(){
     bot3.food += bot3.food_gain;
     bot3.ore += bot3.ore_gain;
     update_resource_counters();
+}
+/**BOT FUNCTIONS**/
+function bot_turn(bot){
+    switch(bot.personality){
+        case "turtle":
+            if(bot_check_are_we_alarmed(bot)){
+                bot_do_buy_military(bot);
+            }
+            else{
+                bot_do_develop(bot);
+            }
+            
+            break;
+        case "spammer":
+            break;
+        case "balanced":
+            
+            break;
+    }
+}
+function bot_check_canbuy(bot, id_inq){
+    if(bot.food >= bot_costlist[id_inq][0] && bot.ore >= bot_costlist[id_inq][1] && bot.oil >= bot_costlist[id_inq][2] && bot.gems >= bot_costlist[id_inq][3] && bot.aluminium >= bot_costlist[id_inq][4] && bot.hazardite >= bot_costlist[id_inq][5]){return true;}
+    else{return false;}
+}
+function bot_check_are_we_alarmed(bot){
+    for(let a=-7; a<7; a++){
+        for(let b=-7; b<7; b++){
+            if((bot.x+a > 0 && bot.x+a < 26) && (bot.y+b > 0 && bot.y+b < 26)){
+                if(get_unit_by_pos(bot.x+a, bot.y+b)!==null){return true;}
+            }
+        }
+    }
+    return false;
+}
+function bot_calculate_buymax(bot){
+    bot_hypo_buylist_ids=[];
+    bot_hypo_buylist_names=[];
+    const hypo_res_storage=[bot.food, bot.ore, bot.oil, bot.gems, bot.aluminium, bot.hazardite];
+    while(bot_check_canbuy(bot, bot.cost_ids[1][0])===true){
+        for(let i=1; i<=8; i++){
+            if(bot_check_canbuy(bot, bot.cost_ids[1][8-i])===true && bot.units_unlocked.includes(bot.cost_ids[1][8-i])){
+                bot_do_charge_for(bot, bot.cost_ids[1][8-i]);
+                bot_hypo_buylist_ids.push(bot.cost_ids[1][8-i]);
+                bot_hypo_buylist_names.push(bot.unit_names[1][8-i]);
+                break;
+            }
+        }
+    }
+    bot.food=hypo_res_storage[0];
+    bot.ore=hypo_res_storage[1];
+    bot.oil=hypo_res_storage[2];
+    bot.gems=hypo_res_storage[3];
+    bot.aluminium=hypo_res_storage[4];
+    bot.hazardite=hypo_res_storage[5];
+}
+function bot_do_charge_for(bot, id_inq){
+    if(bot_check_canbuy(bot, id_inq)===true && bot.units_unlocked.includes(id_inq)){
+        bot.food -= bot_costlist[id_inq][0];
+        bot.ore -= bot_costlist[id_inq][1];
+        bot.oil -= bot_costlist[id_inq][2];
+        bot.gems -= bot_costlist[id_inq][3];
+        bot.aluminium -= bot_costlist[id_inq][4];
+        bot.hazardite -= bot_costlist[id_inq][5];
+    }
+    else{print("catastrophic failure");}
+}
+function bot_do_secure_hq(bot){
 
 }
+function bot_do_secure_surr(bot){
+
+}
+function bot_do_workers(bot){
+
+}
+function bot_do_buy_military(bot){
+
+}
+function bot_do_develop(bot){
+
+}
+function bot_do_attack(bot){
+    
+}
+function bot_do_develop(bot){
+    
+}
+
+
 function nothing(){
     print("Have a nice day!")
 }
@@ -1941,6 +2083,15 @@ function generate_map(){
         bot3.faction = "pastans"; 
         bot3.color="#00ff6a";
     }
+    bot1.cost_ids=faction_unit_cost_ids[bot1.faction];
+    bot2.cost_ids=faction_unit_cost_ids[bot2.faction];    //literally chefs kiss
+    bot3.cost_ids=faction_unit_cost_ids[bot3.faction];
+    bot1.unit_names=faction_unit_names[bot1.faction];
+    bot2.unit_names=faction_unit_names[bot2.faction];    
+    bot3.unit_names=faction_unit_names[bot3.faction];
+    bot1.units_unlocked.push(bot1.cost_ids[1][0]);
+    bot2.units_unlocked.push(bot2.cost_ids[1][0]);
+    bot3.units_unlocked.push(bot3.cost_ids[1][0]);
 
     //MAIN MAP
     hotbar.style.display = "block";
@@ -2068,7 +2219,11 @@ function game_start(){
     bubu.render_unit();
 
     update_resource_counters();
-    update_hq_healthbar();
+    update_hq_healthbar();    
+
+    bot_calculate_buymax(bot1);
+    console.log(bot_hypo_buylist_names);
+    console.log(bot1);
 }
 
 //ONCLICK ASSIGNMENTS

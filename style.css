@@ -255,7 +255,21 @@ span, div, button{
     left:0px;
     width:100vw;
     height:100vh;
-    z-index:400000000000;
+    z-index:40000000000;
+    background-color: #000099;
+}
+.timeout_text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Almendra SC";
+    color: white;
+    font-size: 2em;
+    text-align: center;
+    border:0px;
+    padding:0px;
+    margin:0;
 }
 /**GAME START**/
 .faction_choose{
