@@ -287,6 +287,10 @@ const bot_costlist=[
     [30,20,0,0,0,0],
     [30,30,1,0,0,0],
     [40,40,0,1,0,1], //30
+
+    [0,0,0,1,0,0],
+    [0,0,1,1,1,1],
+    [10,40,0,0,0,0],//33
 ];
 const faction_unit_cost_ids={ //list 0 is worker cost id, list 1 is fighter ids, list 2 is unit 6 40/30 
     humans:[[10],[11, 12, 12, 13, 2, 14, 15, 15],[8]],
@@ -296,10 +300,20 @@ const faction_unit_cost_ids={ //list 0 is worker cost id, list 1 is fighter ids,
 };
 const faction_unit_names={
     humans:[["labourer"],["spearman", "warrior", "horseman", "archer", "musketman", "gun car", "juggy", "tank"]],
-    scrapbots:[["fusilli"],["penne", "rigatoni", "lasagna", "orechiette", "spaghetti", "tagliatelle", "farfalle", "macaroni"]],
-    pastans:[["worker"],["fodder", "fighter", "sprinter", "shooter", "skirmisher", "pursuer", "destroyer", "annihilator"]],
+    pastans:[["fusilli"],["penne", "rigatoni", "lasagna", "orechiette", "spaghetti", "tagliatelle", "farfalle", "macaroni"]],
+    scrapbots:[["worker"],["fodder", "fighter", "sprinter", "shooter", "skirmisher", "pursuer", "destroyer", "annihilator"]],
     yox_empire:[["gnome"],["kobold", "hoplite", "strider", "slingslime", "lich", "cerberus", "leviathan", "reaper"]],
-}
+};
+const personality_buylist_ids={
+    turtle:[0,0,1,1,1,2,2,2,2,4,1,1,1,1,2,3,4,6,2,2,32,2,3,3,33,2,5,"placeholder",9,2,2,4],
+    spammer:[0,0,1,1,2,2,2,2,3,4,1,1,2,2,1,5,"placeholder",6,4,2,31,2,9,2,3,3,4,2,2,1,1,33],
+    balanced:[0,0,1,1,1,2,2,2,2,4,1,1,2,3,4,1,1,2,2,6,5,"placeholder",2,2,32,2,9,3,3,33,4,2],
+};
+const personality_buylist_names={
+    turtle:["farm", "quarry", "unit1", "walls", "market", "unit2", "mill", "mineshafts", "fortifications", "university", "r11", "r12", "r13", "r14", "unit3", "unit4", "shopping", "researchf", "r23", "r24", "r33", "r34", "r41", "r42", "r43", "hospital", "unit5", "unit6", "unit7", "r21", "r22", "r44"],
+    spammer:["farm", "quarry", "unit1", "market", "unit2", "unit3", "mill", "mineshafts", "unit4", "university", "r11", "r12", "r21", "r22", "walls", "unit5", "unit6", "researchf", "shopping", "r23", "r31", "r32", "unit7", "r24", "r41", "r42", "r44", "hospital", "fortifications", "r13", "r14", "r43"],
+    balanced:["farm", "quarry", "unit1", "market", "walls", "unit2", "unit3", "mill", "mineshafts", "university", "r11", "r12", "fortifications", "unit4", "shopping", "r13", "r14", "r21", "r22", "researchf", "unit5", "unit6", "r23", "r24", "r33", "r34", "unit7", "r41", "r42", "r43", "r44", "hospital"],
+};
 let global_units=[];
 let global_resources=[];
 
@@ -313,7 +327,7 @@ let player = {
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
     color:"",
     name:"Player", x:2, y:2, hq_doc:0,
-    alive:"yes",
+    alive:"yes", research_32_status:0,
 };
 let bot1 = {
     food:100, ore:100, oil:5, hazardite:5, aluminium:0, gems:0,
@@ -324,13 +338,14 @@ let bot1 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
-    name:"Computer 1", x:2, y:24, hq_doc:0,
-    alive:"yes",
+    name:"Computer 1", shortname:"bot1", x:2, y:24, hq_doc:0,
+    alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
-    cost_ids:[], units_unlocked:[], unit_names:[],
+    cost_ids:[], units_unlocked:["skip"], unit_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[],
 };
 let bot2 = {
-    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:100, ore:100, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
@@ -338,10 +353,11 @@ let bot2 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
-    name:"Computer 2",  x:24, y:2, hq_doc:0,
-    alive:"yes",
+    name:"Computer 2", shortname:"bot2",  x:24, y:2, hq_doc:0,
+    alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
-    cost_ids:[], units_unlocked:[], unit_names:[],
+    cost_ids:[], units_unlocked:["skip"], unit_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[],
 };
 let bot3 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -352,26 +368,31 @@ let bot3 = {
     units:[],
     hq_health:100, hq_maxhealth:100,
     color:"",
-    name:"Computer 3",  x:24, y:24, hq_doc:0,
-    alive:"yes",
+    name:"Computer 3", shortname:"bot3",  x:24, y:24, hq_doc:0,
+    alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
-    cost_ids:[], units_unlocked:[], unit_names:[],
+    cost_ids:[], units_unlocked:["skip"], unit_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[],
 };
+let everyone = [player, bot1, bot2, bot3];
+let all_worker_names = ["labourer", "fusilli", "worker", "gnome"];
 let building_inq;
 let current_id=456;
 let correct_x;
 let active_unit=null;
-let research_32_status=0;
 let rename_this_variable;
 let damage_text_animation_counter=0;
 let bs_variable;
 let linknum;
 let upi=[];
+let ubi=[];
 let hq_damage_taken;
 let mine_damage_taken;
 let turn_number=1;
 let bot_hypo_buylist_ids=[];
 let bot_hypo_buylist_names=[];
+
+
 //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
@@ -406,6 +427,19 @@ function FESBP(){
     else if(get_unit_by_pos(2,1)===null){return [2,1];}
     else if(get_unit_by_pos(1,1)===null){return [1,1];}
     else{return null;}
+}
+//find empty spot by bot hq
+function FESBB(bot){
+    if(get_unit_by_pos(bot.x+1,bot.y)===null){return [bot.x+1,bot.y];}
+    else if(get_unit_by_pos(bot.x-1,bot.y)===null){return [bot.x-1,bot.y];}
+    else if(get_unit_by_pos(bot.x,bot.y+1)===null){return [bot.x,bot.y+1];}
+    else if(get_unit_by_pos(bot.x,bot.y-1)===null){return [bot.x,bot.y-1];}
+    else if(get_unit_by_pos(bot.x+1,bot.y+1)===null){return [bot.x+1,bot.y+1];}
+    else if(get_unit_by_pos(bot.x-1,bot.y+1)===null){return [bot.x-1,bot.y+1];}
+    else if(get_unit_by_pos(bot.x+1,bot.y-1)===null){return [bot.x+1,bot.y-1];}
+    else if(get_unit_by_pos(bot.x-1,bot.y-1)===null){return [bot.x-1,bot.y-1];}
+    else{print("hi"); return null;}
+
 }
 
 class Unit{
@@ -1581,7 +1615,7 @@ function buy_research_do(research_id){
                 r3r3.style.display="none";
                 r3r4.style.display="none";
                 research_row3.style.background="#ff0000";
-                research_32_status=2;
+                player.research_32_status=2;
                 if(player.faction==="humans"){unit1_button.innerText="Labourer - FREE";}
                 else if(player.faction==="pastans"){unit1_button.innerText="Fusilli - FREE";}
                 else if(player.faction==="scrapbots"){unit1_button.innerText="Builder - FREE";}
@@ -1822,10 +1856,10 @@ function buy_unit_do(unit_number){
                 }
                 break;
         }
-        if((player.food < upi[0] || player.ore < upi[1] || player.oil < upi[2] || player.gems < upi[3] || player.aluminium < upi[4] || player.hazardite < upi[5]) && !(upi[12]==="worker" && research_32_status===2)){hq_popup("You don't have enough resources");}
+        if((player.food < upi[0] || player.ore < upi[1] || player.oil < upi[2] || player.gems < upi[3] || player.aluminium < upi[4] || player.hazardite < upi[5]) && !(upi[12]==="worker" && player.research_32_status===2)){hq_popup("You don't have enough resources");}
         else if(!player.buildings.includes(upi[7])){hq_popup("Build the "+upi[7]+" to recruit "+upi[16]);}
         else{
-            if(upi[12]==="worker" && research_32_status===2){research_32_status=0;}
+            if(upi[12]==="worker" && player.research_32_status===2){player.research_32_status=0;}
             else{
                 player.food-=upi[0];
                 player.ore-=upi[1];
@@ -1856,14 +1890,12 @@ function next_turn(){
     bot_turn(bot2);
     bot_turn(bot3);
     global_resources.forEach((resource => resource.produce_resources()));
-    player.food += player.food_gain;
-    player.ore += player.ore_gain;
-    bot1.food += bot1.food_gain;
-    bot1.ore += bot1.ore_gain;
-    bot2.food += bot2.food_gain;
-    bot2.ore += bot2.ore_gain;
-    bot3.food += bot3.food_gain;
-    bot3.ore += bot3.ore_gain;
+    everyone.forEach((one) => {
+        one.food+=one.food_gain;
+        one.ore+=one.ore_gain;
+        if(one.research.includes("32") && one.research_32_status!==2){one.research_32_status+=1;}
+    })
+    
     update_resource_counters();
 }
 /**BOT FUNCTIONS**/
@@ -1871,7 +1903,7 @@ function bot_turn(bot){
     switch(bot.personality){
         case "turtle":
             if(bot_check_are_we_alarmed(bot)){
-                bot_do_buy_military(bot);
+                bot_do_buymax_military(bot);
             }
             else{
                 bot_do_develop(bot);
@@ -1885,7 +1917,7 @@ function bot_turn(bot){
             break;
     }
 }
-function bot_check_canbuy(bot, id_inq){
+function bot_check_canafford(bot, id_inq){
     if(bot.food >= bot_costlist[id_inq][0] && bot.ore >= bot_costlist[id_inq][1] && bot.oil >= bot_costlist[id_inq][2] && bot.gems >= bot_costlist[id_inq][3] && bot.aluminium >= bot_costlist[id_inq][4] && bot.hazardite >= bot_costlist[id_inq][5]){return true;}
     else{return false;}
 }
@@ -1903,10 +1935,10 @@ function bot_calculate_buymax(bot){
     bot_hypo_buylist_ids=[];
     bot_hypo_buylist_names=[];
     const hypo_res_storage=[bot.food, bot.ore, bot.oil, bot.gems, bot.aluminium, bot.hazardite];
-    while(bot_check_canbuy(bot, bot.cost_ids[1][0])===true){
+    while(bot_check_canafford(bot, bot.cost_ids[1][0])===true && FESBB(bot)!==null){
         for(let i=1; i<=8; i++){
-            if(bot_check_canbuy(bot, bot.cost_ids[1][8-i])===true && bot.units_unlocked.includes(bot.cost_ids[1][8-i])){
-                bot_do_charge_for(bot, bot.cost_ids[1][8-i]);
+            if(bot_check_canafford(bot, bot.cost_ids[1][8-i])===true && bot.units_unlocked.includes(bot.unit_names[1][8-i])){
+                bot_do_charge_for(bot, bot.cost_ids[1][8-i], bot.unit_names[1][8-i]);
                 bot_hypo_buylist_ids.push(bot.cost_ids[1][8-i]);
                 bot_hypo_buylist_names.push(bot.unit_names[1][8-i]);
                 break;
@@ -1920,8 +1952,9 @@ function bot_calculate_buymax(bot){
     bot.aluminium=hypo_res_storage[4];
     bot.hazardite=hypo_res_storage[5];
 }
-function bot_do_charge_for(bot, id_inq){
-    if(bot_check_canbuy(bot, id_inq)===true && bot.units_unlocked.includes(id_inq)){
+function bot_do_charge_for(bot, id_inq, name_inq){
+    if(all_worker_names.includes(name_inq) && bot.research_32_status===2){print("bot used free worker; not an error");}
+    else if(bot_check_canafford(bot, id_inq)===true && bot.units_unlocked.includes(name_inq)){
         bot.food -= bot_costlist[id_inq][0];
         bot.ore -= bot_costlist[id_inq][1];
         bot.oil -= bot_costlist[id_inq][2];
@@ -1930,6 +1963,126 @@ function bot_do_charge_for(bot, id_inq){
         bot.hazardite -= bot_costlist[id_inq][5];
     }
     else{print("catastrophic failure");}
+}
+function bot_do_buy_unit(bot, id_inq, name_inq){
+    if(bot_check_canafford(bot, id_inq)===true && bot.units_unlocked.includes(name_inq) && FESBB(bot)!==null){
+        bot_do_charge_for(bot, id_inq, name_inq);
+        switch(name_inq){
+            //aware that having two switch cases for units is inefficient, but i prefer it this way
+            //ubi is maxhealth, movement, attack, range, type, filepath
+            case "labourer":
+                ubi=[10, 2, 0, 0, "worker", "images/humans/labourer.png"];
+                break;
+            case "spearman":
+                ubi=[10, 2, 5, 1, "melee", "images/humans/spearman.png"];
+                break;
+            case "warrior":
+                ubi=[20, 2, 7, 1, "melee", "images/humans/warrior.png"];
+                break;
+            case "horseman":
+                ubi=[15, 4, 5, 1, "melee", "images/humans/horseman.png"];
+                break;
+            case "archer":
+                ubi=[10, 2, 5, 2, "ranged", "images/humans/archer.png"];
+                break;
+            case "musketman":
+                ubi=[20, 2, 7, 2, "skirmisher", "images/humans/musketman.png"];
+                break;
+            case "gun car":
+                ubi=[25, 5, 7, 2, "ranged", "images/humans/gun_car.png"];
+                break;
+            case "juggy":
+                ubi=[40, 2, 12, 2, "melee", "images/humans/juggernaut.png"];
+                break;
+            case "tank":
+                ubi=[50, 3, 15, 2, "skirmisher", "images/humans/tank.png"];
+                break;
+            case "fusilli":
+                ubi=[10, 2, 0, 0, "worker", "images/pastans/fusilli.png"];
+                break;
+            case "penne":
+                ubi=[5, 2, 5, 2, "ranged", "images/pastans/penne.png"];
+                break;
+            case "rigatoni":
+                ubi=[20, 2, 7, 1, "melee", "images/pastans/rigatoni.png"];
+                break;
+            case "lasagna":
+                ubi=[25, 1, 8, 1, "melee", "images/pastans/lasagna.png"];
+                break;
+            case "orechiette":
+                ubi=[15, 2, 7, 2, "ranged", "images/pastans/orechiette.png"];
+                break;
+            case "spaghetti":
+                ubi=[20, 2, 7, 3, "skirmisher", "images/pastans/spaghetti.png"];
+                break;
+            case "tagliatelle":
+                ubi=[30, 2, 10, 2, "ranged", "images/pastans/tagliatelle.png"];
+                break;
+            case "farfalle":
+                ubi=[25, 3, 10, 1, "melee", "images/pastans/farfalle.png"];
+                break;
+            case "macaroni":
+                ubi=[40, 2, 13, 1, "melee", "images/pastans/macaroni.png"];
+                break;
+            case "worker":
+                ubi=[10, 2, 0, 0, "worker", "images/scrapbots/builder.png"];
+                break;
+            case "fodder":
+                ubi=[10, 2, 3, 1, "melee", "images/scrapbots/fodder.png"];
+                break;
+            case "fighter":
+                ubi=[15, 2, 5, 1, "melee", "images/scrapbots/fighter.png"];
+                break;
+            case "sprinter":
+                ubi=[10, 6, 3, 1, "melee", "images/scrapbots/sprinter.png"];
+                break;
+            case "shooter":
+                ubi=[15, 2, 5, 2, "ranged", "images/scrapbots/shooter.png"];
+                break;
+            case "pursuer":
+                ubi=[25, 2, 7, 2, "skirmisher", "images/scrapbots/pursuer.png"];
+                break;
+            case "destroyer":
+                ubi=[30, 2, 5, 1, "melee", "images/scrapbots/destroyer.png"];
+                break;
+            case "annihilator":
+                ubi=[10, 2, 20, 4, "ranged", "images/scrapbots/annihilator.png"];
+                break;
+            case "gnome":
+                ubi=[10, 2, 0, 0, "worker", "images/yox_empire/gnome.png"];
+                break;
+            case "kobold":
+                ubi=[12, 2, 5, 1, "melee", "images/yox_empire/kobold.png"];
+                break;
+            case "hoplite":
+                ubi=[20, 2, 7, 1, "melee", "images/yox_empire/hoplite.png"];
+                break;
+            case "strider":
+                ubi=[22, 3, 5, 1, "melee", "images/yox_empire/strider.png"];
+                break;
+            case "slingslime":
+                ubi=[20, 2, 5, 2, "ranged", "images/yox_empire/slingslime.png"];
+                break;
+            case "lich":
+                ubi=[22, 2, 9, 2, "ranged", "images/yox_empire/lich.png"];
+                break;
+            case "cerberus":
+                ubi=[20, 2, 6, 3, "skirmisher", "images/yox_empire/cerberus.png"];
+                break;
+            case "leviathan":
+                ubi=[42, 1, 14, 1, "melee", "images/yox_empire/leviathan.png"];
+                break;
+            case "reaper":
+                ubi=[40, 3, 12, 1, "melee", "images/yox_empire/reaper.png"];
+                break;
+        }
+        let dudu = new Unit(name_inq, ubi[0], ubi[1], ubi[2], ubi[3], FESBB(bot)[0], FESBB(bot)[1], ubi[4], ubi[5], bot.shortname);
+        dudu.render_unit();
+        //                  name, maxhealth, movement, attack, range, x, y, type, filepath, owner
+    }
+    else{print("problem at bot buying unit");}
+    
+    //do a switch case and repeat as with player buying
 }
 function bot_do_secure_hq(bot){
 
@@ -1940,19 +2093,130 @@ function bot_do_secure_surr(bot){
 function bot_do_workers(bot){
 
 }
-function bot_do_buy_military(bot){
-
+function bot_do_buyhalf_military(bot){
+    bot_calculate_buymax(bot);
+    if(Math.floor((bot_hypo_buylist_names.length) / 2) !== 0){
+        for(let i=0; i<Math.floor((bot_hypo_buylist_names.length) / 2); i++){
+            bot_do_buy_unit(bot, bot_hypo_buylist_ids[i], bot_hypo_buylist_names[i]);
+        }
+    }
+}
+function bot_do_buymax_military(bot){
+    bot_calculate_buymax(bot);
+    if(bot_hypo_buylist_names.length !== 0){
+        for(let i=0; i<bot_hypo_buylist_names.length; i++){
+            bot_do_buy_unit(bot, bot_hypo_buylist_ids[i], bot_hypo_buylist_names[i]);
+        }
+    }
 }
 function bot_do_develop(bot){
-
+    if(bot.develop_counter!==bot.dev_names.length && bot_check_canafford(bot, bot.dev_costids[bot.develop_counter])){
+        bot_do_charge_for(bot, bot.dev_costids[bot.develop_counter], "skip");
+        switch (bot.dev_names[bot.develop_counter]){
+            //  balanced:["farm", "quarry", "unit1", "market", "walls", "unit2", "unit3", "mill", "mineshafts", "university", "r11", "r12", "fortifications", "unit4", "shopping", "r13", "r14", "r21", "r22", "researchf", "unit5", "unit6", "r23", "r24", "r33", "r34", "unit7", "r41", "r42", "r43", "r44", "hospital"],
+            case "farm":
+                bot.food_gain+=5;
+                break;
+            case "quarry":
+                bot.ore_gain+=5;
+                break;
+            case "unit1":
+                bot.units_unlocked.push(bot.unit_names[1][1]);
+                break;
+            case "unit2":
+                bot.units_unlocked.push(bot.unit_names[1][2]);
+                break;
+            case "unit3":
+                bot.units_unlocked.push(bot.unit_names[1][3]);
+                break;
+            case "unit4":
+                bot.units_unlocked.push(bot.unit_names[1][4]);
+                break;
+            case "unit5":
+                bot.units_unlocked.push(bot.unit_names[1][5]);
+                break;
+            case "unit6":
+                bot.units_unlocked.push(bot.unit_names[1][6]);
+                break;
+            case "unit7":
+                bot.units_unlocked.push(bot.unit_names[1][7]);
+                break;
+            case "market":
+                bot.buildings.push("Market");
+                break;
+            case "walls":
+                bot.hq_health+=100;
+                bot.hq_maxhealth+=100;
+                break;
+            case "mill":
+                bot.food_gain+=5;
+                break;
+            case "mineshafts":
+                bot.ore_gain+=5;
+                break;
+            case "r11":
+                bot.food_gain+=5;
+                break;
+            case "r12":
+                bot.ore_gain+=5;
+                break;
+            case "r13":
+                bot.hq_health+=25;
+                break;
+            case "r14":
+                bot.research.push("14");
+                global_units.forEach((unit) => {if(unit.owner_obj===bot && unit.type==="worker"){unit.maxmovement+=1; unit.movement+=1;}})
+                break;
+            case "r21":
+                bot.research.push("21");
+                global_units.forEach((unit) => {if(unit.owner_obj===bot && unit.type==="ranged"){unit.range+=1;}})
+                break;
+            case "r22":
+                bot.research.push("22");
+                global_units.forEach((unit) => {if(unit.owner_obj===bot && unit.type==="melee"){unit.health+=5;}})
+                break;
+            case "r31":
+                bot.research.push("31");
+                global_units.forEach((unit) => {if(unit.owner_obj===bot && unit.type==="worker"){unit.maxmovement+=1; unit.movement+=1;}})
+                break;
+            case "r32":
+                bot.research.push("32");
+                bot.research_32_status=2;
+                break;
+            case "r33":
+                bot.research.push("33");
+                break;
+            case "r34":
+                bot.research.push("34");
+                break;
+            case "r41":
+                bot.food_gain+=5;
+                break;
+            case "r42":
+                bot.ore_gain+=5;
+                break;
+            case "r43":
+                bot.hq_maxhealth+=50;
+                bot.hq_health+=50;
+                break;
+            case "r44":
+                global_units.forEach((unit) => {if(unit.owner_obj===bot && unit.type==="melee"){unit.attack+=5;}})
+                break;
+            case "fortifications":
+                bot.hq_maxhealth+=50;
+                bot.hq_health+=50;
+                break;
+            case "shopping":
+                bot.buildings.push("Shopping Center");
+                break;
+            case "hospital":
+                bot.buildings.push("Hospital");
+                break;
+        }
+        bot.develop_counter+=1;
+    }
+    else{console.log("erjkn");}
 }
-function bot_do_attack(bot){
-    
-}
-function bot_do_develop(bot){
-    
-}
-
 
 function nothing(){
     print("Have a nice day!")
@@ -1969,7 +2233,7 @@ function load_assets(){
     function next_image(){
         loader.src = "images/"+loading_images[linknum];
         linknum++;
-        if(linknum < loading_images.length){setTimeout(next_image, 100);    }
+        if(linknum < loading_images.length){setTimeout(next_image, 90);    }
         else{
             loader_cover.style.display="none";
             loader.style.display="none";
@@ -2089,9 +2353,16 @@ function generate_map(){
     bot1.unit_names=faction_unit_names[bot1.faction];
     bot2.unit_names=faction_unit_names[bot2.faction];    
     bot3.unit_names=faction_unit_names[bot3.faction];
-    bot1.units_unlocked.push(bot1.cost_ids[1][0]);
-    bot2.units_unlocked.push(bot2.cost_ids[1][0]);
-    bot3.units_unlocked.push(bot3.cost_ids[1][0]);
+    bot1.units_unlocked.push(bot1.unit_names[1][0]);
+    bot2.units_unlocked.push(bot2.unit_names[1][0]);
+    bot3.units_unlocked.push(bot3.unit_names[1][0]);
+    bot1.dev_costids=personality_buylist_ids[bot1.personality];
+    bot2.dev_costids=personality_buylist_ids[bot2.personality];
+    bot3.dev_costids=personality_buylist_ids[bot3.personality];
+    bot1.dev_names=personality_buylist_names[bot1.personality];
+    bot2.dev_names=personality_buylist_names[bot2.personality];
+    bot3.dev_names=personality_buylist_names[bot3.personality];
+
 
     //MAIN MAP
     hotbar.style.display = "block";
@@ -2219,11 +2490,10 @@ function game_start(){
     bubu.render_unit();
 
     update_resource_counters();
-    update_hq_healthbar();    
+    update_hq_healthbar();
 
-    bot_calculate_buymax(bot1);
-    console.log(bot_hypo_buylist_names);
-    console.log(bot1);
+    
+
 }
 
 //ONCLICK ASSIGNMENTS
