@@ -342,7 +342,7 @@ let bot1 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
 };
 let bot2 = {
     food:100, ore:100, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -357,7 +357,7 @@ let bot2 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
 };
 let bot3 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -372,7 +372,7 @@ let bot3 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[],
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
 };
 let everyone = [player, bot1, bot2, bot3];
 let all_worker_names = ["labourer", "fusilli", "worker", "gnome"];
@@ -384,14 +384,13 @@ let rename_this_variable;
 let damage_text_animation_counter=0;
 let bs_variable;
 let linknum;
-let upi=[];
 let ubi=[];
 let hq_damage_taken;
 let mine_damage_taken;
 let turn_number=1;
 let bot_hypo_buylist_ids=[];
 let bot_hypo_buylist_names=[];
-
+let enemies_found_count=0;
 
 //food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
 
@@ -439,9 +438,7 @@ function FESBB(bot){
     else if(get_unit_by_pos(bot.x+1,bot.y-1)===null){return [bot.x+1,bot.y-1];}
     else if(get_unit_by_pos(bot.x-1,bot.y-1)===null){return [bot.x-1,bot.y-1];}
     else{print("hi"); return null;}
-
 }
-
 class Unit{
     constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
         this.name=name;
@@ -539,14 +536,13 @@ class Unit{
             this.y=dest_y;
             this.movement-=distance_gone;
             this.check_if_exhausted();
-            this.activate_unit();
+            if(this.owner_obj===player){this.activate_unit();}
             if(this.type==="worker"){this.worker_buildcheck();}
         }  
     }
     worker_buildcheck(){
         if(this.type==="worker" && get_resource_tile_by_pos(this.x, this.y)!==null){
             const the_resources_in_question=get_resource_tile_by_pos(this.x, this.y);
-            console.log(the_resources_in_question);
             if(the_resources_in_question.owner==="unoccupied"){
                 the_resources_in_question.owner=this.owner;
                 the_resources_in_question.owner_obj=this.owner_obj;
@@ -604,7 +600,7 @@ class Unit{
                 //(tilex===2 || tilex===24) && (tiley===2 || tiley===24)
                 if(((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.movement) || (get_unit_by_pos(tilex, tiley)!==null)){tile.style.filter="brightness(10%)";}
                 else if(get_resource_tile_by_pos(tilex, tiley)!==null){
-                    if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.range || this.canattack==="no"){tile.style.filter="brightness(10%)";}
+                    if((Math.abs(this.x-tilex)+Math.abs(this.y-tiley))>this.range || this.canattack==="no" || (this.type!=="worker" && (get_resource_tile_by_pos(tilex, tiley).owner==="unoccupied" || get_resource_tile_by_pos(tilex, tiley).owner==="player"))){tile.style.filter="brightness(10%)";}
                     else if(this.type==="ranged" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))===1){tile.style.filter="brightness(10%)";}
                     if(this.type==="worker" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))<=this.movement && get_resource_tile_by_pos(tilex, tiley).owner==="unoccupied"){tile.style.filter="brightness(110%)";}
                     else if(this.type==="worker" && (Math.abs(this.x-tilex)+Math.abs(this.y-tiley))<=this.movement){tile.style.filter="brightness(100%)";}
@@ -755,8 +751,7 @@ class Resource_tile{
                 }
             }
         }
-    }
-      
+    } 
 }
 function render_all_units(){
     global_units.forEach((unit => unit.check_if_exhausted()));
@@ -1728,6 +1723,7 @@ function buy_research_do(research_id){
 function buy_unit_do(unit_number){
     if(FESBP()===null){hq_popup("No space around HQ")}
     else{
+        let upi;
         switch(player.faction){
             case "humans":
                 switch(unit_number){
@@ -1895,7 +1891,6 @@ function next_turn(){
         one.ore+=one.ore_gain;
         if(one.research.includes("32") && one.research_32_status!==2){one.research_32_status+=1;}
     })
-    
     update_resource_counters();
 }
 /**BOT FUNCTIONS**/
@@ -1906,8 +1901,12 @@ function bot_turn(bot){
                 bot_do_buymax_military(bot);
             }
             else{
-                bot_do_develop(bot);
+                bot.wecantdev=0;
+                while(bot.wecantdev===0){
+                    bot_do_develop(bot);
+                }
             }
+            bot_do_workers(bot);
             
             break;
         case "spammer":
@@ -1916,6 +1915,16 @@ function bot_turn(bot){
             
             break;
     }
+}
+function find_hostiles(radius, centerx, centery, team){
+    enemies_found_count=0;
+    for(let xc = (0-radius); xc <= (0+radius); xc++){
+        for(let yc = (0 - (radius-Math.abs(xc))); yc <= (0+(radius-Math.abs(xc))); yc++){
+            if(get_unit_by_pos(centerx+xc, centery+yc)!==null){if(get_unit_by_pos(centerx+xc, centery+yc).owner!==team){enemies_found_count++;}}
+        }
+    }
+    if(enemies_found_count===0){return false;}
+    else{return true;}
 }
 function bot_check_canafford(bot, id_inq){
     if(bot.food >= bot_costlist[id_inq][0] && bot.ore >= bot_costlist[id_inq][1] && bot.oil >= bot_costlist[id_inq][2] && bot.gems >= bot_costlist[id_inq][3] && bot.aluminium >= bot_costlist[id_inq][4] && bot.hazardite >= bot_costlist[id_inq][5]){return true;}
@@ -2091,7 +2100,72 @@ function bot_do_secure_surr(bot){
 
 }
 function bot_do_workers(bot){
+    //find or buy worker
+    let the_worker_in_question=null;
+    global_units.forEach((unit) => {
+        if(unit.type==="worker" && unit.owner_obj===bot){
+            the_worker_in_question=unit;
+        }
+    })
+    if(the_worker_in_question===null && (bot.research_32_status==2 || bot_check_canafford(bot, bot.cost_ids[0][0]))){
+        bot_do_buy_unit(bot, bot.cost_ids[0][0], bot.unit_names[0][0]);
+        global_units.forEach((unit) => {
+            if(unit.type==="worker" && unit.owner_obj===bot){
+                the_worker_in_question=unit;
+            }
+        })
+    }
+    //once have worker, move it, if no worker then do nothing 
+    if(the_worker_in_question!==null){
+        let the_target_resource=null;
+        let the_shortest_distance=999;
+        global_resources.forEach((resource) => {
+            if(resource.owner_obj!==bot && (Math.abs(the_worker_in_question.x-resource.x)+Math.abs(the_worker_in_question.y-resource.y)) < the_shortest_distance){
+                the_target_resource=resource;
+                the_shortest_distance=Math.abs(the_worker_in_question.x-resource.x)+Math.abs(the_worker_in_question.y-resource.y);
+            }
+        })
+        //if there is a target, go for it, otherwise do nothing
+        if(the_target_resource!==null){
+            if(the_worker_in_question.movement>=the_shortest_distance){
+                the_worker_in_question.move_unit(the_target_resource.x, the_target_resource.y);
+            }
+            else{
+                let w_x=the_worker_in_question.x;
+                let w_y=the_worker_in_question.y;
+                let r_x=the_target_resource.x;
+                let r_y=the_target_resource.y;
+                let distance_togo=the_worker_in_question.movement;
+                let backup_options=[];
 
+
+                for(let x = Math.min(w_x, r_x); x<=Math.max(w_x, r_x); x++){
+                    for(let y = Math.min(w_y, r_y); y<=Math.max(w_y, r_y); y++){
+                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(w_x-x)+Math.abs(w_y-y))===distance_togo){
+                            if(find_hostiles(2, x, y, the_worker_in_question.owner)){
+                                backup_options.push([x, y, enemies_found_count]);
+                            }
+                            else{
+                                the_worker_in_question.move_unit(x, y);
+                                return;
+                            }
+                        }    
+                    }
+                }
+                if(backup_options.length!==0){
+                    let backup_options_high_score=[null, null, 999];
+                    for(const option of backup_options){
+                        if(option[2] < backup_options_high_score[2]){backup_options_high_score=option;}
+                    }
+                    the_worker_in_question.move_unit(backup_options_high_score[0], backup_options_high_score[1])
+                }
+            }
+        }
+        //if it can reach, then move there and make a mine
+        //otherwise check all spots in between that match movement; check if each has enemies in 3 radius; if no then go
+        //otherwise check all spots it can reach without enemies nearby and move there
+        //if that fails then stay put
+    }
 }
 function bot_do_buyhalf_military(bot){
     bot_calculate_buymax(bot);
@@ -2215,7 +2289,7 @@ function bot_do_develop(bot){
         }
         bot.develop_counter+=1;
     }
-    else{console.log("erjkn");}
+    else{bot.wecantdev=1;}
 }
 
 function nothing(){
@@ -2353,6 +2427,9 @@ function generate_map(){
     bot1.unit_names=faction_unit_names[bot1.faction];
     bot2.unit_names=faction_unit_names[bot2.faction];    
     bot3.unit_names=faction_unit_names[bot3.faction];
+    bot1.units_unlocked.push(bot1.unit_names[0][0]);
+    bot2.units_unlocked.push(bot2.unit_names[0][0]);
+    bot3.units_unlocked.push(bot3.unit_names[0][0]);
     bot1.units_unlocked.push(bot1.unit_names[1][0]);
     bot2.units_unlocked.push(bot2.unit_names[1][0]);
     bot3.units_unlocked.push(bot3.unit_names[1][0]);
@@ -2491,9 +2568,6 @@ function game_start(){
 
     update_resource_counters();
     update_hq_healthbar();
-
-    
-
 }
 
 //ONCLICK ASSIGNMENTS
