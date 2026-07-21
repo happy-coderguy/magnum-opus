@@ -250,6 +250,7 @@ const r4r2 = document.querySelector(".r4r2");
 const r4r3 = document.querySelector(".r4r3");
 const r4r4 = document.querySelector(".r4r4");
 
+//bunch of atrocious variable declarations
 const loading_images = ["backgrounds/black.jpg","backgrounds/menu.png","humans/archer.png","humans/gun_car.png","humans/horseman.png","humans/juggernaut.png","humans/labourer.png","humans/musketman.png","humans/spearman.png","humans/warrior.png","humans/tank.png","pastans/farfalle.png","pastans/fusilli.png","pastans/lasagna.png","pastans/macaroni.png","pastans/orechiette.png","pastans/penne.png","pastans/rigatoni.png","pastans/spaghetti.png","pastans/tagliatelle.png","scrapbots/annihilator.png","scrapbots/builder.png","scrapbots/destroyer.png","scrapbots/fighter.png","scrapbots/fodder.png","scrapbots/pursuer.png","scrapbots/shooter.png","scrapbots/skirmisher.png","scrapbots/sprinter.png","tiles/yox_empire_hq.png","tiles/scrapbots_hq.png","tiles/pastans_hq.png","tiles/oil.png","tiles/oil_developed.png","tiles/mine.png","tiles/mine_developed.png","tiles/land.png","tiles/humans_hq.png","tiles/hazardite.png","tiles/hazardite_developed.png","tiles/gems.png","tiles/gems_developed.png","tiles/food.png","tiles/food_developed.png","tiles/aluminium.png","tiles/aluminium_developed.png","yox_empire/strider.png","yox_empire/slingslime.png","yox_empire/reaper.png","yox_empire/lich.png","yox_empire/leviathan.png","yox_empire/kobold.png","yox_empire/hoplite.png","yox_empire/gnome.png","yox_empire/cerberus.png"
 ];
 const bot_personalities=["turtle", "spammer", "balanced"];
@@ -314,6 +315,85 @@ const personality_buylist_names={
     spammer:["farm", "quarry", "unit1", "market", "unit2", "unit3", "mill", "mineshafts", "unit4", "university", "r11", "r12", "r21", "r22", "walls", "unit5", "unit6", "researchf", "shopping", "r23", "r31", "r32", "unit7", "r24", "r41", "r42", "r44", "hospital", "fortifications", "r13", "r14", "r43"],
     balanced:["farm", "quarry", "unit1", "market", "walls", "unit2", "unit3", "mill", "mineshafts", "university", "r11", "r12", "fortifications", "unit4", "shopping", "r13", "r14", "r21", "r22", "researchf", "unit5", "unit6", "r23", "r24", "r33", "r34", "unit7", "r41", "r42", "r43", "r44", "hospital"],
 };
+const the_encycl_data=[
+    ["something went wrong"],
+    ["Labourer", "images/humans/labourer.png", "A builder unit. When it moves onto a resource it makes a mine for you."],
+    ["Spearman", "images/humans/spearman.png", "Weak melee unit. Uses sharp pointy."],
+    ["Warrior", "images/humans/warrior.png", "Melee unit. Likes sunshine and beef."],
+    ["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"],
+    ["Archer", "images/humans/archer.png", "Can shoot arrows"],
+    ["Musketeer", "images/humans/musketeer.png", "Own a musket for home defence. Can shoot and stab"],
+    ["Gun Car", "images/humans/gun_car.png", "Vroom pyew"],
+    ["Juggernaut", "images/humans/juggernaut.png", "Real tough guy"],
+    ["Tank", "images/humans/tank.png", "Fast and big and deadly. Not historically accurate."],
+    ["Fusilli", "images/pastans/fusilli.png", "A builder unit. When it moves onto a resource it makes a mine for you."],
+    ["Penne", "images/pastans/penne.png", "Shoots lasers from its hand. Weak but cheap"],
+    ["Rigatoni", "images/pastans/rigatoni.png", "A bombastic stabby man."],
+    ["Lasagna", "images/pastans/lasagna.png", "Goes nice close to its enemies and then BLEHHH"],
+    ["Orechiette", "images/pastans/orechiette.png", "Ranged unit with many lasers."],
+    ["Spaghetti", "images/pastans/spaghetti.png", "Grandma's cooking leads to psychic awakening"],
+    ["Tagliatelle", "images/pastans/tagliatelle.png", "Little gremlin big gun"],
+    ["Farfalle", "images/pastans/farfalle.png", "It's ya boy Farfie who attacks enemies. DJ Farfie OUT"],
+    ["Macaroni", "images/pastans/macaroni.png", "Like El Macho but so macho he doesn't die, melee"],
+    ["Builder", "images/scrapbots/builder.png", "A builder unit. When it moves onto a resource it makes a mine for you."],
+    ["Fodder", "images/scrapbots/fodder.png", "Melee. Lacks the intelligence to care about being fodder"],
+    ["Fighter", "images/scrapbots/fighter.png", "Punchy punchy boi"],
+    ["Sprinter", "images/scrapbots/sprinter.png", "Melee that shockingly can't run because no legs."],
+    ["Shooter", "images/scrapbots/shooter.png", "Most self-explanatory unit"],
+    ["Skirmisher", "images/scrapbots/skirmisher.png", "Forgive me for naming it skirmisher even though it's not one"],
+    ["Pursuer", "images/scrapbots/pursuer.png", "Be you here or be you there I shall reduce you to thin air"],
+    ["Destroyer", "images/scrapbots/destroyer.png", "Unstoppable melee that will touch your opponents"],
+    ["Annihilator", "images/scrapbots/annihilator.png", "Sir, why is the sun flying towards us?"],
+    ["Gnome", "images/yox_empire/gnome.png", "A builder unit. When it moves onto a resource it makes a mine for you."],
+    ["Kobold", "images/yox_empire/kobold.png", "Melee unit that somehow manages to punch"],
+    ["Hoplite", "images/yox_empire/hoplite.png", "Clickity click-clack, a discombobulating attack"],
+    ["Strider", "images/yox_empire/strider.png", "Fast and melee"],
+    ["Slingslime", "images/yox_empire/slingslime.png", "Shoots rocks cutely"],
+    ["Lich", "images/yox_empire/lich.png", "I cast big fat laser"],
+    ["Cerberus", "images/yox_empire/cerberus.png", "Fast, shoots you, punches you"],
+    ["Leviathan", "images/yox_empire/leviathan.png", "Eats kobolds for breakfast"],
+    ["Reaper", "images/yox_empire/reaper.png", "Deadly elite unit that will probably kill you"],
+    ["Farm", "images/icons/food.png", "Gives you 5 more food each turn"],
+    ["Quarry", "images/icons/ore.png", "Gives you 5 more ore each turn"],
+    ["Marketplace", "images/icons/marketplace.png", "Allows for you to trade basic resources"],
+    ["Walls", "images/icons/wall.png", "City health +50"],
+    ["Mill", "images/icons/food.png", "Gives you 5 more food each turn"],
+    ["Mineshafts", "images/icons/ore.png", "Gives you 5 more ore each turn"],
+    ["Fortifications", "images/icons/fortifications.png", "City health +50"],
+    ["University", "images/icons/science.png", "Unlock research"],
+    ["Shopping Center", "images/icons/marketplace.png", "Allows you to trade premium resources"],
+    ["Hospital", "images/icons/hospital.png", "Units next to your city will heal at the end of your turn"],
+    ["Research Center", "images/icons/science.png", "Unlock more research"],
+    ["Barracks", "images/humans/warrior.png", "Allows you to recuit Warriors"],
+    ["Stables", "images/humans/horseman.png", "Allows you to recuit Horsemen"],
+    ["Archery Range", "images/humans/archer.png", "Allows you to recuit Archers"],
+    ["Shooting Range", "images/humans/musketeer.png", "Allows you to recuit Musketeers. Not to be confused with Shooting Range"],
+    ["Garage", "images/humans/gun_car.png", "Allows you to recuit Gun Cars, has cool doors"],
+    ["Elite Bootcamp", "images/humans/juggernaut.png", "Allows you to recuit Juggernauts, includes one (1) tree"],
+    ["Tank Park", "images/humans/tank.png", "Allows you to recuit Tanks, includes two (2) trees"],
+    ["Spoon", "images/pastans/rigatoni.png", "Allows you to recuit Rigatonines"],
+    ["Baking Tray", "images/pastans/lasagna.png", "Allows you to recuit Lasagnae"],
+    ["Bowl", "images/pastans/orechiette.png", "Allows you to recuit Orechietti"],
+    ["Sieve", "images/pastans/spaghetti.png", "Allows you to recuit Spaghettis"],
+    ["Grater", "images/pastans/tagliatelle.png", "Allows you to recuit Tagliatellae"],
+    ["Plate", "images/pastans/farfalle.png", "Allows you to recuit Farfallen"],
+    ["Pot", "images/pastans/macaroni.png", "Allows you to recuit Macarone"],
+    ["Factory", "images/scrapbots/fighter.png", "Allows you to recuit Fighters"],
+    ["Racetrack", "images/scrapbots/sprinter.png", "Allows you to recuit Sprinters, is the most boring circle track possible"],
+    ["Shooting Range", "images/scrapbots/shooter.png", "Allows you to recuit Shooters. Not to be confused with Shooting Range"],
+    ["Spider Bunker", "images/scrapbots/skirmisher.png", "Allows you to recuit Skirmishers, it's not a cave."],
+    ["Airfield", "images/scrapbots/pursuer.png", "Allows you to recuit Pursuers"],
+    ["Assembly Scaffolds", "images/scrapbots/destroyer.png", "Allows you to recuit Destroyers. Looks like a spaceship launch pad"],
+    ["Supershell", "images/scrapbots/annihilator.png", "Allows you to recuit Annihilators, like a dyson sphere but it builds the sun"],
+    ["Graveyard", "images/yox_empire/hoplite.png", "Allows you to recuit Hoplites, has spiky trees"],
+    ["Silent Trees", "images/yox_empire/strider.png", "Allows you to recuit Striders"],
+    ["Damp Cave", "images/yox_empire/slingslime.png", "Allows you to recuit Slingslimes. Hat shop included"],
+    ["Forbidden Library", "images/yox_empire/lich.png", "Allows you to recuit Liches"],
+    ["Hell's Kennel", "images/yox_empire/cerberus.png", "Allows you to recuit Cerberuses"],
+    ["Big Pit", "images/yox_empire/leviathan.png", "Allows you to recuit Leviathans, it's very big"],
+    ["Tower of Souls", "images/yox_empire/reaper.png", "Allows you to recuit Reapers, has cool floating wisps"]
+];
+
 let global_units=[];
 let global_resources=[];
 
@@ -374,6 +454,7 @@ let bot3 = {
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
     develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
 };
+
 let everyone = [player, bot1, bot2, bot3];
 let all_worker_names = ["labourer", "fusilli", "worker", "gnome"];
 let building_inq;
@@ -391,8 +472,7 @@ let turn_number=1;
 let bot_hypo_buylist_ids=[];
 let bot_hypo_buylist_names=[];
 let enemies_found_count=0;
-
-//food, ore, oil, gems, alu, hite, name, building, maxhealth, movement, attack, range, type, filepath, button, buttontext, pluralname, buyunitfuncid
+let enemies_found_list=[];
 
 /**UNIT STUFF AND UNIT FUNCTIONS**/
 function assign_id(){
@@ -753,73 +833,6 @@ class Resource_tile{
         }
     } 
 }
-function render_all_units(){
-    global_units.forEach((unit => unit.check_if_exhausted()));
-}
-function attack_hq(ownerobj){
-    hq_damage_taken = 0;
-    //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
-    if(active_unit===null){
-        unit_health_text.style.display="block";
-        unit_hotbar.style.display="flex";
-        hotbar.style.display="none";
-        unit_chealth_text.innerText=ownerobj.hq_health;
-        unit_mhealth_text.innerText=ownerobj.hq_maxhealth;
-        unit_name_text.innerText=ownerobj.name+" HQ";
-        unit_attack_text_cont.style.display="none";
-        unit_move_text_cont.style.display="none";
-        unit_range_text_cont.style.display="none";
-        if(ownerobj.alive==="no"){
-            unit_health_text.style.display="none";
-            unit_name_text.innerText="Ruins";
-        }
-    }
-    else if(ownerobj.alive==="yes" && active_unit.type==="melee" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
-        hq_damage_taken=active_unit.attack;
-    }
-    else if(ownerobj.alive==="yes" && active_unit.type==="ranged" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) !== 1) && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
-        hq_damage_taken=active_unit.attack;
-    }
-    else if(ownerobj.alive==="yes" && active_unit.type==="skirmisher" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
-        hq_damage_taken=active_unit.attack;
-    }
-
-    if(hq_damage_taken!==0){
-        active_unit.canattack="no";
-        active_unit.check_if_exhausted();
-        active_unit.activate_unit();
-        ownerobj.hq_health-=hq_damage_taken;
-        damage_text.innerText="-"+hq_damage_taken;
-        damage_text_container.style.display="block";
-        rename_this_variable = ownerobj.hq_doc;
-        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
-        damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
-        damage_text_container.style.filter="opacity(100%)";
-        damage_text_animation_counter=0;
-        setTimeout(damage_text_animation, 10);
-
-        if(ownerobj.hq_health<1){
-            if(ownerobj===player){
-                gameover_screen.style.display="flex";
-                player.alive="no";
-            }
-            else{
-                ownerobj.alive="no";
-                ownerobj.hq_doc.querySelector(".tileimg").src="images/tiles/destroyed_hq.png";
-                for(let unit of global_units){
-                    if(unit.owner_obj===ownerobj){
-                        unit.take_damage(525252525252152, "yes");
-                    }   
-                }
-                if(bot1.alive==="no" && bot2.alive==="no" && bot3.alive==="no"){
-                    victory_screen.style.display="flex";
-                }
-            }
-            
-        }
-    }
-}
-
 //this is for goofy easter egg
 const d = new Date
 let time = d.getTime();
@@ -827,7 +840,9 @@ let time = d.getTime();
 /**GENERAL FUNCTIONS**/
 function print(item){
     console.log(item);
-    //chat is this rhubarby coding
+}
+function nothing(){
+    print("Have a nice day!")
 }
 function show_settings(){
     //code for goofy easter egg
@@ -937,237 +952,10 @@ function update_hq_healthbar(){
     else{root.style.setProperty("--hq-healthbar-color", "#ff9900");}
 }
 function open_encycl_entry(entry){
-    switch(entry){
-        case 1:
-            encycl_infobox_data=["Labourer", "images/humans/labourer.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
-            break;
-        case 2:
-            encycl_infobox_data=["Spearman", "images/humans/spearman.png", "Weak melee unit. Uses sharp pointy."];
-            break;
-        case 3:
-            encycl_infobox_data=["Warrior", "images/humans/warrior.png", "Melee unit. Likes sunshine and beef."];
-            break;
-        case 4:
-            encycl_infobox_data=["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"];
-            break;
-        case 5:
-            encycl_infobox_data=["Archer", "images/humans/archer.png", "Can shoot arrows"];
-            break;
-        case 6:
-            encycl_infobox_data=["Musketeer", "images/humans/musketeer.png", "Own a musket for home defence. Can shoot and stab"];
-            break;
-        case 7:
-            encycl_infobox_data=["Gun Car", "images/humans/gun_car.png", "Vroom pyew"];
-            break;
-        case 8:
-            encycl_infobox_data=["Juggernaut", "images/humans/juggernaut.png", "Real tough guy"];
-            break;
-        case 9:
-            encycl_infobox_data=["Tank", "images/humans/tank.png", "Fast and big and deadly. Not historically accurate."];
-            break;
-        case 10:
-            encycl_infobox_data=["Fusilli", "images/pastans/fusilli.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
-            break;
-        case 11:
-            encycl_infobox_data=["Penne", "images/pastans/penne.png", "Shoots lasers from its hand. Weak but cheap"];
-            break;
-        case 12:
-            encycl_infobox_data=["Rigatoni", "images/pastans/rigatoni.png", "A bombastic stabby man."];
-            break;
-        case 13:
-            encycl_infobox_data=["Lasagna", "images/pastans/lasagna.png", "Goes nice close to its enemies and then BLEHHH"];
-            break;
-        case 14:
-            encycl_infobox_data=["Orechiette", "images/pastans/orechiette.png", "Ranged unit with many lasers."];
-            break;
-        case 15:
-            encycl_infobox_data=["Spaghetti", "images/pastans/spaghetti.png", "Grandma's cooking leads to psychic awakening"];
-            break;
-        case 16:
-            encycl_infobox_data=["Tagliatelle", "images/pastans/tagliatelle.png", "Little gremlin big gun"];
-            break;
-        case 17:
-            encycl_infobox_data=["Farfalle", "images/pastans/farfalle.png", "It's ya boy Farfie who attacks enemies. DJ Farfie OUT"];
-            break;
-        case 18:
-            encycl_infobox_data=["Macaroni", "images/pastans/macaroni.png", "Like El Macho but so macho he doesn't die, melee"];
-            break;
-        case 19:
-            encycl_infobox_data=["Builder", "images/scrapbots/builder.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
-            break;
-        case 20:
-            encycl_infobox_data=["Fodder", "images/scrapbots/fodder.png", "Melee. Lacks the intelligence to care about being fodder"];
-            break;
-        case 21:
-            encycl_infobox_data=["Fighter", "images/scrapbots/fighter.png", "Punchy punchy boi"];
-            break;
-        case 22:
-            encycl_infobox_data=["Sprinter", "images/scrapbots/sprinter.png", "Melee that shockingly can't run because no legs."];
-            break;
-        case 23:
-            encycl_infobox_data=["Shooter", "images/scrapbots/shooter.png", "Most self-explanatory unit"];
-            break;
-        case 24:
-            encycl_infobox_data=["Skirmisher", "images/scrapbots/skirmisher.png", "Forgive me for naming it skirmisher even though it's not one"];
-            break;
-        case 25:
-            encycl_infobox_data=["Pursuer", "images/scrapbots/pursuer.png", "Be you here or be you there I shall reduce you to thin air"];
-            break;
-        case 26:
-            encycl_infobox_data=["Destroyer", "images/scrapbots/destroyer.png", "Unstoppable melee that will touch your opponents"];
-            break;
-        case 27:
-            encycl_infobox_data=["Annihilator", "images/scrapbots/annihilator.png", "Sir, why is the sun flying towards us?"];
-            break;
-        case 28:
-            encycl_infobox_data=["Gnome", "images/yox_empire/gnome.png", "A builder unit. When it moves onto a resource it makes a mine for you."];
-            break;
-        case 29:
-            encycl_infobox_data=["Kobold", "images/yox_empire/kobold.png", "Melee unit that somehow manages to punch"];
-            break;
-        case 30:
-            encycl_infobox_data=["Hoplite", "images/yox_empire/hoplite.png", "Clickity click-clack, a discombobulating attack"];
-            break;
-        case 31:
-            encycl_infobox_data=["Strider", "images/yox_empire/strider.png", "Fast and melee"];
-            break;
-        case 32:
-            encycl_infobox_data=["Slingslime", "images/yox_empire/slingslime.png", "Shoots rocks cutely"];
-            break;
-        case 33:
-            encycl_infobox_data=["Lich", "images/yox_empire/lich.png", "I cast big fat laser"];
-            break;
-        case 34:
-            encycl_infobox_data=["Cerberus", "images/yox_empire/cerberus.png", "Fast, shoots you, punches you"];
-            break;
-        case 35:
-            encycl_infobox_data=["Leviathan", "images/yox_empire/leviathan.png", "Eats kobolds for breakfast"];
-            break;
-        case 36:
-            encycl_infobox_data=["Reaper", "images/yox_empire/reaper.png", "Deadly elite unit that will probably kill you"];
-            break;
-        case 37:
-            encycl_infobox_data=["Farm", "images/icons/food.png", "Gives you 5 more food each turn"];
-            break;
-        case 38:
-            encycl_infobox_data=["Quarry", "images/icons/ore.png", "Gives you 5 more ore each turn"];
-            break;
-        case 39:
-            encycl_infobox_data=["Marketplace", "images/icons/marketplace.png", "Allows for you to trade basic resources"];
-            break;
-        case 40:
-            encycl_infobox_data=["Walls", "images/icons/wall.png", "City health +50"];
-            break;
-        case 41:
-            encycl_infobox_data=["Mill", "images/icons/food.png", "Gives you 5 more food each turn"];
-            break;
-        case 42:
-            encycl_infobox_data=["Mineshafts", "images/icons/ore.png", "Gives you 5 more ore each turn"];
-            break;
-        case 43:
-            encycl_infobox_data=["Fortifications", "images/icons/fortifications.png", "City health +50"];
-            break;
-        case 44:
-            encycl_infobox_data=["University", "images/icons/science.png", "Unlock research"];
-            break;
-        case 45:
-            encycl_infobox_data=["Shopping Center", "images/icons/marketplace.png", "Allows you to trade premium resources"];
-            break;
-        case 46:
-            encycl_infobox_data=["Hospital", "images/icons/hospital.png", "Units next to your city will heal at the end of your turn"];
-            break;
-        case 47:
-            encycl_infobox_data=["Research Center", "images/icons/science.png", "Unlock more research"];
-            break;
-        case 48:
-            encycl_infobox_data=["Barracks", "images/humans/warrior.png", "Allows you to recuit Warriors"];
-            break;
-        case 49:
-            encycl_infobox_data=["Stables", "images/humans/horseman.png", "Allows you to recuit Horsemen"];
-            break;
-        case 50:
-            encycl_infobox_data=["Archery Range", "images/humans/archer.png", "Allows you to recuit Archers"];
-            break;
-        case 51:
-            encycl_infobox_data=["Shooting Range", "images/humans/musketeer.png", "Allows you to recuit Musketeers. Not to be confused with Shooting Range"];
-            break;
-        case 52:
-            encycl_infobox_data=["Garage", "images/humans/gun_car.png", "Allows you to recuit Gun Cars, has cool doors"];
-            break;
-        case 53:
-            encycl_infobox_data=["Elite Bootcamp", "images/humans/juggernaut.png", "Allows you to recuit Juggernauts, includes one (1) tree"];
-            break;
-        case 54:
-            encycl_infobox_data=["Tank Park", "images/humans/tank.png", "Allows you to recuit Tanks, includes two (2) trees"];
-            break;
-        case 55:
-            encycl_infobox_data=["Spoon", "images/pastans/rigatoni.png", "Allows you to recuit Rigatonines"];
-            break;
-        case 56:
-            encycl_infobox_data=["Baking Tray", "images/pastans/lasagna.png", "Allows you to recuit Lasagnae"];
-            break;
-        case 57:
-            encycl_infobox_data=["Bowl", "images/pastans/orechiette.png", "Allows you to recuit Orechietti"];
-            break;
-        case 58:
-            encycl_infobox_data=["Sieve", "images/pastans/spaghetti.png", "Allows you to recuit Spaghettis"];
-            break;
-        case 59:
-            encycl_infobox_data=["Grater", "images/pastans/tagliatelle.png", "Allows you to recuit Tagliatellae"];
-            break;
-        case 60:
-            encycl_infobox_data=["Plate", "images/pastans/farfalle.png", "Allows you to recuit Farfallen"];
-            break;
-        case 61:
-            encycl_infobox_data=["Pot", "images/pastans/macaroni.png", "Allows you to recuit Macarone"];
-            break;
-        case 62:
-            encycl_infobox_data=["Factory", "images/scrapbots/fighter.png", "Allows you to recuit Fighters"];
-            break;
-        case 63:
-            encycl_infobox_data=["Racetrack", "images/scrapbots/sprinter.png", "Allows you to recuit Sprinters, is the most boring circle track possible"];
-            break;
-        case 64:
-            encycl_infobox_data=["Shooting Range", "images/scrapbots/shooter.png", "Allows you to recuit Shooters. Not to be confused with Shooting Range"];
-            break;
-        case 65:
-            encycl_infobox_data=["Spider Bunker", "images/scrapbots/skirmisher.png", "Allows you to recuit Skirmishers, it's not a cave."];
-            break;
-        case 66:
-            encycl_infobox_data=["Airfield", "images/scrapbots/pursuer.png", "Allows you to recuit Pursuers"];
-            break;
-        case 67:
-            encycl_infobox_data=["Assembly Scaffolds", "images/scrapbots/destroyer.png", "Allows you to recuit Destroyers. Looks like a spaceship launch pad"];
-            break;
-        case 68:
-            encycl_infobox_data=["Supershell", "images/scrapbots/annihilator.png", "Allows you to recuit Annihilators, like a dyson sphere but it builds the sun"];
-            break;
-        case 69:
-            encycl_infobox_data=["Graveyard", "images/yox_empire/hoplite.png", "Allows you to recuit Hoplites, has spiky trees"];
-            break;
-        case 70:
-            encycl_infobox_data=["Silent Trees", "images/yox_empire/strider.png", "Allows you to recuit Striders"];
-            break;
-        case 71:
-            encycl_infobox_data=["Damp Cave", "images/yox_empire/slingslime.png", "Allows you to recuit Slingslimes. Hat shop included"];
-            break;
-        case 72:
-            encycl_infobox_data=["Forbidden Library", "images/yox_empire/lich.png", "Allows you to recuit Liches"];
-            break;
-        case 73:
-            encycl_infobox_data=["Hell's Kennel", "images/yox_empire/cerberus.png", "Allows you to recuit Cerberuses"];
-            break;
-        case 74:
-            encycl_infobox_data=["Big Pit", "images/yox_empire/leviathan.png", "Allows you to recuit Leviathans, it's very big"];
-            break;
-        case 75:
-            encycl_infobox_data=["Tower of Souls", "images/yox_empire/reaper.png", "Allows you to recuit Reapers, has cool floating wisps"];
-            break;
-    }
+    encycl_infobox_data=the_encycl_data[entry];
     encycl_infobox_title.innerText=encycl_infobox_data[0];
     encycl_infobox_image.src=encycl_infobox_data[1];
     encycl_infobox_text.innerText=encycl_infobox_data[2];
-
 }
 function hq_popup(text){
     hq_popup_div.style.display="block";
@@ -1879,6 +1667,72 @@ function buy_unit_do(unit_number){
     }
     update_resource_counters();
 }
+function render_all_units(){
+    global_units.forEach((unit => unit.check_if_exhausted()));
+}
+function attack_hq(ownerobj){
+    hq_damage_taken = 0;
+    //Math.abs(this.x-tilex)+Math.abs(this.y-tiley)
+    if(active_unit===null){
+        unit_health_text.style.display="block";
+        unit_hotbar.style.display="flex";
+        hotbar.style.display="none";
+        unit_chealth_text.innerText=ownerobj.hq_health;
+        unit_mhealth_text.innerText=ownerobj.hq_maxhealth;
+        unit_name_text.innerText=ownerobj.name+" HQ";
+        unit_attack_text_cont.style.display="none";
+        unit_move_text_cont.style.display="none";
+        unit_range_text_cont.style.display="none";
+        if(ownerobj.alive==="no"){
+            unit_health_text.style.display="none";
+            unit_name_text.innerText="Ruins";
+        }
+    }
+    else if(ownerobj.alive==="yes" && active_unit.type==="melee" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) == 1) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+    else if(ownerobj.alive==="yes" && active_unit.type==="ranged" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) !== 1) && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+    else if(ownerobj.alive==="yes" && active_unit.type==="skirmisher" && (Math.abs(ownerobj.x-active_unit.x)+Math.abs(ownerobj.y-active_unit.y) <= active_unit.range) && active_unit.canattack==="yes"){
+        hq_damage_taken=active_unit.attack;
+    }
+
+    if(hq_damage_taken!==0){
+        active_unit.canattack="no";
+        active_unit.check_if_exhausted();
+        active_unit.activate_unit();
+        ownerobj.hq_health-=hq_damage_taken;
+        damage_text.innerText="-"+hq_damage_taken;
+        damage_text_container.style.display="block";
+        rename_this_variable = ownerobj.hq_doc;
+        damage_text_container.style.top=(parseInt(rename_this_variable.style.top)+ 56)+"px";
+        damage_text_container.style.left=parseInt(rename_this_variable.style.left)+"px";
+        damage_text_container.style.filter="opacity(100%)";
+        damage_text_animation_counter=0;
+        setTimeout(damage_text_animation, 10);
+
+        if(ownerobj.hq_health<1){
+            if(ownerobj===player){
+                gameover_screen.style.display="flex";
+                player.alive="no";
+            }
+            else{
+                ownerobj.alive="no";
+                ownerobj.hq_doc.querySelector(".tileimg").src="images/tiles/destroyed_hq.png";
+                for(let unit of global_units){
+                    if(unit.owner_obj===ownerobj){
+                        unit.take_damage(525252525252152, "yes");
+                    }   
+                }
+                if(bot1.alive==="no" && bot2.alive==="no" && bot3.alive==="no"){
+                    victory_screen.style.display="flex";
+                }
+            }
+            
+        }
+    }
+}
 function next_turn(){
     turn_number+=1;
     timeout_screen.style.display="block";
@@ -1893,21 +1747,22 @@ function next_turn(){
     })
     update_resource_counters();
 }
-/**BOT FUNCTIONS**/
+
+
+//BOT FUNCTIONS
 function bot_turn(bot){
     switch(bot.personality){
         case "turtle":
             if(bot_check_are_we_alarmed(bot)){
-                bot_do_buymax_military(bot);
+                bot_do_secure_hq(bot);
             }
             else{
-                bot.wecantdev=0;
-                while(bot.wecantdev===0){
-                    bot_do_develop(bot);
-                }
+                bot_do_develop(bot);
+                bot_do_develop(bot);
+                bot_do_buyhalf_military(bot);
+                //normal military action
             }
             bot_do_workers(bot);
-            
             break;
         case "spammer":
             break;
@@ -1918,9 +1773,10 @@ function bot_turn(bot){
 }
 function find_hostiles(radius, centerx, centery, team){
     enemies_found_count=0;
+    enemies_found_list=[];
     for(let xc = (0-radius); xc <= (0+radius); xc++){
         for(let yc = (0 - (radius-Math.abs(xc))); yc <= (0+(radius-Math.abs(xc))); yc++){
-            if(get_unit_by_pos(centerx+xc, centery+yc)!==null){if(get_unit_by_pos(centerx+xc, centery+yc).owner!==team){enemies_found_count++;}}
+            if(get_unit_by_pos(centerx+xc, centery+yc)!==null){if(get_unit_by_pos(centerx+xc, centery+yc).owner!==team){enemies_found_count++; enemies_found_list.push(get_unit_by_pos(centerx+xc, centery+yc));}}
         }
     }
     if(enemies_found_count===0){return false;}
@@ -1931,8 +1787,8 @@ function bot_check_canafford(bot, id_inq){
     else{return false;}
 }
 function bot_check_are_we_alarmed(bot){
-    for(let a=-7; a<7; a++){
-        for(let b=-7; b<7; b++){
+    for(let a=-3; a<3; a++){
+        for(let b=-3; b<3; b++){
             if((bot.x+a > 0 && bot.x+a < 26) && (bot.y+b > 0 && bot.y+b < 26)){
                 if(get_unit_by_pos(bot.x+a, bot.y+b)!==null){return true;}
             }
@@ -2094,10 +1950,58 @@ function bot_do_buy_unit(bot, id_inq, name_inq){
     //do a switch case and repeat as with player buying
 }
 function bot_do_secure_hq(bot){
+    let so_what_do_we_have_to_work_with=[];
+    let so_what_do_we_have_to_deal_with=[];
 
-}
-function bot_do_secure_surr(bot){
+    function detect_interlopers(){
+        so_what_do_we_have_to_deal_with=[];
+        for(let a=-3; a<3; a++){
+            for(let b=-3; b<3; b++){
+                if((bot.x+a > 0 && bot.x+a < 26) && (bot.y+b > 0 && bot.y+b < 26) && get_unit_by_pos(bot.x+a, bot.y+b)!==null){
+                    if(get_unit_by_pos(bot.x+a, bot.y+b).owner_obj!==bot){so_what_do_we_have_to_deal_with.push(get_unit_by_pos(bot.x+a, bot.y+b));}
+                }
+            }
+        }
+    }
+    function lets_see_what_we_got(){
+        so_what_do_we_have_to_work_with=[];
+        global_units.forEach((unit) => {
+            if(unit.owner_obj===bot && unit.type!=="worker" && unit.movement!==0){so_what_do_we_have_to_work_with.push(unit);}
+        })
+    }
+    lets_see_what_we_got();
 
+    function lets_get_cracking(){
+        while(so_what_do_we_have_to_deal_with.length!==0 && so_what_do_we_have_to_work_with.length!==0){
+            if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].movement===0){
+                so_what_do_we_have_to_work_with.pop();
+            }
+            else if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].type==="ranged"){
+                //check if can shoot, then if movement necessary
+                //else move to where can shoot then shoot
+                //else move towards HQ
+                
+            }
+            else if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].type==="melee"){
+                //check if can kill
+                //else check if can move then kill
+                //else move to HQ no regard for enemies 
+            }
+            detect_interlopers();
+        }
+    }
+
+    lets_get_cracking();
+    if(so_what_do_we_have_to_deal_with.length!==0){
+        bot_do_buyhalf_military(bot);
+        lets_see_what_we_got();
+    }
+    lets_get_cracking();
+    if(so_what_do_we_have_to_deal_with.length!==0){
+        bot_do_buymax_military(bot);
+        lets_see_what_we_got();
+    }
+    lets_get_cracking();
 }
 function bot_do_workers(bot){
     //find or buy worker
@@ -2292,9 +2196,6 @@ function bot_do_develop(bot){
     else{bot.wecantdev=1;}
 }
 
-function nothing(){
-    print("Have a nice day!")
-}
 //GAME STARTING FUNCTIONS 
 function load_assets(){
     start_menu.style.display="none";
