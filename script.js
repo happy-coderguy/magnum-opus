@@ -322,7 +322,7 @@ const the_encycl_data=[
     ["Warrior", "images/humans/warrior.png", "Melee unit. Likes sunshine and beef."],
     ["Horseman", "images/humans/horseman.png", "Fast melee unit. Neigh neigh"],
     ["Archer", "images/humans/archer.png", "Can shoot arrows"],
-    ["Musketeer", "images/humans/musketeer.png", "Own a musket for home defence. Can shoot and stab"],
+    ["Musketeer", "images/humans/musketman.png", "Own a musket for home defence. Can shoot and stab"],
     ["Gun Car", "images/humans/gun_car.png", "Vroom pyew"],
     ["Juggernaut", "images/humans/juggernaut.png", "Real tough guy"],
     ["Tank", "images/humans/tank.png", "Fast and big and deadly. Not historically accurate."],
@@ -367,7 +367,7 @@ const the_encycl_data=[
     ["Barracks", "images/humans/warrior.png", "Allows you to recuit Warriors"],
     ["Stables", "images/humans/horseman.png", "Allows you to recuit Horsemen"],
     ["Archery Range", "images/humans/archer.png", "Allows you to recuit Archers"],
-    ["Shooting Range", "images/humans/musketeer.png", "Allows you to recuit Musketeers. Not to be confused with Shooting Range"],
+    ["Shooting Range", "images/humans/musketman.png", "Allows you to recuit Musketmen. Not to be confused with Shooting Range"],
     ["Garage", "images/humans/gun_car.png", "Allows you to recuit Gun Cars, has cool doors"],
     ["Elite Bootcamp", "images/humans/juggernaut.png", "Allows you to recuit Juggernauts, includes one (1) tree"],
     ["Tank Park", "images/humans/tank.png", "Allows you to recuit Tanks, includes two (2) trees"],
@@ -1966,26 +1966,87 @@ function bot_do_secure_hq(bot){
     function lets_see_what_we_got(){
         so_what_do_we_have_to_work_with=[];
         global_units.forEach((unit) => {
-            if(unit.owner_obj===bot && unit.type!=="worker" && unit.movement!==0){so_what_do_we_have_to_work_with.push(unit);}
+            if(unit.owner_obj===bot && unit.type!=="worker" && unit.movement!==0 && unit.canattack==="yes"){so_what_do_we_have_to_work_with.push(unit);}
         })
     }
     lets_see_what_we_got();
 
     function lets_get_cracking(){
+        let myguy;
         while(so_what_do_we_have_to_deal_with.length!==0 && so_what_do_we_have_to_work_with.length!==0){
-            if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].movement===0){
+            myguy = so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1];
+            if(myguy.movement===0 || myguy.canattack==="no"){
                 so_what_do_we_have_to_work_with.pop();
             }
-            else if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].type==="ranged"){
-                //check if can shoot, then if movement necessary
-                //else move to where can shoot then shoot
-                //else move towards HQ
-                
+            else if(myguy.type==="ranged"){
+                let the_closest_feller=null;
+                let hiogh_scor=999;
+                for(let unit of so_what_do_we_have_to_deal_with){
+                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){the_closest_feller=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
+                }
+                if(hiogh_scor===1){
+                    //run away
+                }
+                else if(hiogh_scor <= myguy.range){
+                    //shoot
+                }
+                else{
+                    // move towarsd an enemy
+                }
+                if(myguy.canattack){
+                    //check if can shoot anyone
+                }
             }
-            else if(so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1].type==="melee"){
-                //check if can kill
-                //else check if can move then kill
-                //else move to HQ no regard for enemies 
+            else if(myguy.type==="melee" || myguy.type==="skirmisher"){
+                let backup_target=null;
+                let obvious_target=null;
+                //find targets
+                for(let unit of so_what_do_we_have_to_deal_with){
+                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.range){
+                        obvious_target=unit;
+                        break;
+                    }
+                    else if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.movement+myguy.range && backup_target===null){
+                        backup_target=unit;
+                    }
+                }
+                //check if we found targets and act accordingly
+                if(obvious_target!==null){
+                    obvious_target.take_damage(myguy.attack, "yes");
+                    myguy.canattack="no";
+                }
+                else if(backup_target!==null){
+                    lets_go_attack:
+                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
+                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
+                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement) && (Math.abs(backup_target.x-x) + Math.abs(backup_target.y-y) <= myguy.range)){
+                                myguy.move_unit(x,y);
+                                backup_target.take_damage(myguy.attack);
+                                myguy.canattack="no";
+                                break lets_go_attack;
+                            }
+                        }
+                    }
+                }
+                else{
+                    //move towards enemy
+                    let hiogh_scor=999;
+                    for(let unit of so_what_do_we_have_to_deal_with){
+                        if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){backup_target=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
+                    }
+                    lets_go_defend:
+                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
+                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
+                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
+                                myguy.move_unit(x,y);
+                                break lets_go_defend;
+                            }
+                        }    
+                    }
+                }
+            }
+            else{
+                so_what_do_we_have_to_work_with.pop();
             }
             detect_interlopers();
         }
