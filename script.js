@@ -410,7 +410,7 @@ let player = {
     alive:"yes", research_32_status:0,
 };
 let bot1 = {
-    food:100, ore:100, oil:5, hazardite:5, aluminium:0, gems:0,
+    food:20, ore:20, oil:5, hazardite:5, aluminium:0, gems:0,
     food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
@@ -1949,121 +1949,6 @@ function bot_do_buy_unit(bot, id_inq, name_inq){
     
     //do a switch case and repeat as with player buying
 }
-function bot_do_secure_hq(bot){
-    let so_what_do_we_have_to_work_with=[];
-    let so_what_do_we_have_to_deal_with=[];
-
-    function detect_interlopers(){
-        so_what_do_we_have_to_deal_with=[];
-        for(let a=-3; a<3; a++){
-            for(let b=-3; b<3; b++){
-                if((bot.x+a > 0 && bot.x+a < 26) && (bot.y+b > 0 && bot.y+b < 26) && get_unit_by_pos(bot.x+a, bot.y+b)!==null){
-                    if(get_unit_by_pos(bot.x+a, bot.y+b).owner_obj!==bot){so_what_do_we_have_to_deal_with.push(get_unit_by_pos(bot.x+a, bot.y+b));}
-                }
-            }
-        }
-    }
-    function lets_see_what_we_got(){
-        so_what_do_we_have_to_work_with=[];
-        global_units.forEach((unit) => {
-            if(unit.owner_obj===bot && unit.type!=="worker" && unit.movement!==0 && unit.canattack==="yes"){so_what_do_we_have_to_work_with.push(unit);}
-        })
-    }
-    lets_see_what_we_got();
-
-    function lets_get_cracking(){
-        let myguy;
-        while(so_what_do_we_have_to_deal_with.length!==0 && so_what_do_we_have_to_work_with.length!==0){
-            myguy = so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1];
-            if(myguy.movement===0 || myguy.canattack==="no"){
-                so_what_do_we_have_to_work_with.pop();
-            }
-            else if(myguy.type==="ranged"){
-                let the_closest_feller=null;
-                let hiogh_scor=999;
-                for(let unit of so_what_do_we_have_to_deal_with){
-                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){the_closest_feller=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
-                }
-                if(hiogh_scor===1){
-                    //run away
-                }
-                else if(hiogh_scor <= myguy.range){
-                    //shoot
-                }
-                else{
-                    // move towarsd an enemy
-                }
-                if(myguy.canattack){
-                    //check if can shoot anyone
-                }
-            }
-            else if(myguy.type==="melee" || myguy.type==="skirmisher"){
-                let backup_target=null;
-                let obvious_target=null;
-                //find targets
-                for(let unit of so_what_do_we_have_to_deal_with){
-                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.range){
-                        obvious_target=unit;
-                        break;
-                    }
-                    else if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.movement+myguy.range && backup_target===null){
-                        backup_target=unit;
-                    }
-                }
-                //check if we found targets and act accordingly
-                if(obvious_target!==null){
-                    obvious_target.take_damage(myguy.attack, "yes");
-                    myguy.canattack="no";
-                }
-                else if(backup_target!==null){
-                    lets_go_attack:
-                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
-                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
-                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement) && (Math.abs(backup_target.x-x) + Math.abs(backup_target.y-y) <= myguy.range)){
-                                myguy.move_unit(x,y);
-                                backup_target.take_damage(myguy.attack);
-                                myguy.canattack="no";
-                                break lets_go_attack;
-                            }
-                        }
-                    }
-                }
-                else{
-                    //move towards enemy
-                    let hiogh_scor=999;
-                    for(let unit of so_what_do_we_have_to_deal_with){
-                        if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){backup_target=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
-                    }
-                    lets_go_defend:
-                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
-                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
-                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
-                                myguy.move_unit(x,y);
-                                break lets_go_defend;
-                            }
-                        }    
-                    }
-                }
-            }
-            else{
-                so_what_do_we_have_to_work_with.pop();
-            }
-            detect_interlopers();
-        }
-    }
-
-    lets_get_cracking();
-    if(so_what_do_we_have_to_deal_with.length!==0){
-        bot_do_buyhalf_military(bot);
-        lets_see_what_we_got();
-    }
-    lets_get_cracking();
-    if(so_what_do_we_have_to_deal_with.length!==0){
-        bot_do_buymax_military(bot);
-        lets_see_what_we_got();
-    }
-    lets_get_cracking();
-}
 function bot_do_workers(bot){
     //find or buy worker
     let the_worker_in_question=null;
@@ -2255,6 +2140,148 @@ function bot_do_develop(bot){
         bot.develop_counter+=1;
     }
     else{bot.wecantdev=1;}
+}
+function bot_do_secure_hq(bot){
+    let so_what_do_we_have_to_work_with=[];
+    let so_what_do_we_have_to_deal_with=[];
+
+    function detect_interlopers(){
+        so_what_do_we_have_to_deal_with=[];
+        for(let a=-3; a<3; a++){
+            for(let b=-3; b<3; b++){
+                if((bot.x+a > 0 && bot.x+a < 26) && (bot.y+b > 0 && bot.y+b < 26) && get_unit_by_pos(bot.x+a, bot.y+b)!==null){
+                    if(get_unit_by_pos(bot.x+a, bot.y+b).owner_obj!==bot){so_what_do_we_have_to_deal_with.push(get_unit_by_pos(bot.x+a, bot.y+b));}
+                }
+            }
+        }
+    }
+    function lets_see_what_we_got(){
+        so_what_do_we_have_to_work_with=[];
+        global_units.forEach((unit) => {
+            if(unit.owner_obj===bot && unit.type!=="worker" && unit.movement!==0 && unit.canattack==="yes"){so_what_do_we_have_to_work_with.push(unit);}
+        })
+    }
+    lets_see_what_we_got();
+
+    function lets_get_cracking(){
+        let myguy;
+        while(so_what_do_we_have_to_deal_with.length!==0 && so_what_do_we_have_to_work_with.length!==0){
+            //console.log(myguy);
+            myguy = so_what_do_we_have_to_work_with[(so_what_do_we_have_to_work_with.length)-1];
+            if(myguy.movement===0 || myguy.canattack==="no"){
+                so_what_do_we_have_to_work_with.pop();
+            }
+            else if(myguy.type==="ranged"){
+                let the_closest_feller=null;
+                let hiogh_scor=999;
+                for(let unit of so_what_do_we_have_to_deal_with){
+                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){the_closest_feller=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
+                }
+                if(hiogh_scor===1){
+                    escape_the_enemy:
+                    for(let xc = (0-myguy.movement); xc <= (0+myguy.movement); xc++){
+                        for(let yc = (0 - (myguy.movement-Math.abs(xc))); yc <= (0+(myguy.movement-Math.abs(xc))); yc++){
+                            if(get_unit_by_pos(myguy.x+xc, myguy.y+yc)===null && get_resource_tile_by_pos(myguy.x+xc, myguy.y+yc)===null && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(xc, yc); break escape_the_enemy;}
+                        }
+                    }
+                    //run away 
+                }
+                else if(hiogh_scor <= myguy.range){
+                    the_closest_feller.take_damage(myguy.attack, "yes");
+                    myguy.canattack="no";
+                }
+                else{
+                    lets_go_pursuue:
+                    for(let x = Math.min(myguy.x, the_closest_feller.x); x <= Math.max(myguy.x, the_closest_feller.x); x++){
+                        for(let y = Math.min(myguy.y, the_closest_feller.y); y <= Math.max(myguy.y, the_closest_feller.y); y++){
+                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement)){
+                                myguy.move_unit(x,y);
+                                if(myguy.movement===0){break lets_go_pursuue;}
+                            }
+                        }    
+                    }
+                }
+                if(myguy.canattack==="yes"){
+                    let the_closest_feller=null;
+                    let hiogh_scor=999;
+                    for(let unit of so_what_do_we_have_to_deal_with){
+                        if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor && Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)!==1){the_closest_feller=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
+                    }
+                    if(hiogh_scor!==1 && hiogh_scor<=myguy.range && the_closest_feller!==null){
+                        the_closest_feller.take_damage(myguy.attack, "yes");
+                        myguy.canattack="no";
+                    }
+                }
+            }
+            else if(myguy.type==="melee" || myguy.type==="skirmisher"){
+                let backup_target=null;
+                let obvious_target=null;
+                //find targets
+                for(let unit of so_what_do_we_have_to_deal_with){
+                    if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.range){
+                        obvious_target=unit;
+                        break;
+                    }
+                    else if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) <= myguy.movement+myguy.range && backup_target===null){
+                        backup_target=unit;
+                    }
+                }
+                //check if we found targets and act accordingly
+                if(obvious_target!==null){
+                    obvious_target.take_damage(myguy.attack, "yes");
+                    myguy.canattack="no";
+                }
+                else if(backup_target!==null){
+                    lets_go_attack:
+                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
+                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
+                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement) && (Math.abs(backup_target.x-x) + Math.abs(backup_target.y-y) <= myguy.range)){
+                                myguy.move_unit(x,y);
+                                backup_target.take_damage(myguy.attack);
+                                myguy.canattack="no";
+                                break lets_go_attack;
+                            }
+                        }
+                    }
+                }
+                else{
+                    //move towards enemy
+                    let hiogh_scor=999;
+                    for(let unit of so_what_do_we_have_to_deal_with){
+                        if(Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y) < hiogh_scor){backup_target=unit; hiogh_scor=Math.abs(myguy.x-unit.x)+Math.abs(myguy.y-unit.y)}
+                    }
+                    lets_go_pursue:
+                    for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
+                        for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
+                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
+                                myguy.move_unit(x,y);
+                                break lets_go_pursue;
+                            }
+                        }    
+                    }
+                }
+            }
+            else{
+                so_what_do_we_have_to_work_with.pop();
+            }
+            detect_interlopers();
+        }
+    }
+    detect_interlopers();
+    lets_get_cracking();
+    if(so_what_do_we_have_to_deal_with.length!==0){
+        bot_do_buyhalf_military(bot);
+        lets_see_what_we_got();
+    }
+    lets_get_cracking();
+    if(so_what_do_we_have_to_deal_with.length!==0){
+        bot_do_buymax_military(bot);
+        lets_see_what_we_got();
+    }
+    lets_get_cracking();
+}
+function bot_do_military_campaign(bot){
+    
 }
 
 //GAME STARTING FUNCTIONS 
@@ -2525,7 +2552,7 @@ function game_start(){
 
     //test area for xyz to run at game start
     //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
-    let bubu = new Unit("Bubu", 1, 100, 1000, 1, 7, 7, "melee", "important.png", "player");
+    let bubu = new Unit("Bubu", 1, 100, 1000, 1, 2, 23, "melee", "important.png", "player");
     bubu.render_unit();
 
     update_resource_counters();
