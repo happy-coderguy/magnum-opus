@@ -2554,6 +2554,7 @@ function game_start(){
     //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
     let bubu = new Unit("Bubu", 1, 100, 1000, 1, 2, 23, "melee", "important.png", "player");
     bubu.render_unit();
+    bot_do_secure_hq(bot1);
 
     update_resource_counters();
     update_hq_healthbar();
