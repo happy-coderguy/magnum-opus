@@ -1746,6 +1746,14 @@ function next_turn(){
         if(one.research.includes("32") && one.research_32_status!==2){one.research_32_status+=1;}
     })
     update_resource_counters();
+    global_units.forEach((unit) => {
+        unit.movement=unit.maxmovement;
+        unit.canattack="yes";
+        render_all_units();
+    })
+    setTimeout(() => {
+        timeout_screen.style.display="none";
+    }, 1000);
 }
 
 
@@ -1760,14 +1768,32 @@ function bot_turn(bot){
                 bot_do_develop(bot);
                 bot_do_develop(bot);
                 bot_do_buyhalf_military(bot);
-                //normal military action
+                bot_do_military_campaign(bot);
             }
             bot_do_workers(bot);
             break;
         case "spammer":
+            if(bot_check_are_we_alarmed(bot)){
+                bot_do_secure_hq(bot);
+            }
+            else{
+                bot_do_buyhalf_military(bot);
+                bot_do_develop(bot);
+                bot_do_buyhalf_military(bot);
+                bot_do_military_campaign(bot);
+            }
+            bot_do_workers(bot);
             break;
         case "balanced":
-            
+            if(bot_check_are_we_alarmed(bot)){
+                bot_do_secure_hq(bot);
+            }
+            else{
+                bot_do_develop(bot);
+                bot_do_buyhalf_military(bot);
+                bot_do_military_campaign(bot);
+            }
+            bot_do_workers(bot);
             break;
     }
 }
@@ -2281,7 +2307,29 @@ function bot_do_secure_hq(bot){
     lets_get_cracking();
 }
 function bot_do_military_campaign(bot){
-    
+    let master_targets_list=[];
+    let my_army=[];
+    global_units.forEach((unit) => {
+        if(unit.owner_obj!==bot){master_targets_list.push([unit, (1 / ((Math.abs(unit.x-bot.x) + Math.abs(unit.y-bot.y)) ** 2))])}
+        else if(unit.type!=="worker"){my_army.push(unit);}
+
+    })
+    global_resources.forEach((resource) => {
+        if(resource.owner_obj!==bot && resource.owner!=="unoccupied"){master_targets_list.push([resource, (3 / ((Math.abs(resource.x-bot.x) + Math.abs(resource.y-bot.y)) ** 2))])}
+    })
+    if(bot.x!==2 || bot.y!==2){master_targets_list.push([player, (5 / ((Math.abs(2-bot.x) + Math.abs(2-bot.y)) ** 2))])}
+    if(bot.x!==2 || bot.y!==24){master_targets_list.push([bot1, (5 / ((Math.abs(2-bot.x) + Math.abs(24-bot.y)) ** 2))])}
+    if(bot.x!==24 || bot.y!==2){master_targets_list.push([bot2, (5 / ((Math.abs(24-bot.x) + Math.abs(2-bot.y)) ** 2))])}
+    if(bot.x!==24 || bot.y!==24){master_targets_list.push([bot3, (5 / ((Math.abs(24-bot.x) + Math.abs(24-bot.y)) ** 2))])}
+
+    master_targets_list.sort((a, b) => b[1] - a[1]);
+    //console.log(master_targets_list);
+
+    while (my_army.length!==0){
+        //do loop
+    }
+
+
 }
 
 //GAME STARTING FUNCTIONS 
@@ -2554,7 +2602,7 @@ function game_start(){
     //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
     let bubu = new Unit("Bubu", 1, 100, 1000, 1, 2, 23, "melee", "important.png", "player");
     bubu.render_unit();
-    bot_do_secure_hq(bot1);
+    bot_do_military_campaign(bot1);
 
     update_resource_counters();
     update_hq_healthbar();
