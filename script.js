@@ -2210,7 +2210,6 @@ function bot_do_secure_hq(bot){
                             if(get_unit_by_pos(myguy.x+xc, myguy.y+yc)===null && get_resource_tile_by_pos(myguy.x+xc, myguy.y+yc)===null && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(xc, yc); break escape_the_enemy;}
                         }
                     }
-                    //run away 
                 }
                 else if(hiogh_scor <= myguy.range){
                     the_closest_feller.take_damage(myguy.attack, "yes");
@@ -2325,11 +2324,65 @@ function bot_do_military_campaign(bot){
     master_targets_list.sort((a, b) => b[1] - a[1]);
     //console.log(master_targets_list);
 
-    while (my_army.length!==0){
-        //do loop
+    while (my_army.length!==0 && master_targets_list.length!==0){
+        let current_feller = my_army[my_army.length-1];
+        if(current_feller.movement===0 || current_feller.canattack==="no"){
+            my_army.pop();
+        }
+        else if(current_feller.type==="melee" || current_feller.type==="skirmisher"){
+            let big_bad_high_score=999;
+            let big_bad_target;
+            for(let target of master_targets_list){
+                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}
+            }
+            if(big_bad_high_score<=current_feller.range){
+                //attack
+            }
+            else if(big_bad_high_score<=(current_feller.range+current_feller.movement)){
+                //move + attack
+            }
+            else{
+                big_bad_high_score=999;
+                big_bad_target=null;
+                for(let target of master_targets_list.slice(0,5)){
+                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}    
+                }
+                //move towards big bad target
+            }
+        }
+        else if(current_feller.type==="ranged"){
+            let big_bad_high_score=999;
+            let big_bad_target;
+            for(let target of master_targets_list){
+                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}
+            }
+            if(big_bad_high_score===1){
+                elude_the_enemy:
+                for(let xc = (0-current_feller.movement); xc <= (0+current_feller.movement); xc++){
+                    for(let yc = (0 - (current_feller.movement-Math.abs(xc))); yc <= (0+(current_feller.movement-Math.abs(xc))); yc++){
+                        if(get_unit_by_pos(current_feller.x+xc, current_feller.y+yc)===null && get_resource_tile_by_pos(current_feller.x+xc, current_feller.y+yc)===null && find_hostiles(2, current_feller.x+xc, current_feller.y+yc, current_feller.owner)===false){current_feller.move_unit(xc, yc); break elude_the_enemy;}
+                    }
+                }   
+            }
+            else if(big_bad_high_score<=current_feller.range){
+                //attack
+            }
+            else if(big_bad_high_score<=(current_feller.movement+current_feller.range)){
+                //move + attack
+            }
+            else{
+                big_bad_high_score=999;
+                big_bad_target=null;
+                for(let target of master_targets_list.slice(0,5)){
+                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}    
+                }
+                //move towards big bad target
+            }        
+        }
+        else{
+            my_army.pop();
+        }
     }
-
-
 }
 
 //GAME STARTING FUNCTIONS 
