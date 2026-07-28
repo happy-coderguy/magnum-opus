@@ -398,7 +398,7 @@ let global_units=[];
 let global_resources=[];
 
 let player = {
-    food:1000000, ore:1000000, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5, 
     faction:"",
     buildings:["None"],
@@ -407,10 +407,10 @@ let player = {
     hq_health:100, hq_maxhealth:100, hq_pcenthealth:100,
     color:"",
     name:"Player", x:2, y:2, hq_doc:0,
-    alive:"yes", research_32_status:0,
+    alive:"yes", research_32_status:0, whatareyou: "spieler",
 };
 let bot1 = {
-    food:20, ore:20, oil:5, hazardite:5, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
@@ -422,10 +422,10 @@ let bot1 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0, whatareyou: "spieler",
 };
 let bot2 = {
-    food:100, ore:100, oil:0, hazardite:0, aluminium:0, gems:0,
+    food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
     food_gain:5, ore_gain:5,
     faction:"",
     buildings:["None"],
@@ -437,7 +437,7 @@ let bot2 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0, whatareyou: "spieler",
 };
 let bot3 = {
     food:10, ore:10, oil:0, hazardite:0, aluminium:0, gems:0,
@@ -452,7 +452,7 @@ let bot3 = {
     alive:"yes", research_32_status:0,
     personality:"", development:0, goals:[],
     cost_ids:[], units_unlocked:["skip"], unit_names:[],
-    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0,
+    develop_counter:0, dev_costids:[], dev_names:[], wecantdev:0, whatareyou: "spieler",
 };
 
 let everyone = [player, bot1, bot2, bot3];
@@ -523,6 +523,7 @@ class Unit{
     constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
         this.name=name;
         this.id=assign_id();
+        this.whatareyou="troop";
         this.filepath=filepath;
         this.owner=owner;
 
@@ -747,6 +748,7 @@ class Resource_tile{
         this.health=25;
         this.maxhealth=25;
         this.tileimg.onclick=this.update_u_hotbar.bind(this);
+        this.whatareyou="rt";
 
         if(owner==="unoccupied"){this.owner_obj=null;}
         else if(owner==="player"){this.owner_obj=player;}
@@ -778,6 +780,7 @@ class Resource_tile{
             }
         }
     }
+    //update hotbar also has getting attacked 
     update_u_hotbar(){
         if(active_unit===null){
             unit_health_text.style.display="block";
@@ -1825,16 +1828,20 @@ function bot_check_are_we_alarmed(bot){
 function bot_calculate_buymax(bot){
     bot_hypo_buylist_ids=[];
     bot_hypo_buylist_names=[];
+    let arewegood = true;
     const hypo_res_storage=[bot.food, bot.ore, bot.oil, bot.gems, bot.aluminium, bot.hazardite];
-    while(bot_check_canafford(bot, bot.cost_ids[1][0])===true && FESBB(bot)!==null){
+    while(bot_check_canafford(bot, bot.cost_ids[1][0])===true && FESBB(bot)!==null && arewegood){
+        arewegood=false;
         for(let i=1; i<=8; i++){
             if(bot_check_canafford(bot, bot.cost_ids[1][8-i])===true && bot.units_unlocked.includes(bot.unit_names[1][8-i])){
                 bot_do_charge_for(bot, bot.cost_ids[1][8-i], bot.unit_names[1][8-i]);
                 bot_hypo_buylist_ids.push(bot.cost_ids[1][8-i]);
                 bot_hypo_buylist_names.push(bot.unit_names[1][8-i]);
+                arewegood=true;
                 break;
             }
         }
+
     }
     bot.food=hypo_res_storage[0];
     bot.ore=hypo_res_storage[1];
@@ -2198,6 +2205,7 @@ function bot_do_secure_hq(bot){
                 so_what_do_we_have_to_work_with.pop();
             }
             else if(myguy.type==="ranged"){
+                let acted = false;
                 let the_closest_feller=null;
                 let hiogh_scor=999;
                 for(let unit of so_what_do_we_have_to_deal_with){
@@ -2207,13 +2215,14 @@ function bot_do_secure_hq(bot){
                     escape_the_enemy:
                     for(let xc = (0-myguy.movement); xc <= (0+myguy.movement); xc++){
                         for(let yc = (0 - (myguy.movement-Math.abs(xc))); yc <= (0+(myguy.movement-Math.abs(xc))); yc++){
-                            if(get_unit_by_pos(myguy.x+xc, myguy.y+yc)===null && get_resource_tile_by_pos(myguy.x+xc, myguy.y+yc)===null && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(xc, yc); break escape_the_enemy;}
+                            if(get_unit_by_pos(myguy.x+xc, myguy.y+yc)===null && get_resource_tile_by_pos(myguy.x+xc, myguy.y+yc)===null && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(xc, yc); acted=true; break escape_the_enemy;}
                         }
                     }
                 }
                 else if(hiogh_scor <= myguy.range){
                     the_closest_feller.take_damage(myguy.attack, "yes");
                     myguy.canattack="no";
+                    acted=true;
                 }
                 else{
                     lets_go_pursuue:
@@ -2235,10 +2244,16 @@ function bot_do_secure_hq(bot){
                     if(hiogh_scor!==1 && hiogh_scor<=myguy.range && the_closest_feller!==null){
                         the_closest_feller.take_damage(myguy.attack, "yes");
                         myguy.canattack="no";
+                        acted=true;
                     }
+                }
+                if(!acted){
+                    myguy.canattack="no";
+                    myguy.movement=0;
                 }
             }
             else if(myguy.type==="melee" || myguy.type==="skirmisher"){
+                let acted = false;
                 let backup_target=null;
                 let obvious_target=null;
                 //find targets
@@ -2255,6 +2270,7 @@ function bot_do_secure_hq(bot){
                 if(obvious_target!==null){
                     obvious_target.take_damage(myguy.attack, "yes");
                     myguy.canattack="no";
+                    acted=true;
                 }
                 else if(backup_target!==null){
                     lets_go_attack:
@@ -2264,6 +2280,7 @@ function bot_do_secure_hq(bot){
                                 myguy.move_unit(x,y);
                                 backup_target.take_damage(myguy.attack);
                                 myguy.canattack="no";
+                                acted=true;
                                 break lets_go_attack;
                             }
                         }
@@ -2280,10 +2297,15 @@ function bot_do_secure_hq(bot){
                         for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
                             if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
                                 myguy.move_unit(x,y);
+                                acted=true;
                                 break lets_go_pursue;
                             }
                         }    
                     }
+                }
+                if(!acted){
+                    myguy.canattack="no";
+                    myguy.movement=0;
                 }
             }
             else{
@@ -2324,60 +2346,146 @@ function bot_do_military_campaign(bot){
     master_targets_list.sort((a, b) => b[1] - a[1]);
     //console.log(master_targets_list);
 
+    function hit_something(hitter, victim){
+        if(victim.whatareyou==="troop"){
+            victim.take_damage(hitter.attack, "yes");
+        }
+        else if(victim.whatareyou==="rt"){
+            victim.health-=hitter.attack;
+            if(victim.health<1){
+                    victim.owner="unoccupied";
+                    victim.health=victim.maxhealth;
+                    victim.owner_obj=null;
+                    victim.tileimg.src="images/tiles/"+victim.resource+".png";
+                    victim.tileimg.style.border="0px solid black";
+
+                    let check_if_bro_waiting_on_this=get_unit_by_pos(victim.x, victim.y);
+                    if(check_if_bro_waiting_on_this!==null){if(check_if_bro_waiting_on_this.type==="worker"){check_if_bro_waiting_on_this.worker_buildcheck();}}
+                }
+        }
+        else if(victim.whatareyou==="spieler"){
+            victim.hq_health-=hitter.attack;
+            if(victim.hq_health<1){
+                if(victim===player){
+                    gameover_screen.style.display="flex";
+                    player.alive="no";
+                }
+                else{
+                    victim.alive="no";
+                    victim.hq_doc.querySelector(".tileimg").src="images/tiles/destroyed_hq.png";
+                    for(let unit of global_units){
+                        if(unit.owner_obj===victim){
+                            unit.take_damage(525252525252152, "yes");
+                        }   
+                    }
+                    if(bot1.alive==="no" && bot2.alive==="no" && bot3.alive==="no"){
+                        victory_screen.style.display="flex";
+                    }
+                }
+            }
+        }
+        else{
+            console.log("fatal error during bot military campaign attacking");
+        }
+        hitter.canattack="no";
+    }
+
     while (my_army.length!==0 && master_targets_list.length!==0){
         let current_feller = my_army[my_army.length-1];
         if(current_feller.movement===0 || current_feller.canattack==="no"){
             my_army.pop();
         }
         else if(current_feller.type==="melee" || current_feller.type==="skirmisher"){
+            let acted = false;
             let big_bad_high_score=999;
             let big_bad_target;
             for(let target of master_targets_list){
-                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}
+                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0]; big_bad_high_score=Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y);}
             }
             if(big_bad_high_score<=current_feller.range){
-                //attack
+                hit_something(current_feller, big_bad_target);
+                acted=true;
             }
             else if(big_bad_high_score<=(current_feller.range+current_feller.movement)){
-                //move + attack
+                lets_go_attack_peas:
+                for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
+                    for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
+                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && (Math.abs(big_bad_target.x-x) + Math.abs(big_bad_target.y-y) <= current_feller.range)){
+                            current_feller.move_unit(x,y);
+                            acted=true;
+                            hit_something(current_feller, big_bad_target);
+                            break lets_go_attack_peas;
+                        }
+                    }
+                }
             }
             else{
                 big_bad_high_score=999;
                 big_bad_target=null;
                 for(let target of master_targets_list.slice(0,5)){
-                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}    
+                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0]; big_bad_high_score=Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y);}    
                 }
                 //move towards big bad target
+                this_could_be_more_efficient_i_just_wanna_finish_already:
+                for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
+                    for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
+                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) === current_feller.movement)){
+                            current_feller.move_unit(x,y);
+                            acted=true;
+                            break this_could_be_more_efficient_i_just_wanna_finish_already;
+                        }
+                    }    
+                }
+            }
+            if(!acted){
+                current_feller.canattack="no";
+                current_feller.movement=0;
             }
         }
         else if(current_feller.type==="ranged"){
+            let acted = false;
             let big_bad_high_score=999;
             let big_bad_target;
             for(let target of master_targets_list){
-                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}
+                if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0]; big_bad_high_score=Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y);}
             }
             if(big_bad_high_score===1){
                 elude_the_enemy:
                 for(let xc = (0-current_feller.movement); xc <= (0+current_feller.movement); xc++){
                     for(let yc = (0 - (current_feller.movement-Math.abs(xc))); yc <= (0+(current_feller.movement-Math.abs(xc))); yc++){
-                        if(get_unit_by_pos(current_feller.x+xc, current_feller.y+yc)===null && get_resource_tile_by_pos(current_feller.x+xc, current_feller.y+yc)===null && find_hostiles(2, current_feller.x+xc, current_feller.y+yc, current_feller.owner)===false){current_feller.move_unit(xc, yc); break elude_the_enemy;}
+                        if(get_unit_by_pos(current_feller.x+xc, current_feller.y+yc)===null && get_resource_tile_by_pos(current_feller.x+xc, current_feller.y+yc)===null && find_hostiles(2, current_feller.x+xc, current_feller.y+yc, current_feller.owner)===false){current_feller.move_unit(xc, yc); acted=true; break elude_the_enemy;}
                     }
                 }   
             }
             else if(big_bad_high_score<=current_feller.range){
-                //attack
-            }
-            else if(big_bad_high_score<=(current_feller.movement+current_feller.range)){
-                //move + attack
+                hit_something(current_feller, big_bad_target);
+                acted=true;
             }
             else{
                 big_bad_high_score=999;
                 big_bad_target=null;
                 for(let target of master_targets_list.slice(0,5)){
-                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0];}    
+                    if(Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y) < big_bad_high_score){big_bad_target=target[0]; big_bad_high_score=Math.abs(current_feller.x-target[0].x)+Math.abs(current_feller.y-target[0].y);}    
                 }
-                //move towards big bad target
+                they_could_be_the_same_func_but_i_dont_wanna:
+                for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
+                    for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
+                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && find_hostiles(1, x, y, current_feller.owner)===false){
+                            current_feller.move_unit(x,y);
+                            acted=true;
+                            if(current_feller.movement===0){break they_could_be_the_same_func_but_i_dont_wanna;}
+                        }
+                    }    
+                }
+            }
+            if(current_feller.canattack==="yes" && (Math.abs(current_feller.x-big_bad_target.x)+Math.abs(current_feller.y-big_bad_target.y)) <= current_feller.range && (Math.abs(current_feller.x-big_bad_target.x)+Math.abs(current_feller.y-big_bad_target.y)) !== 1){
+                hit_something(current_feller, big_bad_target);
+                acted=true;
             }        
+            if(!acted){
+                current_feller.canattack="no";
+                current_feller.movement=0;
+            }
         }
         else{
             my_army.pop();
@@ -2653,9 +2761,6 @@ function game_start(){
 
     //test area for xyz to run at game start
     //name, maxhealth, movement, attack, range, x, y, type, filepath, owner
-    let bubu = new Unit("Bubu", 1, 100, 1000, 1, 2, 23, "melee", "important.png", "player");
-    bubu.render_unit();
-    bot_do_military_campaign(bot1);
 
     update_resource_counters();
     update_hq_healthbar();
