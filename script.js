@@ -519,6 +519,10 @@ function FESBB(bot){
     else if(get_unit_by_pos(bot.x-1,bot.y-1)===null){return [bot.x-1,bot.y-1];}
     else{print("hi"); return null;}
 }
+function can_i_move_to(x, y){
+    if(get_unit_by_pos(x, y) === null && get_resource_tile_by_pos(x, y) === null && !((x===2 || x===24) && (y===2 || y===24))){return true;}
+    else{return false;}
+}
 class Unit{
     constructor(name, maxhealth, movement, attack, range, x, y, type, filepath, owner){
         this.name=name;
@@ -552,21 +556,27 @@ class Unit{
         if(this.owner_obj.research.includes("21") && this.type==="ranged"){this.range+=1;}
     }
     render_unit(state){
-        const existing=document.querySelector(`.u${this.id}`);
-        if(existing){existing.remove();}
-        const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
-        this.unit_render=document.createElement("img");
-        this.unit_render.classList.add("unit");
-        this.unit_render.classList.add(`u${this.id}`);
-        this.unit_render.src=this.filepath;
-        this.unit_render.style.width="128px";
-        this.unit_render.style.height="128px";
-        if(this.owner==="player"){this.unit_render.onclick=this.activate_unit.bind(this);}
-        else{this.unit_render.onclick=this.get_attacked.bind(this);}
-        if(state==="exhausted"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
-        else if(state==="outofrange"){this.unit_render.style.filter="brightness(10%) opacity(100%)";}
-        else{this.unit_render.style.filter="brightness(100%) opacity(100%)";}
-        tile_parent.appendChild(this.unit_render);
+        if((this.x<26 && this.x>0 && this.y<26 && this.y>0) && !((this.x===24 || this.x===2) && (this.y===24 && this.y===2))){
+            const existing=document.querySelector(`.u${this.id}`);
+            if(existing){existing.remove();}
+            const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
+            this.unit_render=document.createElement("img");
+            this.unit_render.classList.add("unit");
+            this.unit_render.classList.add(`u${this.id}`);
+            this.unit_render.src=this.filepath;
+            this.unit_render.style.width="128px";
+            this.unit_render.style.height="128px";
+            if(this.owner==="player"){this.unit_render.onclick=this.activate_unit.bind(this);}
+            else{this.unit_render.onclick=this.get_attacked.bind(this);}
+            if(state==="exhausted"){this.unit_render.style.filter="brightness(80%) opacity(80%)";}
+            else if(state==="outofrange"){this.unit_render.style.filter="brightness(10%) opacity(100%)";}
+            else{this.unit_render.style.filter="brightness(100%) opacity(100%)";}
+            tile_parent.appendChild(this.unit_render);
+        }
+        else{
+            this.take_damage(8888888);
+        }
+        
     }
     check_for_opps(){
         bs_variable=false;
@@ -619,7 +629,10 @@ class Unit{
             this.check_if_exhausted();
             if(this.owner_obj===player){this.activate_unit();}
             if(this.type==="worker"){this.worker_buildcheck();}
-        }  
+        }
+        else{
+            this.take_damage(498483235);
+        }
     }
     worker_buildcheck(){
         if(this.type==="worker" && get_resource_tile_by_pos(this.x, this.y)!==null){
@@ -1737,7 +1750,6 @@ function attack_hq(ownerobj){
     }
 }
 function next_turn(){
-    turn_number+=1;
     timeout_screen.style.display="block";
     bot_turn(bot1);
     bot_turn(bot2);
@@ -1754,6 +1766,7 @@ function next_turn(){
         unit.canattack="yes";
         render_all_units();
     })
+    turn_number+=1;
     setTimeout(() => {
         timeout_screen.style.display="none";
     }, 1000);
@@ -1771,9 +1784,7 @@ function bot_turn(bot){
                 bot_do_develop(bot);
                 bot_do_develop(bot);
                 bot_do_buyhalf_military(bot);
-                bot_do_military_campaign(bot);
             }
-            bot_do_workers(bot);
             break;
         case "spammer":
             if(bot_check_are_we_alarmed(bot)){
@@ -1783,9 +1794,7 @@ function bot_turn(bot){
                 bot_do_buyhalf_military(bot);
                 bot_do_develop(bot);
                 bot_do_buyhalf_military(bot);
-                bot_do_military_campaign(bot);
             }
-            bot_do_workers(bot);
             break;
         case "balanced":
             if(bot_check_are_we_alarmed(bot)){
@@ -1794,11 +1803,11 @@ function bot_turn(bot){
             else{
                 bot_do_develop(bot);
                 bot_do_buyhalf_military(bot);
-                bot_do_military_campaign(bot);
             }
-            bot_do_workers(bot);
             break;
     }
+    bot_do_military_campaign(bot);
+    bot_do_workers(bot);
 }
 function find_hostiles(radius, centerx, centery, team){
     enemies_found_count=0;
@@ -1937,6 +1946,9 @@ function bot_do_buy_unit(bot, id_inq, name_inq){
             case "shooter":
                 ubi=[15, 2, 5, 2, "ranged", "images/scrapbots/shooter.png"];
                 break;
+            case "skirmisher":
+                ubi=[20, 3, 5, 1, "melee", "images/scrapbots/skirmisher.png"];
+                break;
             case "pursuer":
                 ubi=[25, 2, 7, 2, "skirmisher", "images/scrapbots/pursuer.png"];
                 break;
@@ -1998,16 +2010,18 @@ function bot_do_workers(bot){
             }
         })
     }
+    //console.log(the_worker_in_question);
     //once have worker, move it, if no worker then do nothing 
     if(the_worker_in_question!==null){
         let the_target_resource=null;
         let the_shortest_distance=999;
         global_resources.forEach((resource) => {
             if(resource.owner_obj!==bot && (Math.abs(the_worker_in_question.x-resource.x)+Math.abs(the_worker_in_question.y-resource.y)) < the_shortest_distance){
-                the_target_resource=resource;
-                the_shortest_distance=Math.abs(the_worker_in_question.x-resource.x)+Math.abs(the_worker_in_question.y-resource.y);
+                the_target_resource = resource;
+                the_shortest_distance = (Math.abs(the_worker_in_question.x-resource.x)+Math.abs(the_worker_in_question.y-resource.y));
             }
         })
+        //console.log(the_target_resource);
         //if there is a target, go for it, otherwise do nothing
         if(the_target_resource!==null){
             if(the_worker_in_question.movement>=the_shortest_distance){
@@ -2344,6 +2358,7 @@ function bot_do_military_campaign(bot){
     if(bot.x!==24 || bot.y!==24){master_targets_list.push([bot3, (5 / ((Math.abs(24-bot.x) + Math.abs(24-bot.y)) ** 2))])}
 
     master_targets_list.sort((a, b) => b[1] - a[1]);
+
     //console.log(master_targets_list);
 
     function hit_something(hitter, victim){
@@ -2365,6 +2380,7 @@ function bot_do_military_campaign(bot){
         }
         else if(victim.whatareyou==="spieler"){
             victim.hq_health-=hitter.attack;
+            update_hq_healthbar();
             if(victim.hq_health<1){
                 if(victim===player){
                     gameover_screen.style.display="flex";
@@ -2436,6 +2452,20 @@ function bot_do_military_campaign(bot){
                         }
                     }    
                 }
+                if(current_feller.movement===current_feller.maxmovement){
+                    if(get_unit_by_pos(current_feller.x+1, current_feller.y)===null && get_resource_tile_by_pos(current_feller.x+1, current_feller.y)===null && !((current_feller.x+1===24 || current_feller.x+1===2) && (current_feller.y===24 && current_feller.y===2))){
+                        current_feller.move_unit(current_feller.x+1, current_feller.y);
+                    }
+                    else if(get_unit_by_pos(current_feller.x-1, current_feller.y)===null && get_resource_tile_by_pos(current_feller.x-1, current_feller.y)===null && !((current_feller.x-1===24 || current_feller.x-1===2) && (current_feller.y===24 && current_feller.y===2))){
+                        current_feller.move_unit(current_feller.x-1, current_feller.y);
+                    }
+                    else if(get_unit_by_pos(current_feller.x, current_feller.y+1)===null && get_resource_tile_by_pos(current_feller.x, current_feller.y+1)===null && !((current_feller.x===24 || current_feller.x===2) && (current_feller.y+1===24 && current_feller.y+1===2))){
+                        current_feller.move_unit(current_feller.x, current_feller.y+1);
+                    }
+                    else if(get_unit_by_pos(current_feller.x, current_feller.y-1)===null && get_resource_tile_by_pos(current_feller.x, current_feller.y-1)===null && !((current_feller.x===24 || current_feller.x===2) && (current_feller.y-1===24 && current_feller.y-1===2))){
+                        current_feller.move_unit(current_feller.x, current_feller.y-1);
+                    }
+                }
             }
             if(!acted){
                 current_feller.canattack="no";
@@ -2470,7 +2500,7 @@ function bot_do_military_campaign(bot){
                 they_could_be_the_same_func_but_i_dont_wanna:
                 for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
                     for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
-                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && find_hostiles(1, x, y, current_feller.owner)===false){
+                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && find_hostiles(1, x, y, current_feller.owner)===false && (Math.abs(x-big_bad_target.x)+Math.abs(y-big_bad_target.y) !== 1)){
                             current_feller.move_unit(x,y);
                             acted=true;
                             if(current_feller.movement===0){break they_could_be_the_same_func_but_i_dont_wanna;}
