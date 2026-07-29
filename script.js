@@ -2058,6 +2058,12 @@ function bot_do_workers(bot){
                 }
             }
         }
+        if(the_worker_in_question.movement===the_worker_in_question.maxmovement){
+            if(can_i_move_to(the_worker_in_question.x+1, the_worker_in_question.y)){the_worker_in_question.move_unit(the_worker_in_question.x+1, the_worker_in_question.y);}
+            else if(can_i_move_to(the_worker_in_question.x-1, the_worker_in_question.y)){the_worker_in_question.move_unit(the_worker_in_question.x-1, the_worker_in_question.y);}
+            else if(can_i_move_to(the_worker_in_question.x, the_worker_in_question.y+1)){the_worker_in_question.move_unit(the_worker_in_question.x, the_worker_in_question.y+1);}
+            else if(can_i_move_to(the_worker_in_question.x, the_worker_in_question.y-1)){the_worker_in_question.move_unit(the_worker_in_question.x, the_worker_in_question.y-1);}
+        }
         //if it can reach, then move there and make a mine
         //otherwise check all spots in between that match movement; check if each has enemies in 3 radius; if no then go
         //otherwise check all spots it can reach without enemies nearby and move there
@@ -2229,7 +2235,7 @@ function bot_do_secure_hq(bot){
                     escape_the_enemy:
                     for(let xc = (0-myguy.movement); xc <= (0+myguy.movement); xc++){
                         for(let yc = (0 - (myguy.movement-Math.abs(xc))); yc <= (0+(myguy.movement-Math.abs(xc))); yc++){
-                            if(get_unit_by_pos(myguy.x+xc, myguy.y+yc)===null && get_resource_tile_by_pos(myguy.x+xc, myguy.y+yc)===null && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(xc, yc); acted=true; break escape_the_enemy;}
+                            if(can_i_move_to(myguy.x+xc, myguy.y+yc) && find_hostiles(2, myguy.x+xc, myguy.y+yc, myguy.owner)===false){myguy.move_unit(myguy.x+xc, myguy.y+yc); acted=true; break escape_the_enemy;}
                         }
                     }
                 }
@@ -2242,7 +2248,7 @@ function bot_do_secure_hq(bot){
                     lets_go_pursuue:
                     for(let x = Math.min(myguy.x, the_closest_feller.x); x <= Math.max(myguy.x, the_closest_feller.x); x++){
                         for(let y = Math.min(myguy.y, the_closest_feller.y); y <= Math.max(myguy.y, the_closest_feller.y); y++){
-                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement)){
+                            if(can_i_move_to(x, y) && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement)){
                                 myguy.move_unit(x,y);
                                 if(myguy.movement===0){break lets_go_pursuue;}
                             }
@@ -2290,7 +2296,7 @@ function bot_do_secure_hq(bot){
                     lets_go_attack:
                     for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
                         for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
-                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement) && (Math.abs(backup_target.x-x) + Math.abs(backup_target.y-y) <= myguy.range)){
+                            if(can_i_move_to(x, y) && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) <= myguy.movement) && (Math.abs(backup_target.x-x) + Math.abs(backup_target.y-y) <= myguy.range)){
                                 myguy.move_unit(x,y);
                                 backup_target.take_damage(myguy.attack);
                                 myguy.canattack="no";
@@ -2309,7 +2315,7 @@ function bot_do_secure_hq(bot){
                     lets_go_pursue:
                     for(let x = Math.min(myguy.x, backup_target.x); x <= Math.max(myguy.x, backup_target.x); x++){
                         for(let y = Math.min(myguy.y, backup_target.y); y <= Math.max(myguy.y, backup_target.y); y++){
-                            if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
+                            if(can_i_move_to(x, y) && (Math.abs(myguy.x-x)+Math.abs(myguy.y-y) === myguy.movement)){
                                 myguy.move_unit(x,y);
                                 acted=true;
                                 break lets_go_pursue;
@@ -2426,7 +2432,7 @@ function bot_do_military_campaign(bot){
                 lets_go_attack_peas:
                 for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
                     for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
-                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && (Math.abs(big_bad_target.x-x) + Math.abs(big_bad_target.y-y) <= current_feller.range)){
+                        if(can_i_move_to(x, y) && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && (Math.abs(big_bad_target.x-x) + Math.abs(big_bad_target.y-y) <= current_feller.range)){
                             current_feller.move_unit(x,y);
                             acted=true;
                             hit_something(current_feller, big_bad_target);
@@ -2445,7 +2451,7 @@ function bot_do_military_campaign(bot){
                 this_could_be_more_efficient_i_just_wanna_finish_already:
                 for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
                     for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
-                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) === current_feller.movement)){
+                        if(can_i_move_to(x, y) && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) === current_feller.movement)){
                             current_feller.move_unit(x,y);
                             acted=true;
                             break this_could_be_more_efficient_i_just_wanna_finish_already;
@@ -2453,18 +2459,10 @@ function bot_do_military_campaign(bot){
                     }    
                 }
                 if(current_feller.movement===current_feller.maxmovement){
-                    if(get_unit_by_pos(current_feller.x+1, current_feller.y)===null && get_resource_tile_by_pos(current_feller.x+1, current_feller.y)===null && !((current_feller.x+1===24 || current_feller.x+1===2) && (current_feller.y===24 && current_feller.y===2))){
-                        current_feller.move_unit(current_feller.x+1, current_feller.y);
-                    }
-                    else if(get_unit_by_pos(current_feller.x-1, current_feller.y)===null && get_resource_tile_by_pos(current_feller.x-1, current_feller.y)===null && !((current_feller.x-1===24 || current_feller.x-1===2) && (current_feller.y===24 && current_feller.y===2))){
-                        current_feller.move_unit(current_feller.x-1, current_feller.y);
-                    }
-                    else if(get_unit_by_pos(current_feller.x, current_feller.y+1)===null && get_resource_tile_by_pos(current_feller.x, current_feller.y+1)===null && !((current_feller.x===24 || current_feller.x===2) && (current_feller.y+1===24 && current_feller.y+1===2))){
-                        current_feller.move_unit(current_feller.x, current_feller.y+1);
-                    }
-                    else if(get_unit_by_pos(current_feller.x, current_feller.y-1)===null && get_resource_tile_by_pos(current_feller.x, current_feller.y-1)===null && !((current_feller.x===24 || current_feller.x===2) && (current_feller.y-1===24 && current_feller.y-1===2))){
-                        current_feller.move_unit(current_feller.x, current_feller.y-1);
-                    }
+                    if(can_i_move_to(current_feller.x+1, current_feller.y)){current_feller.move_unit(current_feller.x+1, current_feller.y);}
+                    else if(can_i_move_to(current_feller.x-1, current_feller.y)){current_feller.move_unit(current_feller.x-1, current_feller.y);}
+                    else if(can_i_move_to(current_feller.x, current_feller.y+1)){current_feller.move_unit(current_feller.x, current_feller.y+1);}
+                    else if(can_i_move_to(current_feller.x, current_feller.y-1)){current_feller.move_unit(current_feller.x, current_feller.y-1);}
                 }
             }
             if(!acted){
@@ -2483,7 +2481,7 @@ function bot_do_military_campaign(bot){
                 elude_the_enemy:
                 for(let xc = (0-current_feller.movement); xc <= (0+current_feller.movement); xc++){
                     for(let yc = (0 - (current_feller.movement-Math.abs(xc))); yc <= (0+(current_feller.movement-Math.abs(xc))); yc++){
-                        if(get_unit_by_pos(current_feller.x+xc, current_feller.y+yc)===null && get_resource_tile_by_pos(current_feller.x+xc, current_feller.y+yc)===null && find_hostiles(2, current_feller.x+xc, current_feller.y+yc, current_feller.owner)===false){current_feller.move_unit(xc, yc); acted=true; break elude_the_enemy;}
+                        if(can_i_move_to(current_feller.x+xc, current_feller.y+yc) && find_hostiles(2, current_feller.x+xc, current_feller.y+yc, current_feller.owner)===false){current_feller.move_unit(current_feller.x+xc, current_feller.y+yc); acted=true; break elude_the_enemy;}
                     }
                 }   
             }
@@ -2500,7 +2498,7 @@ function bot_do_military_campaign(bot){
                 they_could_be_the_same_func_but_i_dont_wanna:
                 for(let x = Math.min(current_feller.x, big_bad_target.x); x <= Math.max(current_feller.x, big_bad_target.x); x++){
                     for(let y = Math.min(current_feller.y, big_bad_target.y); y <= Math.max(current_feller.y, big_bad_target.y); y++){
-                        if(get_unit_by_pos(x,y)===null && get_resource_tile_by_pos(x,y)===null && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && find_hostiles(1, x, y, current_feller.owner)===false && (Math.abs(x-big_bad_target.x)+Math.abs(y-big_bad_target.y) !== 1)){
+                        if(can_i_move_to(x, y) && (Math.abs(current_feller.x-x)+Math.abs(current_feller.y-y) <= current_feller.movement) && find_hostiles(1, x, y, current_feller.owner)===false && (Math.abs(x-big_bad_target.x)+Math.abs(y-big_bad_target.y) !== 1)){
                             current_feller.move_unit(x,y);
                             acted=true;
                             if(current_feller.movement===0){break they_could_be_the_same_func_but_i_dont_wanna;}
@@ -2511,7 +2509,13 @@ function bot_do_military_campaign(bot){
             if(current_feller.canattack==="yes" && (Math.abs(current_feller.x-big_bad_target.x)+Math.abs(current_feller.y-big_bad_target.y)) <= current_feller.range && (Math.abs(current_feller.x-big_bad_target.x)+Math.abs(current_feller.y-big_bad_target.y)) !== 1){
                 hit_something(current_feller, big_bad_target);
                 acted=true;
-            }        
+            }
+            if(current_feller.movement===current_feller.maxmovement){
+                if(can_i_move_to(current_feller.x+1, current_feller.y)){current_feller.move_unit(current_feller.x+1, current_feller.y);}
+                else if(can_i_move_to(current_feller.x-1, current_feller.y)){current_feller.move_unit(current_feller.x-1, current_feller.y);}
+                else if(can_i_move_to(current_feller.x, current_feller.y+1)){current_feller.move_unit(current_feller.x, current_feller.y+1);}
+                else if(can_i_move_to(current_feller.x, current_feller.y-1)){current_feller.move_unit(current_feller.x, current_feller.y-1);}
+            }
             if(!acted){
                 current_feller.canattack="no";
                 current_feller.movement=0;
