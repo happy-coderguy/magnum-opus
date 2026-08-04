@@ -479,13 +479,14 @@ function assign_id(){
     current_id+=1;
     return current_id;
 }
-function get_unit_by_pos(x, y){
-    for(let unit of global_units){
+function get_unit_by_pos(x, y){ 
+    let found = null;
+    global_units.forEach((unit) => {
         if(unit.x===x && unit.y===y){
-            return unit;
-        }   
-    }
-    return null;
+            if(found===null){found=unit;}
+        }
+    })
+    return found;
 }
 function get_resource_tile_by_pos(x,y){
     for(let tile of global_resources){
@@ -532,6 +533,7 @@ class Unit{
         this.owner=owner;
 
         global_units.push(this);
+        
         if(owner==="player"){this.owner_obj=player;}
         else if(owner==="bot1"){this.owner_obj=bot1;}
         else if(owner==="bot2"){this.owner_obj=bot2;}
@@ -542,21 +544,21 @@ class Unit{
         //Valid types: 'melee', 'ranged', 'skirmisher', 'worker'
         this.maxhealth=maxhealth;
         this.health=maxhealth;
-        this.x=x;
-        this.y=y;
+        this.x = Number(x);
+        this.y = Number(y);
         this.attack=attack;
         this.canattack="yes";
         this.range=range;
         this.movement=movement;
         this.maxmovement=movement;
-        if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
-        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=5;}
+        if(this.owner_obj.research.includes("14") && this.type==="worker"){this.movement+=1; this.maxmovement+=1;}
+        if(this.owner_obj.research.includes("31") && this.type==="worker"){this.movement+=1; this.maxmovement+=1;}
         if(this.owner_obj.research.includes("22") && this.type==="melee"){this.maxhealth+=5; this.health+=5;}
         if(this.owner_obj.research.includes("44") && this.type==="melee"){this.attack+=5;}
         if(this.owner_obj.research.includes("21") && this.type==="ranged"){this.range+=1;}
     }
     render_unit(state){
-        if((this.x<26 && this.x>0 && this.y<26 && this.y>0) && !((this.x===24 || this.x===2) && (this.y===24 && this.y===2))){
+        if((this.x<26 && this.x>0 && this.y<26 && this.y>0) && !((this.x===24 || this.x===2) && (this.y===24 || this.y===2))){
             const existing=document.querySelector(`.u${this.id}`);
             if(existing){existing.remove();}
             const tile_parent = document.querySelector(`.tile[data-x="${this.x}"][data-y="${this.y}"]`);
@@ -612,8 +614,10 @@ class Unit{
             //DEATH
             const existing=document.querySelector(`.u${this.id}`);
             if(existing){existing.remove();}
-            global_units.splice(global_units.indexOf(this), 1);
-            this.owner_obj.units.splice(this.owner_obj.units.indexOf(this), 1);
+            const gi = global_units.indexOf(this);
+            if(gi!==-1){ global_units.splice(gi, 1); }
+            const oi = this.owner_obj.units.indexOf(this);
+            if(oi!==-1){ this.owner_obj.units.splice(oi, 1); }
         }
     }
     deal_damage(damage, target_x, target_y){
@@ -1517,7 +1521,7 @@ function buy_research_do(research_id){
                 player.research.push("44");
                 root.style.setProperty("--r4r4-purchased", "#00ff00");
                 r4r4.innerText="Researched";
-                player.units.forEach((unit) => {if(unit.type==="melee"){unit.damage+=5;}})
+                player.units.forEach((unit) => {if(unit.type==="melee"){unit.attack+=5;}})
             }
             break;
     }
@@ -1754,6 +1758,7 @@ function next_turn(){
     bot_turn(bot1);
     bot_turn(bot2);
     bot_turn(bot3);
+    
     global_resources.forEach((resource => resource.produce_resources()));
     everyone.forEach((one) => {
         one.food+=one.food_gain;
@@ -1766,6 +1771,7 @@ function next_turn(){
         unit.canattack="yes";
         render_all_units();
     })
+    
     turn_number+=1;
     setTimeout(() => {
         timeout_screen.style.display="none";
@@ -1860,7 +1866,11 @@ function bot_calculate_buymax(bot){
     bot.hazardite=hypo_res_storage[5];
 }
 function bot_do_charge_for(bot, id_inq, name_inq){
-    if(all_worker_names.includes(name_inq) && bot.research_32_status===2){print("bot used free worker; not an error");}
+    if(all_worker_names.includes(name_inq) && bot.research_32_status===2){
+        print("bot used free worker; not an error");
+        bot.research_32_status = 0; // consume the free worker benefit once
+        return;
+    }
     else if(bot_check_canafford(bot, id_inq)===true && bot.units_unlocked.includes(name_inq)){
         bot.food -= bot_costlist[id_inq][0];
         bot.ore -= bot_costlist[id_inq][1];
@@ -2139,6 +2149,7 @@ function bot_do_develop(bot){
                 break;
             case "r13":
                 bot.hq_health+=25;
+                bot.hq_maxhealth+=25;
                 break;
             case "r14":
                 bot.research.push("14");
@@ -2877,7 +2888,7 @@ aluminium_to_ore.onclick = () => do_trade(10);
 
 for (let i = 1; i <= 75; i++) {
     const btn = document.querySelector(`.encycl_select_${i}`);
-    btn.onclick = () => open_encycl_entry(i);    
+    if (btn) { btn.onclick = () => open_encycl_entry(i); }
 }
 
 //you used to call me on yo cell phone
